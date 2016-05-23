@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--
+  /*
+ * This page was created by Daniel Garijo.
+ */
+  -->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Narratives examples</title>
+
+	
+    <!-- Bootstrap -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+  </head>
+   <body>
+
+    <div class="container">
+      <nav class="navbar navbar-inverse" role="navigation">
+            <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand">Data Narratives</a>
+            </div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			  <ul class="nav navbar-nav">
+				<li><a href="about.html">About</a></li>
+				</ul>
+			</div>
+        </div>
+      </nav>
+	  
+	  <h3 class="text-muted">Data narratives for result: <a href="http://www.opmw.org/datasets/resource/2/126/c02338550daf54951c1e6a55e55b16c2">highly connected drugs</a></h3>
+	  <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+<div class="row">
+  <div class="col-xs-12 col-md-8">
+	  <div class="panel-group">
+		<div class="panel panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <a data-toggle="collapse" href="#collapse1">Data Narrative 1: Resource summary</a>
+			</h4>
+		  </div>
+		  <div id="collapse1" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p>The <a href="http://www.opmw.org/export/page/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highly connected drugs result</a> was generated in the Wings workflow system by execution <a href="http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1348628778528">1348628778528</a> (<a data-toggle="collapse" href="#collapseEx">See figure</a>), which originated from the workflow template <a href="http://www.opmw.org/export/resource/WorkflowTemplate/ABSTRACTGLOBALWORKFLOW2">AbstractGlobalWorkflow2</a> (<a data-toggle="collapse" href="#collapseWf">See figure</a>). The file size is 1166 bytes and is stored in the Wings servers on the following location <a href="">http://www.opmw.org/export/page/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6</a>. The DOI for the result file is: <a href="https://dx.doi.org/10.6084/m9.figshare.776887.v1">https://dx.doi.org/10.6084/m9.figshare.776887.v1</a> 
+			</p>
+			</div>
+			
+		  </div>
+		</div>
+		
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <a data-toggle="collapse" href="#collapse2">Data Narrative 2: Inputs and parameters used in the workflow to produce the resource</a>
+			</h4>
+		  </div>
+		  <div id="collapse2" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p>The <a href="http://www.opmw.org/export/page/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highly connected drugs result</a> was generated in the Wings workflow system by execution <a href="http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1348628778528">1348628778528</a> (<a data-toggle="collapse" href="#collapseEx">See figure</a>), which originated from the workflow template <a href="http://www.opmw.org/export/resource/WorkflowTemplate/ABSTRACTGLOBALWORKFLOW2">AbstractGlobalWorkflow2</a> (<a data-toggle="collapse" href="#collapseWf">See figure</a>).
+			</p>
+			
+			<p>
+			 Several input datasets were used in the execution of the workflow, including the configuration file and the drugBindisngSites for for the <a href="">CompareLigandBindingSitesV2</a> steps, the <a href="">structureForComparison</a> and <a href="">structureForComparison1</a> for the <a href="">CompareLigandBindingSitesV2</a> and <a href="">ResultSorterV2</a> components, the <a href="">tbProteinInfo</a> and <a href="">model_info datasets</a> for the <a href="">FormatStepToCompareDissimilarProteinStructures</a> and <a href="">FormatPDBToCompareProteinStructures</a> abstract steps and the <a href="">template_pdbs</a> and the <a href="">drugKeys</a> for the <a href="">FormatPDBToCompareProteinStructures</a> and <a href="">countDrugs</a> steps respectively. The parameter p-value was set up to 0,05.
+			</p>
+			</div>
+			<!--<div class="panel-footer">Panel Footer</div>-->
+		  </div>
+		</div>
+		
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <a data-toggle="collapse" href="#collapse3">Data Narrative 3: Workflow's main steps.</a>
+			</h4>
+		  </div>
+		  <div id="collapse3" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p>The <a href="http://www.opmw.org/export/page/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highly connected drugs result</a> was generated by an execution of the workflow template <a href="http://www.opmw.org/export/resource/WorkflowTemplate/ABSTRACTGLOBALWORKFLOW2">AbstractGlobalWorkflow2</a> (<a data-toggle="collapse" href="#collapseWf">See figure</a>).
+			</p>
+			<p>
+			<a href="">AbstractGlobalWorkflow2</a> performs three main types of analyses on the input data. First, the <a href="">CompareLigandBindingSitesV2</a> components is applied, then the <a href="">CompareDissimilarStructures</a> and finally the <a href="">Docking component</a> produces the final results.  
+			</p>
+			<p>
+			The <a href="">highlyConnectedDrugs</a> result is the output of the <a href="">MakeGraphNetwork</a> component, a visualization step.
+			</p>
+			</div>
+			<!--<div class="panel-footer">Panel Footer</div>-->
+		  </div>
+		</div>
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <a data-toggle="collapse" href="#collapse4">Data Narrative 4: General descriptions of the method(s) and software used in the workflow.</a>
+			</h4>
+		  </div>
+		  <div id="collapse4" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p>The <a href="http://www.opmw.org/export/page/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highly connected drugs result</a> was generated in the Wings workflow system by execution <a href="http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1348628778528">1348628778528</a> (<a data-toggle="collapse" href="#collapseEx">See figure</a>), which originated from the workflow template <a href="http://www.opmw.org/export/resource/WorkflowTemplate/ABSTRACTGLOBALWORKFLOW2">AbstractGlobalWorkflow2</a> (<a data-toggle="collapse" href="#collapseWf">See figure</a>).
+			</p>
+			<p>
+			The workflow is formed by 3 main analysis steps (a,b,c), 2 merging steps (e,d), 2 sorter steps (f,g), X filtering steps (h,i), Y reformatting steps and Z visualization steps. 
+			</p>
+			<p>
+			The software used for the analysis steps is Fatcat, blah blah. The merging steps use the scripts blah, and the filtering steps (privide the rest of the pointers here)
+			</p>
+			</div>
+			
+		  </div>
+		</div>
+		
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <a data-toggle="collapse" href="#collapse5">Data Narrative 5: Details on how the steps where used to create the results.</a>
+			</h4>
+		  </div>
+		  <div id="collapse5" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p>The <a href="http://www.opmw.org/export/page/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highly connected drugs result</a> was generated in the Wings workflow system by execution <a href="http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1348628778528">1348628778528</a> (<a data-toggle="collapse" href="#collapseEx">See figure</a>), which originated from the workflow template <a href="http://www.opmw.org/export/resource/WorkflowTemplate/ABSTRACTGLOBALWORKFLOW2">AbstractGlobalWorkflow2</a> (<a data-toggle="collapse" href="#collapseWf">See figure</a>).
+			</p>
+			<p>
+			After doing a and b, the component c was applied in the inputs to produce blah. Then, those inputs were used to blah, which blah. Finally, the results produced by blah and blah were used by the MakeGraphNetwork to produce the highly connected results.
+			</p>
+			</div>
+		  </div>
+		</div>
+		
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <a data-toggle="collapse" href="#collapse6">Data Narrative 6: Concrete software used in the step to generate the results.</a>
+			</h4>
+		  </div>
+		  <div id="collapse6" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p>The <a href="http://www.opmw.org/export/page/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highly connected drugs result</a> was generated in the Wings workflow system by execution <a href="http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1348628778528">1348628778528</a> (<a data-toggle="collapse" href="#collapseEx">See figure</a>), which originated from the workflow template <a href="http://www.opmw.org/export/resource/WorkflowTemplate/ABSTRACTGLOBALWORKFLOW2">AbstractGlobalWorkflow2</a> (<a data-toggle="collapse" href="#collapseWf">See figure</a>).
+			</p>
+			
+			<p>
+			The <a href="">highlyConnectedDrugs</a> result is the output of the <a href="">MakeGraphNetwork</a> component, a visualization step which uses the <a href="">MakeGraphNetworkGML implementation </a> and <a href="">a script</a> to generate the results. The MakeGraphNetworkGML takes four inputs and produces two outputs, including the highlyConnectedDrug result. The other result is the networkVisualization.
+			</p>
+			<p>The rest of the inputs are a drugCount (see executionValue), the drugKeys dataset, the significantResultsFiltered and the tb_proteinInfo.
+			</p>
+			</div>
+			<!--<div class="panel-footer">Panel Footer</div>-->
+		  </div>
+		</div>
+		
+	  </div>
+	</div>
+	
+	<div class="col-xs-6 col-md-4">
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <a data-toggle="collapse" href="#collapseWf">Workflow Visualization (Abstract method)</a>
+			</h4>
+		  </div>
+		  <div id="collapseWf" class="panel-collapse collapse ">
+			<img src="http://wind.isi.edu/marbles/assets/components/workflow_portal/users/2/WINGS/ontology/WINGS/AbstractGlobalWorkflow2.owl.png" width="100%"/>
+		  </div>
+		</div>
+		
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <a data-toggle="collapse" href="#collapseEx">Workflow Execution Visualization</a>
+			</h4>
+		  </div>
+		  <div id="collapseEx" class="panel-collapse collapse">
+			<img src="http://wind.isi.edu/marbles/assets/components/workflow_portal/users/2/WINGS/runs/run_126.png" width="100%"/>
+		  </div>
+		</div>
+	
+	</div>
+
+      <!--<footer class="footer">
+        <p>&copy; 2016</p>
+      </footer>-->
+
+    </div> <!-- /container -->
+    
+  </body>
+</html>
