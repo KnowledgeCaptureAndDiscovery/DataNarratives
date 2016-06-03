@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--
+  /*
+ * This page was created by Daniel Garijo.
+ */
+  -->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Narratives examples</title>
+
+	
+    <!-- Bootstrap -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+  </head>
+  
+   <body>
+    <div class="container">
+      <nav class="navbar navbar-inverse" role="navigation">
+            <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand">DANA: DAta NArratives</a>
+            </div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			  <ul class="nav navbar-nav">
+				<li><a href="about.html">About</a></li>
+				</ul>
+			</div>
+        </div>
+      </nav>
+	  
+	  <h3 class="text-muted">Data narratives for result: <a href="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/METABOLISM_RESULT1464370834054">Metabolism_03-02-2010</a></h3>
+	  <!-- Stack the columns on mobile by making one full-width and the other half-width -->
+<div class="row">
+  <div class="col-xs-12 col-md-12">
+	  <div class="panel-group">
+	   
+		
+		<div class="panel panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  Data Narrative 1: Execution view <a data-toggle="collapse" href="#collapse1">(see more details)</a>
+			</h4>
+		  </div>
+		  <div id="collapse1" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p> 
+				The <a href="">reaeration empirical method</a> was run on the <a href="">CDEC_2010-03-02</a> dataset, with depth set to 1.021457, velocity set to 0.653112, barpress set to 760, sunrise set to 1267510800 and sunset set to 1267552200. <a href="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/METABOLISM_RESULT1464370834054">The metabolism 03-02-2010</a> results are available <a href=" ">online</a>. 
+			</p>
+			</div>
+			
+		  </div>
+		</div>
+		
+		<div class="panel panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  Data Narrative 2: Data view <a data-toggle="collapse" href="#collapse2">(see more details)</a>
+			</h4>
+		  </div>
+		  <div id="collapse2" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p> 
+				The <a href="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/METABOLISM_RESULT1464370834054">Metabolism 03-02-2010 result</a> was derived from the <a href="">CDEC_2010-03-02</a> dataset.
+			</p>
+			</div>
+			
+		  </div>
+		</div>
+		
+		
+		
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  Data Narrative 3: Method view <a data-toggle="collapse" href="#collapse3">(see more details)</a>
+			</h4>
+		  </div>
+		  <div id="collapse3" class="panel-collapse collapse">
+			<div class="panel-body">
+			
+			<p>
+			<a href="">Reaeration empirical</a> performs two main types of analyses in the initial dataset. The <a href="">RaerationEmpirical</a> step is the step that compares the Dissolved Oxygen, Temperature, Depth, and Velocity to determine the rate of reaeration, or the K2 value.  The relationship between these inputs is determined through regression on past data. Reaeration is the process by which oxygen is absorbed by the stream from the air. After applying the <a href="">HourlyAverages</a> step, the <a href="">Metabolism</a> step is executed to produce the target results.
+			</p>
+			
+			</div>
+			<!--<div class="panel-footer">Panel Footer</div>-->
+		  </div>
+		</div>
+		
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  Data Narrative 4: Implementation view <a data-toggle="collapse" href="#collapse4">(see more details)</a>
+			</h4>
+		  </div>
+		  <div id="collapse4" class="panel-collapse collapse">
+			<div class="panel-body">
+			
+			<p>
+			<a href="">Reaeration empirical</a> performs two main types of analyses in the initial dataset. The <a href="">RaerationEmpirical</a> step compares the Dissolved Oxygen, Temperature, Depth, and Velocity to determine the rate of reaeration, or the K2 value.  The relationship between these inputs is determined through regression on past data. Reaeration is the process by which oxygen is absorbed by the stream from the air. The rearation empirical step uses the <a href="">ReaerationCMNode</a> software implementation.
+			</p>
+			<p>
+			After applying the <a href="">HourlyAverages</a> step, the <a href="">Metabolism</a> step is executed to produce the target results. The metabolism step uses the <a href="">MetabolismDay</a> software implementation.
+			</p>
+			
+			</div>
+			
+		  </div>
+		</div>
+		
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  Data Narrative 5: Step view <a data-toggle="collapse" href="#collapse5">(see more details)</a>
+			</h4>
+		  </div>
+		  <div id="collapse5" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p>
+			The <a href="">Reaeration empirical</a> method has 3 steps. The first one, <a href="">Waterflow_Hourly_Averages</a> step, uses an input dataset (WaterflowInputs) to produce a result. Next, the <a href="">Raeration_Empirica</a> step consumes that output to produce another result. The final step is the <a href="">metabolisma</a> step, which produced the <a href="">Metabolism_03-02-2010</a> results.
+			</p>
+			</div>
+		  </div>
+		</div>
+		<!--
+		<div class="panel panel-primary">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  Data Narrative 6: Software view <a data-toggle="collapse" href="#collapse6">(see more details)</a>
+			</h4>
+		  </div>
+		  <div id="collapse6" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p>
+			The <a href="http://www.opmw.org/export/4.0/page/resource/WorkflowTemplate/TOPICDETECTION-D751713988987E9331980363E24189CE">TopicDetection</a> method uses two main software components for its functionality. The first one, <a href="">Parallel LDA</a>, is used to implement the <a href="http://www.opmw.org/export/4.0/resource/WorkflowTemplateProcess/TOPICDETECTION-D751713988987E9331980363E24189CE_TRAINTOPICS">TrainTopics</a> and produce the <a href="">output topics</a> dataset. Parallel LDA is a parallel C++ implementation of fast Gibbs sampling of Latent Dirichlet Allocation with Apache License 2.0. 
+			
+			The second software is <a href="">Termite</a>, which implements the <a href="">Plot topics</a> step to create the <a href="">term-topic matrix visualization</a>. Termite (Termite: Visualization Techniques for Assessing Textual Topic Models) has a Copyright (c) 2013, Leland Stanford Junior University.
+			</p>
+			</div>
+		  </div>
+		</div><!-- -->
+		
+	  </div>
+	</div>
+	
+	</div>
+
+      <!--<footer class="footer">
+        <p>&copy; 2016</p>
+      </footer>-->
+
+    </div> <!-- /container -->
+    
+  </body>
+</html>
