@@ -5,7 +5,6 @@
     <title>Data Narratives</title>
 
 	
-    <!-- Bootstrap -->
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -15,35 +14,55 @@
       <nav class="navbar navbar-inverse" role="navigation">
             <div class="container-fluid">
             <div class="navbar-header">
-              <a class="navbar-brand">Data Narratives</a>
+              <a class="navbar-brand">DANA: DAta NArratives</a>
             </div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			</div>
         </div>
-      </nav><h3 class="text-muted">Data narratives for result: <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highlyConnectedDrugs</a></h3>
-<div class="row"><div class="row"><div class="col-xs-12 col-md-8">
-	  <div class="panel-group"></div>
-	</div><div class="col-xs-6 col-md-4"><div class="panel panel-primary">
+      </nav><h3 class="text-muted">Data narratives for result: <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highly Connected Drugs </a></h3>
+<div class="row">
+<div class="col-xs-12 col-md-12">
+	  <div class="panel-group">
+<div class="panel panel panel-info">
 		  <div class="panel-heading">
 			<h4 class="panel-title">
-			  <a data-toggle="collapse" href="#collapseWf">Workflow Visualization (Abstract method)</a>
+			  Data Narrative 1: Execution view  &nbsp;&nbsp;&nbsp;&nbsp;  <button class="SeeMore2 btn btn-primary" data-toggle="collapse" href="#collapse1">See More</button>
 			</h4>
 		  </div>
-		  <div id="collapseWf" class="panel-collapse collapse ">
-			<img src="http://wind.isi.edu/marbles/assets/components/workflow_portal/users/2/WINGS/ontology/WINGS/AbstractGlobalWorkflow2.owl.png" width="100%"/>
+		  <div id="collapse1" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p> 
+	The <a href="http://www.opmw.org/export/resource/WorkflowTemplate/ABSTRACTGLOBALWORKFLOW2">Abstract Global Workflow2 </a> method was run on the <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/6369B8D8956675A7EDF28E9DF88006F4">model info updated</a>, <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/0F147FF6679F181C4EB6CE65D3D157BF">Mtb Structures tar gz</a>, <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DC41278511EE60F4B45EB0962561BC36">homology models list txt</a>, <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/25012620BA810FBE3EF7D5C2ADC9DEC6">tb protein info</a>, <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/4C941C6AE3275822AA57D1FB9F67D9F8">solved tb structures list txt</a>, <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/B2060EE1728414B5839A020796AA32A4">drug key</a>, <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/AEBE60FF538C6F29AFC6652E08CE2DFD">smap properties</a>, <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/957337F1764DCF754C18F62484175E69">template pdbs</a>, <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/0B0BA62D6E100E5251DA1FD7FC5CC486">drug binding sites list txt</a> datasets, whith parameter <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/PVALUE0.00001">PVALUE0.00001</a> set to 0.00001,  The <a href="http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6">highly Connected Drugs </a> results are stored <a href="http://www.opmw.org/datasets/resource/2/126/c02338550daf54951c1e6a55e55b16c2">online</a> (DOI <a href="https://dx.doi.org/10.6084/m9.figshare.776887.v1">https://dx.doi.org/10.6084/m9.figshare.776887.v1</a>). 
+			</p>
+			</div>
+			
 		  </div>
-		</div>
-		
-		<div class="panel panel-primary">
+		</div><div class="panel panel panel-info">
 		  <div class="panel-heading">
 			<h4 class="panel-title">
-			  <a data-toggle="collapse" href="#collapseEx">Workflow Execution Visualization</a>
+			  Data Narrative 2: Data view  &nbsp;&nbsp;&nbsp;&nbsp;  <button class="SeeMore2 btn btn-primary" data-toggle="collapse" href="#collapse2">See More</button>
 			</h4>
 		  </div>
-		  <div id="collapseEx" class="panel-collapse collapse">
-			<img src="http://wind.isi.edu/marbles/assets/components/workflow_portal/users/2/WINGS/runs/run_126.png" width="100%"/>
+		  <div id="collapse2" class="panel-collapse collapse">
+			<div class="panel-body">
+			<p> 
+ The 
+			</p>
+			</div>
+			
 		  </div>
-		</div></div></div> 
+		</div></div>
+	</div></div> 
     </div>
   </body>
-</html>
+  <script>
+  $('.SeeMore2').click(function(){
+		var $this = $(this);
+		$this.toggleClass('SeeMore2');
+		if($this.hasClass('SeeMore2')){
+			$this.text('See More');			
+		} else {
+			$this.text('See Less');
+		}
+	});
+  </script></html>

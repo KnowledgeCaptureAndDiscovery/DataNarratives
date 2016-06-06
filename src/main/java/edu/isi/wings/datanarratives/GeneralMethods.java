@@ -65,4 +65,23 @@ public class GeneralMethods {
             model.read(in, null);//rdf/xml by default
         }
     }
+    
+    public static String splitCamelCase(String input){
+        String[] result = input.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])");
+        String stringWithSpaces ="";
+        for (String s : result) {
+            stringWithSpaces+=s+" ";
+        }
+        return stringWithSpaces;
+    }
+    
+    public static String getFileNameFromURL(String input){
+        return splitCamelCase(input.substring(input.lastIndexOf("/")+1).replace("_", " ")).trim();
+        
+    }
+    
+    public static void main(String[] args){
+        System.out.println(splitCamelCase("highlyConnectedDrugsVALUE"));
+        System.out.println(getFileNameFromURL("http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6 "));
+    }
 }

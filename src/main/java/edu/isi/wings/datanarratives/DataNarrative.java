@@ -9,12 +9,14 @@ import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.util.FileManager;
-import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
- *
+ *  Class designed to represent the contents of a data narrative and retrieve them 
+ * from the KB. The loading of resources can be improved; this is just a prototype.
+ * Resource loading can 
  * @author dgarijo
  */
 public class DataNarrative {
@@ -63,9 +65,9 @@ public class DataNarrative {
         System.out.println("Loading template data...");
         this.retrieveRemoteWorkflowTemplateData(workflowTemplateURI);
         System.out.println("Loading DOI descriptions...");
-        this.retrieveDOIs(doiFile);
+        this.addFileToKnowledgeBase(doiFile);
         System.out.println("Loading Motif descriptions...");
-        this.retrieveDOIs(motifAnnotations);
+        this.addFileToKnowledgeBase(motifAnnotations);
         System.out.println("Load complete.");
     }
     
@@ -121,12 +123,8 @@ public class DataNarrative {
         GeneralMethods.constructWithOnlineRepository(Constants.endpoint, queryLoadTemplateParameters, knowledgeBase);
     }
     
-    private void retrieveMotifs(String motifFile){
-        GeneralMethods.readFileIntoKnowledgeBase(knowledgeBase, motifFile);
-    }
     
-    
-    private void retrieveDOIs(String doiFile) {
+    private void addFileToKnowledgeBase(String doiFile) {
         GeneralMethods.readFileIntoKnowledgeBase(knowledgeBase, doiFile);
     }
     
@@ -140,6 +138,7 @@ public class DataNarrative {
         return resultURI;
     }
     
+    //ideally there should be a class result which loaded all these data once, instead of doing it all the time.
     public String getResultName(){
         if(resultName!=null){
             return resultName;
@@ -153,6 +152,17 @@ public class DataNarrative {
         }else{
             return "resource without label";
         }
+    }
+    
+    public String getResultLocation(){
+       String queryResulName = "select ?loc where {"
+                + "<"+this.resultURI+"> <http://www.opmw.org/ontology/hasLocation> ?loc}";
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, queryResulName);
+        if(rs.hasNext()){
+            return rs.nextSolution().getLiteral("loc").getString();
+        }else{
+            return "#";
+        } 
     }
     
     public String getWorkflowExecutionVisualization(){
@@ -208,10 +218,90 @@ public class DataNarrative {
         }
         return motifs;
     }
+    
+    //returns the name of the workflow
+    public String getMethodName(){
+        String query = "select ?wfname where {\n"
+            + "<"+this.resultURI+">  <http://www.opmw.org/ontology/correspondsToTemplateArtifact> ?a.\n"
+            + "?a <http://www.opmw.org/ontology/isVariableOfTemplate> ?temp.\n"
+            + "?temp <http://www.w3.org/2000/01/rdf-schema#label> ?wfname.\n"
+            + "}";
+//        System.out.println(query);
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, query);
+        if(rs.hasNext()){
+            return rs.next().getLiteral("wfname").getString();
+        }else{
+            return("no name provided");
+        }
+    }
+    
+    //returns the URI of the workflow associated to the tracked result
+    public String getMethodURI(){
+        String query = "select ?temp where {\n"
+            + "<"+this.resultURI+">  <http://www.opmw.org/ontology/correspondsToTemplateArtifact> ?a.\n"
+            + "?a <http://www.opmw.org/ontology/isVariableOfTemplate> ?temp.\n"
+            + "}";
+//        System.out.println(query);
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, query);
+        if(rs.hasNext()){
+            return rs.next().getResource("temp").getURI();
+        }else{
+            return("#");
+        }
+    }
+    
+    //returns the wf input values and locations and URIs of the wf related to out tesult. 
+    public ArrayList<String> getMethodInputsAndURIs(){
+        String query = "select ?input ?l where {"
+                 + "<"+this.resultURI+">  <http://openprovenance.org/model/opmo#account> ?a.\n"
+                + "?input a <http://www.opmw.org/ontology/WorkflowExecutionArtifact>."
+                + "?input <http://openprovenance.org/model/opmo#account> ?a."
+                + "?input <http://www.opmw.org/ontology/hasLocation>?l."
+                + "filter not exists {"
+                + "?input <http://purl.org/net/opmv/ns#wasGeneratedBy> ?p."
+                + "}}";
+        ArrayList inputs = new ArrayList<>();
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, query);
+        while(rs.hasNext()){
+            String input="", loc ="#";
+            QuerySolution qs = rs.nextSolution();
+            input+=qs.getResource("input").getURI();
+            Literal l = qs.getLiteral("l");
+            if (l!=null){
+                loc = l.getString();
+            }
+            inputs.add(input+","+loc);
+        }
+        return inputs;
+    }
+    
+    //returns the wf input locations and URIs. 
+    public ArrayList<String> getMethodInputsParametersAndValues(){
+        String query = "select ?input ?v where {"
+                 + "<"+this.resultURI+">  <http://openprovenance.org/model/opmo#account> ?a.\n"
+                + "?input a <http://www.opmw.org/ontology/WorkflowExecutionArtifact>."
+                + "?input <http://openprovenance.org/model/opmo#account> ?a."
+                + "?input <http://www.opmw.org/ontology/hasValue>?v."
+                + "filter not exists {"
+                + "?input <http://purl.org/net/opmv/ns#wasGeneratedBy> ?p."
+                + "}}";
+        ArrayList inputs = new ArrayList<>();
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, query);
+        while(rs.hasNext()){
+            String input="", value ="#";
+            QuerySolution qs = rs.nextSolution();
+            input+=qs.getResource("input").getURI();
+            Literal l = qs.getLiteral("v");
+            if (l!=null){
+                value = l.getString();
+            }
+            inputs.add(input+","+value);
+        }
+        return inputs;
+    }
     /**
      * debug query
-     * @param query
-     * @return 
+     * @param query 
      */
     public void resultsForQuery(String query){
         ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, query);
