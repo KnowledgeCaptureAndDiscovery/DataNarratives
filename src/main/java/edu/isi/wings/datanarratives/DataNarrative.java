@@ -165,6 +165,30 @@ public class DataNarrative {
         } 
     }
     
+    //method that given a result, it returns the datasets from which it has been derived.
+    //and their location
+    public ArrayList<String> getOriginalSourcesForResult(String result){
+        String q = "select ?input ?loc "
+                + "where{"
+                + "<"+result+"> (<http://purl.org/net/opmv/ns#wasGeneratedBy>/<http://purl.org/net/opmv/ns#used>)* ?input."
+                + "?input <http://www.opmw.org/ontology/hasLocation>?loc."
+                + "FILTER NOT EXISTS {?input <http://purl.org/net/opmv/ns#wasGeneratedBy> ?process}."
+                + "}";
+        ArrayList<String> originalSources= new ArrayList<>();
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, q);
+        while(rs.hasNext()){
+            String input="", loc ="#";
+            QuerySolution qs = rs.nextSolution();
+            input+=qs.getResource("input").getURI();
+            Literal l = qs.getLiteral("loc");
+            if (l!=null){
+                loc = l.getString();
+            }
+            originalSources.add(input+","+loc);
+        }
+        return originalSources;
+    }
+    
     public String getWorkflowExecutionVisualization(){
         String queryVis = "select distinct ?vis where{"
                 + "<"+this.workflowExecutionURI+">"+" <http://www.opmw.org/ontology/hasExecutionDiagram>"+"?vis.}";

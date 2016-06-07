@@ -75,6 +75,7 @@ public class DataNarrativeHTMLSerializer {
         //data view
         htmlPage+= getDataView(d);
         //method view
+        htmlPage+= getMethodView(d);
         //implementation view
         //step view
         //software view
@@ -188,13 +189,49 @@ public class DataNarrativeHTMLSerializer {
 "		  <div id=\"collapse2\" class=\"panel-collapse collapse\">\n" +
 "			<div class=\"panel-body\">\n" +
 "			<p> \n";
-        narrative2+=" The \n" +
-            "			</p>\n" +
+        narrative2+=" The <a href=\"" +d.getResultURI()+"\">"+d.getResultName()+"</a> results have been derived from the ";
+        ArrayList<String> sources = d.getOriginalSourcesForResult(d.getResultURI());
+        if(sources.size()>1){
+            for (String currentSource:sources){
+                String[] aux = currentSource.split(",");
+                //0: uri; 1: location
+                if(sources.indexOf(currentSource) == sources.size()-1){
+                    narrative2+= "and <a href=\""+aux[0]+"\">"+GeneralMethods.getFileNameFromURL(aux[1])+"</a> datasets.";
+                }else{
+                    narrative2+= "<a href=\""+aux[0]+"\">"+GeneralMethods.getFileNameFromURL(aux[1])+"</a>, ";
+                }
+            }
+        }else{
+            //this can be improved
+            String[] aux = sources.get(0).split(",");
+            narrative2+= "<a href=\""+aux[0]+"\">"+GeneralMethods.getFileNameFromURL(aux[1])+"</a> dataset.";
+            
+        }
+        narrative2+="			</p>\n" +
             "			</div>\n" +
             "			\n" +
             "		  </div>\n" +
             "		</div>";
         return narrative2;
+    }
+    
+    private static String getMethodView(DataNarrative d){
+        String narrative3 = "<div class=\"panel panel panel-info\">\n" +
+"		  <div class=\"panel-heading\">\n" +
+"			<h4 class=\"panel-title\">\n" +
+"			  Data Narrative 3: Method view  &nbsp;&nbsp;&nbsp;&nbsp;  <button class=\"SeeMore2 btn btn-primary\" data-toggle=\"collapse\" href=\"#collapse3\">See More</button>\n" +
+"			</h4>\n" +
+"		  </div>\n" +
+"		  <div id=\"collapse3\" class=\"panel-collapse collapse\">\n" +
+"			<div class=\"panel-body\">\n" +
+"			<p> \n";
+        //to do
+        narrative3+="			</p>\n" +
+            "			</div>\n" +
+            "			\n" +
+            "		  </div>\n" +
+            "		</div>";
+        return narrative3;
     }
     
     public static void main (String [] args){
