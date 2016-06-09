@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class that takes a data narrative and creates an html serialization of it.
@@ -189,7 +190,7 @@ public class DataNarrativeHTMLSerializer {
 "		  <div id=\"collapse2\" class=\"panel-collapse collapse\">\n" +
 "			<div class=\"panel-body\">\n" +
 "			<p> \n";
-        narrative2+=" The <a href=\"" +d.getResultURI()+"\">"+d.getResultName()+"</a> results have been derived from the ";
+        narrative2+=" The <a href=\"" +d.getResultURI()+"\">"+GeneralMethods.splitCamelCase(d.getResultName())+"</a> results have been derived from the ";
         ArrayList<String> sources = d.getOriginalSourcesForResult(d.getResultURI());
         if(sources.size()>1){
             for (String currentSource:sources){
@@ -215,6 +216,15 @@ public class DataNarrativeHTMLSerializer {
         return narrative2;
     }
     
+    /**
+     * Template for generating a method view. The template is:
+     * The W method performs N main types of analyses on the original datasets.
+     * The (main Step 1, main step N) produce the main results of the workflow, 
+     * after (motif enumeration goes here, grouped by motif and result respectively).
+     * The R results are the result of the Step component, a Motif goes here step.
+     * @param d
+     * @return 
+     */
     private static String getMethodView(DataNarrative d){
         String narrative3 = "<div class=\"panel panel panel-info\">\n" +
 "		  <div class=\"panel-heading\">\n" +
@@ -225,7 +235,82 @@ public class DataNarrativeHTMLSerializer {
 "		  <div id=\"collapse3\" class=\"panel-collapse collapse\">\n" +
 "			<div class=\"panel-body\">\n" +
 "			<p> \n";
-        //to do
+        //retrieve: steps of the workflow (chain)
+        ArrayList<String> allProcesses = d.getProcesses();
+        narrative3 += "The method <a href=\""+d.getMethodURI()+"\">"+GeneralMethods.splitCamelCase(d.getMethodName())+"</a> ";
+        //motif, steps that are that motif.
+        HashMap<String, ArrayList<String>> motifsAndProcesses = new HashMap<>();
+        ArrayList<String> process;
+        for(String p:allProcesses){
+            ArrayList<String> motifs = d.getMotifsForProcess(p);
+            if(!motifs.isEmpty()){
+                for(String m:motifs){
+                    if(motifsAndProcesses.containsKey(m)){
+                        process = motifsAndProcesses.get(m);
+                    }else{
+                        process = new ArrayList<>();
+                    }
+                    process.add(p);
+                    motifsAndProcesses.put(m, process);
+                }
+            }
+        }
+        int dataAnalysisMotifs = 0;
+        if(motifsAndProcesses.containsKey("http://purl.org/net/wf-motifs#DataAnalysis")){
+                dataAnalysisMotifs = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis").size();
+        }
+        if(dataAnalysisMotifs>0){
+            narrative3+= "performs "+dataAnalysisMotifs +" main types of analysis on the input datasets. ";
+            //if there is only one step, add the rest of the motifs like: after blah and blah, the step is executed.
+            if(dataAnalysisMotifs == 1){
+                //TO DO!!!:
+                //retrieve de steps that depend on the main one (easy query)
+            }else{
+                //if there are more, then just say their order
+                ArrayList<String> m = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis");
+                //reorder m according to the dependencies.
+                m = d.reorderResults(m);
+                for(String currentStep:m){
+                    int i = m.indexOf(currentStep);
+                    if(i==0){
+                        narrative3+="First, the <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a> step processes the datasets, then the data is analyzed by the";
+                    }
+                    else if(i>=1 &&i<m.size()-1){
+                        narrative3+=" <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a>,";
+                    }else{
+                        if(m.size()>2){
+                            narrative3 = narrative3.substring(0, narrative3.length()-1);
+                            narrative3 +=" steps and finally, ";
+                        }
+                        narrative3+=" <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a> produces the end results.";
+                    }
+                }
+            }
+        }else{
+            narrative3+= "does not have one main type of analysis step.";
+        }
+        
+        narrative3+="</p><p> The <a href=\"" +d.getResultURI()+"\">"+GeneralMethods.splitCamelCase(d.getResultName())+"</a> results are the product of the ";
+        String [] aux = d.getMethodProcessForResult(d.getResultURI()).split(",");
+        String methodStepURI = aux[0];
+        String methodName = GeneralMethods.splitCamelCase(aux[1]);
+        ArrayList<String> motifsOfStep = d.getMotifsForProcess(methodStepURI);
+        narrative3+="<a href=\""+methodStepURI+"\">"+methodName+"</a>";
+        if(!motifsOfStep.isEmpty()){
+            narrative3+=", a ";
+            if(motifsOfStep.size()>1){
+                for(String a:motifsOfStep){
+                    if(motifsOfStep.indexOf(a) == motifsOfStep.size()-1){
+                        narrative3+=" and "+"<a href=\""+a+"\">"+GeneralMethods.splitCamelCase(a.replace("http://purl.org/net/wf-motifs#", ""))+"</a>";
+                    }else{
+                        narrative3+="<a href=\""+a+"\">"+GeneralMethods.splitCamelCase(a.replace("http://purl.org/net/wf-motifs#", ""))+"</a>"+",";
+                    }
+                }
+            }else{
+                narrative3+="<a href=\""+motifsOfStep.get(0)+"\">"+GeneralMethods.splitCamelCase(motifsOfStep.get(0).replace("http://purl.org/net/wf-motifs#", ""))+"</a>";
+            }
+            narrative3+=" step.";
+        }
         narrative3+="			</p>\n" +
             "			</div>\n" +
             "			\n" +

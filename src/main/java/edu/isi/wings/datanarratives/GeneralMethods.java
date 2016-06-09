@@ -72,7 +72,7 @@ public class GeneralMethods {
         for (String s : result) {
             stringWithSpaces+=s+" ";
         }
-        return stringWithSpaces;
+        return stringWithSpaces.trim();
     }
     
     public static String getFileNameFromURL(String input){

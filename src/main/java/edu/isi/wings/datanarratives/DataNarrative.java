@@ -6,12 +6,17 @@
 package edu.isi.wings.datanarratives;
 
 import com.hp.hpl.jena.ontology.OntModel;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *  Class designed to represent the contents of a data narrative and retrieve them 
@@ -25,12 +30,13 @@ public class DataNarrative {
     private final String workflowTemplateURI;
     private String ontoSoftRepository;//ontosoft repo where the software definitions are stored
     private String stepLabelsFile;//labels for steps and artifacts
-    private String doiFile;//file associating dois to artifacts
-    private String motifAnnotations;//anotatedMotis
+    private final String doiFile;//file associating dois to artifacts
+    private final String motifAnnotations;//anotatedMotis
     private final String resultURI; //main result from which we want to produce the narrative
     private OntModel knowledgeBase;
     //other attributes useful for handling the narrative without doing queries constantly
     private String resultName;
+    private ArrayList<String> processes;
 
     //for testing purposes
     public DataNarrative() {
@@ -227,19 +233,17 @@ public class DataNarrative {
         return null;
     }
     
-    public String getMotifForProcess(String processURI){
+    public ArrayList<String> getMotifsForProcess(String processURI){
         String queryDOI = "select distinct ?motif where{"
                 + "<"+processURI+">"+" <http://purl.org/net/wf-motifs#hasMotif>"+"?m."
                 + "?m a ?motif}";
         ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, queryDOI);
-        String motifs = "";
+        ArrayList<String> motifs = new ArrayList<>();
         while (rs.hasNext()){
             QuerySolution qs = rs.nextSolution();
-            motifs+= qs.getResource("?motif").getURI()+",";
+            motifs.add(qs.getResource("?motif").getURI());
         }
-        if(!"".equals(motifs)){
-            motifs = motifs.substring(0, motifs.length()-1);//remove last ","
-        }
+        
         return motifs;
     }
     
@@ -331,6 +335,137 @@ public class DataNarrative {
         ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, query);
         ResultSetFormatter.out(System.out, rs);
     }
+    
+    /**
+     * Initializaes the processes HashMap from the knowledgeBase.
+     * The processes are from the workflow of the result we aim to track.
+     */
+    private void retrieveMethodProcesses(){
+        processes = new ArrayList<>();
+        String q = "select ?process ?previous "
+                + "where{"
+                + "<"+this.resultURI+"> <http://openprovenance.org/model/opmo#account> ?a."
+                + "?p <http://openprovenance.org/model/opmo#account> ?a."
+                + "?p a <http://www.opmw.org/ontology/WorkflowExecutionProcess>."
+                + "?p <http://www.opmw.org/ontology/correspondsToTemplateProcess> ?process."
+               // + "optional{?p <http://purl.org/net/opmv/ns#used>/<http://purl.org/net/opmv/ns#wasGeneratedBy> ?pre."
+                //+ "?pre <http://www.opmw.org/ontology/correspondsToTemplateProcess> ?previous}"                
+                + "}";
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, q);
+        while(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            String process; 
+            process = qs.getResource("process").getURI();
+//            if(qs.getResource("previous")!=null){
+//                previous = qs.getResource("previous").getURI();
+//            }
+            processes.add(process);
+        }
+        //System.out.println("Done");
+        
+    }
+
+    public ArrayList<String> getProcesses() {
+        if(processes==null || processes.isEmpty()){
+            retrieveMethodProcesses();
+        }
+        return processes;
+    }
+    
+    public ArrayList<String> reorderResults(ArrayList<String> m) {
+        //retrieve the processes in m that don't depend on the rest.
+        ArrayList<String> orderedList = new ArrayList<>();
+        int i=0;
+        while(m.size()>0){
+            boolean depends = false;
+            String p1 = m.get(i);
+            for(String p:m){
+                if(!p.equals(p1)){
+                    if(workflowStepDependsOn(p1, p)){
+                        depends = true;
+                    }
+                }
+            }
+            if(!depends){
+                orderedList.add(p1);
+                m.remove(i);
+                i=0;
+                //System.out.println(p1);
+            }else{
+                i++;
+            }   
+        }
+        return orderedList;
+//        for(String p1:m){
+//            boolean depends = false;
+//            for(String p:m){
+//                if(!p.equals(p1)){
+//                    if(workflowStepDependsOn(p1, p)){
+//                        depends = true;
+//                    }
+//                }
+//            }
+//            if(!depends){
+//                orderedList.add(p1);
+//                //System.out.println(p1);
+//            }
+//        }
+        //for the rest, retrieve the list of the processes they depend on, and compare
+    }
+    
+    /**
+     * Method that returns true is the process p1 depends on p2 (at any length in the graph)
+     * @param p1
+     * @param p2
+     * @return 
+     */
+    public boolean workflowStepDependsOn(String p1, String p2){
+        String query = "ASK{<"+p1+"> (<http://www.opmw.org/ontology/uses>/<http://www.opmw.org/ontology/isGeneratedBy>)* <"+p2+">.}";
+        Query q = QueryFactory.create(query);
+        QueryExecution qe = QueryExecutionFactory.create(q, knowledgeBase);
+        return qe.execAsk(); 
+    }
+    
+    
+
+    
+    /**
+     * Method that returns the step of the workflow which produced the result
+     * in the execution. We return the URI, name
+     * @param result 
+     * @return  
+     */
+    public String getMethodProcessForResult(String result){
+        String methodStepURIAndName="";
+        String q = "select ?step ?name "
+                + "where{"
+                + "<"+result+"> <http://purl.org/net/opmv/ns#wasGeneratedBy> ?p."
+                + "?p <http://www.opmw.org/ontology/correspondsToTemplateProcess> ?step."
+                + "?step <http://www.w3.org/2000/01/rdf-schema#label> ?name."                
+                + "}"; 
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, q);
+        while(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            methodStepURIAndName = qs.getResource("step").getURI();
+            methodStepURIAndName+=","+qs.getLiteral("name").getString().replace("Workflow template process ", "");
+        }
+        return methodStepURIAndName;
+    }
+    
+    public String getNameForStep(String step){
+        String methodStepURIAndName="";
+        String q = "select ?name "
+                + "where{"
+                + "<"+step+"> <http://www.w3.org/2000/01/rdf-schema#label> ?name."                
+                + "}"; 
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, q);
+        while(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            methodStepURIAndName+=qs.getLiteral("name").getString().replace("Workflow template process ", "");
+        }
+        return methodStepURIAndName;
+    }
+    
     public static void main(String[] args){
         DataNarrative d = new DataNarrative();
 //        String q = "select ?label ?wf ?templ ?loc ?doi "
@@ -347,17 +482,28 @@ public class DataNarrative {
 //                + "optional{?input <http://www.opmw.org/ontology/hasLocation>?loc}."
 //                + "FILTER NOT EXISTS {?input <http://purl.org/net/opmv/ns#wasGeneratedBy> ?process}."
 //                + "}";
-        String q = "select ?step ?f ?i ?o "
-                + "where{"
-                + "?step <http://purl.org/net/wf-motifs#hasMotif> ?m."
-                + "?m a ?f."
-                + "?step <http://www.opmw.org/ontology/uses> ?i."
-                + "?o <http://www.opmw.org/ontology/isGeneratedBy> ?step."
-                + "}";
-        d.resultsForQuery(q);
+//        String q = "select ?step ?f ?i ?o "
+//                + "where{"
+//                + "?step <http://purl.org/net/wf-motifs#hasMotif> ?m."
+//                + "?m a ?f."
+//                + "?step <http://www.opmw.org/ontology/uses> ?i."
+//                + "?o <http://www.opmw.org/ontology/isGeneratedBy> ?step."
+//                + "}";
+//        d.resultsForQuery(q);
+       // d.retrieveMethodProcesses();
         //System.out.println(d.getDOI(d.resultURI));
         //System.out.println(d.getMotifForProcess("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_SIGRESULTMERGER"));
+        //System.out.println(d.workflowStepDependsOn("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES", "http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV2"));
+        //System.out.println(d.workflowStepDependsOn("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES", "http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_SIGRESULTMERGER"));
+        ArrayList<String> a = new ArrayList<>();
+        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_DOCKING");
+        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES");
+        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV21");        
+        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV2");
+        
+        d.reorderResults(a);
     }
+
 
 }
 
