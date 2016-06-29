@@ -72,12 +72,13 @@ public class DataNarrativeHTMLSerializer {
         htmlPage+="<div class=\"col-xs-12 col-md-12\">\n" +
 "	  <div class=\"panel-group\">\n";
         //insert data narratives here
-        htmlPage+= getExecutionView(d);
+        htmlPage+= getExecutionNarrative(d);
         //data view
-        htmlPage+= getDataView(d);
+        htmlPage+= getDataNarrative(d);
         //method view
-        htmlPage+= getMethodView(d);
+        htmlPage+= getMethodNarrative(d);
         //implementation view
+        htmlPage+= getImplementationdNarrative(d);
         //step view
         //software view
         htmlPage+="</div>\n" +
@@ -130,7 +131,7 @@ public class DataNarrativeHTMLSerializer {
      * @param d
      * @return 
      */
-    private static String getExecutionView(DataNarrative d){
+    private static String getExecutionNarrative(DataNarrative d){
         String resultDOI = d.getDOI(d.getResultURI());
         String narrative1 = "<div class=\"panel panel panel-info\">\n" +
 "		  <div class=\"panel-heading\">\n" +
@@ -180,7 +181,7 @@ public class DataNarrativeHTMLSerializer {
         return narrative1;
     }
     
-    public static String getDataView(DataNarrative d){
+    public static String getDataNarrative(DataNarrative d){
         String narrative2 = "<div class=\"panel panel panel-info\">\n" +
 "		  <div class=\"panel-heading\">\n" +
 "			<h4 class=\"panel-title\">\n" +
@@ -225,7 +226,7 @@ public class DataNarrativeHTMLSerializer {
      * @param d
      * @return 
      */
-    private static String getMethodView(DataNarrative d){
+    private static String getMethodNarrative(DataNarrative d){
         String narrative3 = "<div class=\"panel panel panel-info\">\n" +
 "		  <div class=\"panel-heading\">\n" +
 "			<h4 class=\"panel-title\">\n" +
@@ -260,14 +261,53 @@ public class DataNarrativeHTMLSerializer {
                 dataAnalysisMotifs = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis").size();
         }
         if(dataAnalysisMotifs>0){
-            narrative3+= "performs "+dataAnalysisMotifs +" main types of analysis on the input datasets. ";
+            
             //if there is only one step, add the rest of the motifs like: after blah and blah, the step is executed.
+            ArrayList<String> m = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis");
+            //dataAnalysisMotifs = 1; //for tests 
             if(dataAnalysisMotifs == 1){
-                //TO DO!!!:
+                String mainProcess = m.get(0);
+                //tests
+                //mainProcess = "http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES";
+                narrative3+= "performs "+dataAnalysisMotifs +" main type of analysis on the input datasets. The "+
+                        " <a href=\""+mainProcess+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(mainProcess))+"</a> step produces the main results of the workflow";
+                ArrayList<String> dependencies = d.getDependenciesForWorkflowStep(mainProcess);
+                //remove the main step
+                dependencies.remove(mainProcess);//just in case
+                if(dependencies.size()>0){
+                    ArrayList<String> motifs;
+                    if(dependencies.size() ==1){
+                        String dep = dependencies.get(0);
+                        motifs = d.getMotifsForProcess(dep);
+                        if(motifs.size()>0){//at this stage we only consider 1 motif per step.
+                            narrative3+=", after a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.getFileNameFromURL(dep)+").";
+                        }
+                    }else{
+                        String textToAdd ="";
+                        for(String dep:dependencies){
+                            motifs = d.getMotifsForProcess(dep);
+                            if("".equals(textToAdd) && !motifs.isEmpty()){
+                                textToAdd +=", after";
+                            }
+                            if(dependencies.indexOf(dep)==dependencies.size()-1){
+                                if(!motifs.isEmpty()){//at this stage we only consider 1 motif per step.
+                                    textToAdd+="and a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.splitCamelCase(d.getNameForStep(dep))+").";
+                                }
+                            }else
+                                if(!motifs.isEmpty()){//at this stage we only consider 1 motif per step.
+                                    textToAdd+=" a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.splitCamelCase(d.getNameForStep(dep))+"),";
+                                }
+                        }
+                        narrative3 += textToAdd;
+                    }
+                }else{
+                    narrative3+=".";
+                }
                 //retrieve de steps that depend on the main one (easy query)
             }else{
+                narrative3+= "performs "+dataAnalysisMotifs +" main types of analysis on the input datasets. ";
                 //if there are more, then just say their order
-                ArrayList<String> m = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis");
+                
                 //reorder m according to the dependencies.
                 m = d.reorderResults(m);
                 for(String currentStep:m){
@@ -317,6 +357,154 @@ public class DataNarrativeHTMLSerializer {
             "		  </div>\n" +
             "		</div>";
         return narrative3;
+    }
+    
+    /**
+     * Template for generating an implementation narrative. The template is similar to the 
+     * method one, but stating the software used for each of the steps:
+     * The W method performs N main types of analyses on the original datasets.
+     * The (main Step 1, main step N) produce the main results of the workflow, 
+     * after (motif enumeration goes here, grouped by motif and result respectively).
+     * The R results are the result of the Step component, a Motif goes here step.
+     * @param d
+     * @return 
+     */
+    private static String getImplementationdNarrative(DataNarrative d){
+        String narrative4 = "<div class=\"panel panel panel-info\">\n" +
+"		  <div class=\"panel-heading\">\n" +
+"			<h4 class=\"panel-title\">\n" +
+"			  Data Narrative 4: Implementation view  &nbsp;&nbsp;&nbsp;&nbsp;  <button class=\"SeeMore2 btn btn-primary\" data-toggle=\"collapse\" href=\"#collapse4\">See More</button>\n" +
+"			</h4>\n" +
+"		  </div>\n" +
+"		  <div id=\"collapse4\" class=\"panel-collapse collapse\">\n" +
+"			<div class=\"panel-body\">\n" +
+"			<p> \n";
+        //retrieve: steps of the workflow (chain)
+        ArrayList<String> allProcesses = d.getProcesses();
+        narrative4 += "The method <a href=\""+d.getMethodURI()+"\">"+GeneralMethods.splitCamelCase(d.getMethodName())+"</a> ";
+        //motif, steps that are that motif.
+        HashMap<String, ArrayList<String>> motifsAndProcesses = new HashMap<>();
+        ArrayList<String> process;
+        for(String p:allProcesses){
+            ArrayList<String> motifs = d.getMotifsForProcess(p);
+            if(!motifs.isEmpty()){
+                for(String m:motifs){
+                    if(motifsAndProcesses.containsKey(m)){
+                        process = motifsAndProcesses.get(m);
+                    }else{
+                        process = new ArrayList<>();
+                    }
+                    process.add(p);
+                    motifsAndProcesses.put(m, process);
+                }
+            }
+        }
+        String implementations =" ";
+        int dataAnalysisMotifs = 0;
+        if(motifsAndProcesses.containsKey("http://purl.org/net/wf-motifs#DataAnalysis")){
+                dataAnalysisMotifs = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis").size();
+        }
+        if(dataAnalysisMotifs>0){
+            
+            //if there is only one step, add the rest of the motifs like: after blah and blah, the step is executed.
+            ArrayList<String> m = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis");
+            //dataAnalysisMotifs = 1; //for tests 
+            if(dataAnalysisMotifs == 1){
+                String mainProcess = m.get(0);
+                //tests
+                //mainProcess = "http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES";
+                narrative4+= "performs "+dataAnalysisMotifs +" main type of analysis on the input datasets. The "+
+                        " <a href=\""+mainProcess+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(mainProcess))+"</a> step produces the main results of the workflow";
+                ArrayList<String> dependencies = d.getDependenciesForWorkflowStep(mainProcess);
+                //remove the main step
+                dependencies.remove(mainProcess);//just in case
+                if(dependencies.size()>0){
+                    ArrayList<String> motifs;
+                    if(dependencies.size() ==1){
+                        String dep = dependencies.get(0);
+                        motifs = d.getMotifsForProcess(dep);
+                        if(motifs.size()>0){//at this stage we only consider 1 motif per step.
+                            narrative4+=", after a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.getFileNameFromURL(dep)+").";
+                        }
+                    }else{
+                        String textToAdd ="";
+                        for(String dep:dependencies){
+                            motifs = d.getMotifsForProcess(dep);
+                            if("".equals(textToAdd) && !motifs.isEmpty()){
+                                textToAdd +=", after";
+                            }
+                            if(dependencies.indexOf(dep)==dependencies.size()-1){
+                                if(!motifs.isEmpty()){//at this stage we only consider 1 motif per step.
+                                    textToAdd+="and a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.splitCamelCase(d.getNameForStep(dep))+").";
+                                }
+                            }else
+                                if(!motifs.isEmpty()){//at this stage we only consider 1 motif per step.
+                                    textToAdd+=" a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.splitCamelCase(d.getNameForStep(dep))+"),";
+                                }
+                        }
+                        narrative4 += textToAdd;
+                    }
+                }else{
+                    narrative4+=".";
+                }
+                //retrieve de steps that depend on the main one (easy query)
+            }else{
+                narrative4+= "performs "+dataAnalysisMotifs +" main types of analysis on the input datasets. ";
+                //if there are more, then just say their order
+                
+                //reorder m according to the dependencies.
+                m = d.reorderResults(m);
+                for(String currentStep:m){
+                    int i = m.indexOf(currentStep);
+                    if(i==0){
+                        narrative4+="First, the <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a> step processes the datasets, then the data is analyzed by the";
+                    }
+                    else if(i>=1 &&i<m.size()-1){
+                        narrative4+=" <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a>,";
+                    }else{
+                        if(m.size()>2){
+                            narrative4 = narrative4.substring(0, narrative4.length()-1);
+                            narrative4 +=" steps and finally, ";
+                        }
+                        narrative4+=" <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a> produces the end results.";
+                    }
+                    implementations +=" The "+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+ " component has been implemented with the <a href=\""+d.getImplementationURL(currentStep)+"\">" +d.getImplementationName(currentStep)+"</a> software.";
+                }
+            }
+        }else{
+            narrative4+= "does not have one main type of analysis step.";
+        }
+        narrative4 += implementations;
+        narrative4+="</p><p> The <a href=\"" +d.getResultURI()+"\">"+GeneralMethods.splitCamelCase(d.getResultName())+"</a> results are the product of the ";
+        String [] aux = d.getMethodProcessForResult(d.getResultURI()).split(",");
+        String methodStepURI = aux[0];
+        String methodName = GeneralMethods.splitCamelCase(aux[1]);
+        ArrayList<String> motifsOfStep = d.getMotifsForProcess(methodStepURI);
+        narrative4+="<a href=\""+methodStepURI+"\">"+methodName+"</a>";
+        if(!motifsOfStep.isEmpty()){
+            narrative4+=", a ";
+            if(motifsOfStep.size()>1){
+                for(String a:motifsOfStep){
+                    if(motifsOfStep.indexOf(a) == motifsOfStep.size()-1){
+                        narrative4+=" and "+"<a href=\""+a+"\">"+GeneralMethods.splitCamelCase(a.replace("http://purl.org/net/wf-motifs#", ""))+"</a>";
+                    }else{
+                        narrative4+="<a href=\""+a+"\">"+GeneralMethods.splitCamelCase(a.replace("http://purl.org/net/wf-motifs#", ""))+"</a>"+",";
+                    }
+                }
+            }else{
+                narrative4+="<a href=\""+motifsOfStep.get(0)+"\">"+GeneralMethods.splitCamelCase(motifsOfStep.get(0).replace("http://purl.org/net/wf-motifs#", ""))+"</a>";
+            }
+            narrative4+=" step.";
+        }
+        //implementation
+        narrative4 += " The "+methodName+" component has been implemented with the <a href=\""+d.getImplementationURL(methodStepURI)+"\">" +d.getImplementationName(methodStepURI)+"</a> software.";
+        
+        narrative4+="			</p>\n" +
+            "			</div>\n" +
+            "			\n" +
+            "		  </div>\n" +
+            "		</div>";
+        return narrative4;
     }
     
     public static void main (String [] args){

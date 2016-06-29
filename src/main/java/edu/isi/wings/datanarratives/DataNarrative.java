@@ -16,7 +16,6 @@ import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  *  Class designed to represent the contents of a data narrative and retrieve them 
@@ -43,8 +42,8 @@ public class DataNarrative {
         this.workflowExecutionURI="http://www.opmw.org/export/resource/WorkflowExecutionAccount/ACCOUNT1348628778528";
         this.workflowTemplateURI="http://www.opmw.org/export/resource/WorkflowTemplate/ABSTRACTGLOBALWORKFLOW2";
         this.resultURI = "http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6";
-        this.doiFile = "C:\\Users\\dgarijo\\Dropbox\\NetBeansProjects\\DatNarratives\\examples\\highlyConnectedDrugs\\doiAnnotations.ttl";
-        this.motifAnnotations = "C:\\Users\\dgarijo\\Dropbox\\NetBeansProjects\\DatNarratives\\examples\\highlyConnectedDrugs\\motifAnnotations.ttl";
+        this.doiFile = "examples\\highlyConnectedDrugs\\doiAnnotations.ttl";
+        this.motifAnnotations = "examples\\highlyConnectedDrugs\\motifAnnotations.ttl";
         buildKnowledgeBase();
     }
 
@@ -342,7 +341,7 @@ public class DataNarrative {
      */
     private void retrieveMethodProcesses(){
         processes = new ArrayList<>();
-        String q = "select ?process ?previous "
+        String q = "select ?process "
                 + "where{"
                 + "<"+this.resultURI+"> <http://openprovenance.org/model/opmo#account> ?a."
                 + "?p <http://openprovenance.org/model/opmo#account> ?a."
@@ -372,6 +371,11 @@ public class DataNarrative {
         return processes;
     }
     
+    /**
+     * Method that returns the steps in the workflow in the order of execution.
+     * @param m
+     * @return 
+     */
     public ArrayList<String> reorderResults(ArrayList<String> m) {
         //retrieve the processes in m that don't depend on the rest.
         ArrayList<String> orderedList = new ArrayList<>();
@@ -426,6 +430,27 @@ public class DataNarrative {
         return qe.execAsk(); 
     }
     
+    /**
+     * Method that given a step, returns all the preceeding steps in the workflow
+     * @param step
+     * @return 
+     */
+    public ArrayList<String> getDependenciesForWorkflowStep(String step){
+        processes = new ArrayList<>();
+        String q = "select ?step "
+                + "where{"
+                + "<"+step+"> (<http://www.opmw.org/ontology/uses>/<http://www.opmw.org/ontology/isGeneratedBy>)* ?step."
+                + "}";
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, q);
+        while(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            String process; 
+            process = qs.getResource("step").getURI();
+            processes.add(process);
+        }
+        return processes;
+    }
+    
     
 
     
@@ -466,6 +491,47 @@ public class DataNarrative {
         return methodStepURIAndName;
     }
     
+    public String getImplementationName (String templateStepURI){
+        String q = "select ?name "
+                + "where {"
+                + "?execStep  <http://www.opmw.org/ontology/correspondsToTemplateProcess> <"+templateStepURI+">."
+                + "?execStep <http://www.opmw.org/ontology/hasExecutableComponent> ?e."
+                + "?e <http://www.w3.org/2000/01/rdf-schema#label> ?name.}";
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, q);
+        if(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            return qs.getLiteral("name").getString();
+        }
+        return "implementation";
+    }
+    
+    public String getImplementationURL (String templateStepURI){
+        String q = "select ?impl "
+                + "where {"
+                + "?execStep  <http://www.opmw.org/ontology/correspondsToTemplateProcess> <"+templateStepURI+">."
+                + "?execStep <http://www.opmw.org/ontology/hasExecutableComponent> ?e."
+                + "?e <http://www.opmw.org/ontology/hasLocation> ?impl.}";
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, q);
+        if(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            return qs.getLiteral("impl").getString();
+        }
+        return null;
+    }
+    
+    public String getProcessForArtifact(String artifact){
+        String q = "select ?p "
+                + "where{"
+                + "<"+artifact+"> <http://purl.org/net/opmv/ns#wasGeneratedBy> ?p."
+                + "}"; 
+        ResultSet rs = GeneralMethods.queryLocalRepository(knowledgeBase, q);
+        while(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            return qs.getResource("p").getURI();            
+        }
+        return null;
+    }
+    
     public static void main(String[] args){
         DataNarrative d = new DataNarrative();
 //        String q = "select ?label ?wf ?templ ?loc ?doi "
@@ -495,13 +561,17 @@ public class DataNarrative {
         //System.out.println(d.getMotifForProcess("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_SIGRESULTMERGER"));
         //System.out.println(d.workflowStepDependsOn("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES", "http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV2"));
         //System.out.println(d.workflowStepDependsOn("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES", "http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_SIGRESULTMERGER"));
-        ArrayList<String> a = new ArrayList<>();
-        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_DOCKING");
-        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES");
-        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV21");        
-        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV2");
-        
-        d.reorderResults(a);
+//        ArrayList<String> a = new ArrayList<>();
+//        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_DOCKING");
+//        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES");
+//        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV21");        
+//        a.add("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV2");
+//        
+//        d.reorderResults(a);
+        ArrayList<String> aux = d.getDependenciesForWorkflowStep("http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES");
+        for(String s:aux){
+            System.out.println(s);
+        }
     }
 
 
