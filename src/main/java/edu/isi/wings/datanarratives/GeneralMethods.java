@@ -11,59 +11,19 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.util.FileManager;
-import java.io.InputStream;
 
 /**
  *
  * @author dgarijo
  */
 public class GeneralMethods {
-    /**
-     * Method for querying a SPARQL repository
-     * @param endpointURL repository URI
-     * @param queryIn query to perforn
-     * @return result of the query
-     */
-    public static ResultSet queryOnlineRepository(String endpointURL, String queryIn){
-        Query query = QueryFactory.create(queryIn);
-        //System.out.println(queryIn);
-        QueryExecution qe = QueryExecutionFactory.sparqlService(endpointURL, query);
-        ResultSet rs = qe.execSelect();        
-        return rs;
-    }
-    
-    public static void constructWithOnlineRepository(String endpointURL, String queryIn, OntModel m){
-        Query query = QueryFactory.create(queryIn);
-        //System.out.println(queryIn);
-        QueryExecution qe = QueryExecutionFactory.sparqlService(endpointURL, query);
-        qe.execConstruct(m);        
-    }
-    
-    /**
-     * Method to perform a SELECT query to a local repository
-     * @param model which we want to query
-     * @param queryIn query to be launched at the model
-     * @return results
-     */
+    /*leaving this for compatibility, but will be removed**/
     public static ResultSet queryLocalRepository(OntModel model, String queryIn){
         Query query = QueryFactory.create(queryIn);
         //System.out.println(queryIn);
         QueryExecution qe = QueryExecutionFactory.create(query, model);
         ResultSet rs = qe.execSelect(); 
         return rs;
-    }
-    
-    public static void readFileIntoKnowledgeBase (OntModel model, String file){
-        InputStream in = FileManager.get().open(file);
-        if (in == null) {
-            throw new IllegalArgumentException("DOI File: " + file + " not found");
-        }
-        try{
-            model.read(in, null, "TTL");
-        }catch(Exception e){
-            model.read(in, null);//rdf/xml by default
-        }
     }
     
     public static String splitCamelCase(String input){
@@ -80,8 +40,22 @@ public class GeneralMethods {
         
     }
     
-    public static void main(String[] args){
-        System.out.println(splitCamelCase("highlyConnectedDrugsVALUE"));
-        System.out.println(getFileNameFromURL("http://www.opmw.org/export/resource/WorkflowExecutionArtifact/DE58909D2E17DF26F0BF79D75E12C2D6 "));
+    /**
+     * This function removes everything after the hypen of a string. Used to clean up names.
+     * @param input
+     * @return 
+     */
+    public static String removeHypen(String input){
+        String clean = input;
+        if(input.contains("-")){
+            clean = clean.substring(0,input.lastIndexOf("-"));
+        }
+        return clean;
+        
     }
+    
+//    public static void main(String[] args){
+//        System.out.println(splitCamelCase("highlyConnectedDrugsVALUE"));
+//        System.out.println(getFileNameFromURL("http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/WORDFILE1475897421962"));
+//    }
 }
