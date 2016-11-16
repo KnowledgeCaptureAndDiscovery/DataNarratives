@@ -1,8 +1,24 @@
+/*
+ *  Copyright 2016 Daniel Garijo Verdejo, Information Sciences Institute, USC
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
 package edu.isi.wings.datanarratives;
 
-import Elements.Resource;
-import Elements.Step;
-import Elements.WorkflowTemplate;
+import edu.isi.wings.elements.Resource;
+import edu.isi.wings.elements.Software;
+import edu.isi.wings.elements.Step;
+import edu.isi.wings.elements.StepCollection;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,7 +26,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Class that takes a data narrative and creates an html serialization of it.
@@ -19,7 +34,7 @@ import java.util.HashMap;
  */
 public class DataNarrativeHTMLSerializer {
     
-    private enum resourceTypes {executionArtifact, parameter, template, motif, processAndMotif, templateStepAndDependency, string, other};//other refers to the default behavior
+    private enum resourceTypes {executionArtifact, parameter, template, motif, processAndMotif, templateStepAndDependency, executionAndImplentation,executionAndCode, string, other};//other refers to the default behavior
     
     public static void dataNarrativeToHTML(DataNarrative d, String outPath){
         String htmlPage = Constants.HTML_HEAD;
@@ -40,9 +55,9 @@ public class DataNarrativeHTMLSerializer {
         //step view (abstract) TO DO
         htmlPage+= getAbstractMethodNarrative(d);
         //implementation view
-        //htmlPage+= getImplementationdNarrative(d);
+        htmlPage+= getImplementationdNarrative(d);
+        htmlPage+= getSoftwareNarrative(d);
         
-        //software view TO DO
         htmlPage+="</div>\n" +
 "	</div>";
         
@@ -106,13 +121,13 @@ public class DataNarrativeHTMLSerializer {
             currentResource++;
             switch(type){
                 case executionArtifact:
-                    list+= "dataset "+serializeResource((Resource)s, type);
+                    list+= "dataset "+serializeResource(d,(Resource)s, type);
                     if(showVariables){
-                        list+= "(variable "+d.getVariableNameForResource(((Resource)s))+")";
+                        list+= hideText("(input "+d.getVariableNameForResource(((Resource)s))+")");
                     }
                     break;
                 case parameter: 
-                    list+="parameter "+serializeResource((Resource)s, type);
+                    list+=serializeResource(d,(Resource)s, type);//removed "parameter"
                     if(showValue){
                         list+= " set to "+((Resource)s).getValue();
                     }
@@ -124,14 +139,23 @@ public class DataNarrativeHTMLSerializer {
                     list+=s;
                     break;
                 case templateStepAndDependency:
-                    list+= serializeResource((Resource)s, type);
+                    list+= serializeResource(d,(Resource)s, type);
                     ArrayList<Step> dependencies = d.getStepDependencies((Step)s, true);
                     if(!dependencies.isEmpty()){
-                        list+=" (using data from "+serializeResourceList(d, dependencies, resourceTypes.other, false, false)+")";
+                        list+=hideText(" (using data from "+serializeResourceList(d, dependencies, resourceTypes.other, false, false)+")");
+                    }
+                    break;
+                case executionAndImplentation:
+                    Step exec, abs;
+                    exec = (Step)s;
+                    abs = exec.getImplementationOf();
+                    list += serializeResource(d,exec, type);
+                    if(!exec.getName().equals(abs.getName())){//only show if implementation is different from the original
+                        list+= hideText(" (implementation of "+serializeResource(d,abs, type)+")");
                     }
                     break;
                 default:
-                    list+= serializeResource((Resource)s, type);
+                    list+= serializeResource(d,(Resource)s, type);
                     break;
             }
             if(resourcesToList.size()>=2 && currentResource < resourcesToList.size()){
@@ -145,7 +169,7 @@ public class DataNarrativeHTMLSerializer {
         return list;
     }
     
-    private static String serializeResource(Resource r, resourceTypes type){
+    private static String serializeResource(DataNarrative d, Resource r, resourceTypes type){
         switch (type){
             case executionArtifact:
                 return "<a href=\""+r.getLocation()+"\">"+GeneralMethods.getFileNameFromURL(r.getLocation())+"</a> ";
@@ -155,12 +179,33 @@ public class DataNarrativeHTMLSerializer {
                 //templates may have an hyphen, remove
                 return "<a href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase(GeneralMethods.removeHypen(r.getName()))+"</a> ";
             case processAndMotif:
-                String serialization = serializeResource(r, resourceTypes.other);
+                String serialization = serializeResource(d, r, resourceTypes.other);
                 ArrayList<String> motifs = ((Step)r).getMotifs();
                 if(motifs.size()>0){
-                    serialization += " ("+ serializeResourceList(null,motifs, resourceTypes.motif,false,false)+" motif)";
+                    serialization += hideText(" (a type of "+ serializeResourceList(null,motifs, resourceTypes.motif,false,false)+" step)");
                 }
                 return serialization;
+            case executionAndCode:
+                    String s = GeneralMethods.splitCamelCase((r.getName())) +" uses a <a href=\""+((Step)r).getCodeLocation()+"\">bash script</a> ";
+                    //Note: labels HAVE to be EXACTLLY the same
+                    Software soft = d.getSoftwareMetadata((Step)r);
+                    if(!soft.getProgrammingLanguage().equals("")){
+                        s+= "and a "+soft.getProgrammingLanguage()+" ";
+                    }
+                    if(!soft.getCodeLocation().equals("")){
+                        s+="<a href=\""+soft.getCodeLocation()+"\">program</a> ";
+                    }else{
+                        s+="program ";
+                    }
+                    if(!soft.getWebsite().equals("")){
+                        s+= hideText("(see the <a href=\""+soft.getWebsite()+"\">project website</a>) ");
+                    }
+                    s+="to perform its functionality.";
+                    if(!soft.getLicense().equals("")){
+                        s+="The software is licensed under a <a href=\""+soft.getLicense()+"\">"+soft.getLicense().replace("http://ontosoft.org/software#", "")+"</a> license.";
+                    } 
+                    s+= "<br/>";
+                    return s;
             default:
                 //by default, get the name plus URI, without camelcase.
                 return "<a href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase((r.getName()))+"</a>";
@@ -221,14 +266,14 @@ public class DataNarrativeHTMLSerializer {
         Resource method= d.getMethodMetadata();
         String resultDOI = d.getValueForProperty(result, Constants.BIBO_DOI);        
         String narrative1 = Constants.getNarrativeStart("Data Narrative 1: Execution view", "1", Constants.TOOLTIP_NARRATIVE_EXEC);
-        narrative1+= "	The "+serializeResource(method, resourceTypes.template)+" method was run on ";
+        narrative1+= "	The "+serializeResource(d,method, resourceTypes.template)+" method was run on ";
         narrative1+=serializeResourceList(d, d.getMethodInputs(), resourceTypes.executionArtifact, false, true);
         ArrayList<Resource> params = d.getMethodInputParameters();
         if(!params.isEmpty()){
             narrative1 +=", with ";
         }
         narrative1+=serializeResourceList(d, params, resourceTypes.parameter, true, false);
-        narrative1+=". The "+serializeResource(result,resourceTypes.other)+ " results are stored <a href=\""+d.getResult().getLocation()+"\">online</a>";
+        narrative1+=". The "+serializeResource(d,result,resourceTypes.other)+ " results are stored <a href=\""+d.getResult().getLocation()+"\">online</a>";
         if(resultDOI != null && !resultDOI.equals("")){
             narrative1+="(DOI <a href=\""+resultDOI+"\">"+resultDOI+"</a>)\n";
         }
@@ -239,7 +284,7 @@ public class DataNarrativeHTMLSerializer {
     public static String getDataOrientedNarrative(DataNarrative d){
         Resource result = d.getResult();
         String narrative2 = Constants.getNarrativeStart("Data Narrative 2: Data view", "2", Constants.TOOLTIP_NARRATIVE_DATA);
-        narrative2+=" The "+serializeResource(result, resourceTypes.other)+" results have been derived from the ";
+        narrative2+=" The "+serializeResource(d,result, resourceTypes.other)+" results have been derived from the ";
         ArrayList<Resource> sources = d.getOriginalSourcesForResult(d.getResult().getUri());
         narrative2 += serializeResourceList(d, sources, resourceTypes.executionArtifact,  false, true);
         narrative2+="."+Constants.NARRATIVE_END;
@@ -259,26 +304,26 @@ public class DataNarrativeHTMLSerializer {
         Resource result = d.getResult();
         String narrative3 = Constants.getNarrativeStart("Data Narrative 3: Method view", "3", Constants.TOOLTIP_NARRATIVE_METHOD);
         //retrieve: steps of the workflow (chain)
-        WorkflowTemplate template = d.getWorkflowTemplate();
-        narrative3 += "The method "+serializeResource(template, resourceTypes.template)+" ";
+        StepCollection template = d.getWorkflowTemplate();
+        narrative3 += "The method "+serializeResource(d,template, resourceTypes.template)+" ";
         ArrayList<Step> dataAnalysisMotifs = template.stepsWithMotif(Constants.MOTIF_DATA_ANALYSIS);
         switch (dataAnalysisMotifs.size()) {
             case 0: narrative3+= "does not have one main type of analysis step.";
                 break;
             case 1: 
                 Step mainStep = dataAnalysisMotifs.get(0);
-                narrative3+= "performs a single main type of analysis on the input dataset through the "+serializeResource(mainStep, resourceTypes.other)+" step. ";
+                narrative3+= "performs a single main type of analysis on the input dataset through the "+serializeResource(d,mainStep, resourceTypes.other)+" step. ";
                 //get steps with motifs, order them and serialize them
-                narrative3+= serializeOrderedSteps(d,d.orderSteps(template.getStepsWithOneMotifOrMore()), resourceTypes.processAndMotif)+".";
+                narrative3+= hideText(serializeOrderedSteps(d,d.orderSteps(true,template.getStepsWithOneMotifOrMore()), resourceTypes.processAndMotif)+".");
                 break;
             default: narrative3+= "performs "+dataAnalysisMotifs.size() +" main types of analysis on the input datasets." ;
                 //we only summarize the important data analysis steps
-                narrative3+= serializeOrderedSteps(d,d.orderSteps(dataAnalysisMotifs), resourceTypes.other)+".";
+                narrative3+= serializeOrderedSteps(d,d.orderSteps(true,dataAnalysisMotifs), resourceTypes.other)+".";
                 break;
         }
-        narrative3+="</p><p> The "+serializeResource(result, resourceTypes.other)+" results are the product of the ";
+        narrative3+="</p><p> The "+serializeResource(d,result, resourceTypes.other)+" results are the product of the ";
         Step processThatProducedTheResults = template.getStep(d.getMethodProcessForResult(result.getUri()));
-        narrative3+=""+serializeResource(processThatProducedTheResults, resourceTypes.processAndMotif)+".";
+        narrative3+=""+serializeResource(d,processThatProducedTheResults, resourceTypes.processAndMotif)+".";
         narrative3+=Constants.NARRATIVE_END;
         return narrative3;
     }
@@ -286,167 +331,63 @@ public class DataNarrativeHTMLSerializer {
     
     private static String getAbstractMethodNarrative(DataNarrative d){
         Resource result = d.getResult();
-        String narrative4 = Constants.getNarrativeStart("Data Narrative 4: Abstract method view", "4", Constants.TOOLTIP_NARRATIVE_ABSTRACT);
-        WorkflowTemplate template = d.getWorkflowTemplate();
-        narrative4 += "The method "+serializeResource(template, resourceTypes.template)+" has "+template.getSteps().size() +" steps. ";
+        String narrative4 = Constants.getNarrativeStart("Data Narrative 4: Dependency view", "4", Constants.TOOLTIP_NARRATIVE_ABSTRACT);
+        StepCollection template = d.getWorkflowTemplate();
+        narrative4 += "The method "+serializeResource(d,template, resourceTypes.template)+" has "+template.getSteps().size() +" steps. Their dependency view is specified as follows. ";
         
-        narrative4+= serializeOrderedSteps(d,d.orderSteps(template.getSteps()), resourceTypes.templateStepAndDependency);
+        narrative4+= serializeOrderedSteps(d,d.orderSteps(true,template.getSteps()), resourceTypes.templateStepAndDependency)+".";
         
-        narrative4+="</p><p> The "+serializeResource(result, resourceTypes.other)+" results are the product of the ";
+        narrative4+="</p><p> The "+serializeResource(d,result, resourceTypes.other)+" results are the product of ";
         Step processThatProducedTheResults = template.getStep(d.getMethodProcessForResult(result.getUri()));
-        narrative4+=""+serializeResource(processThatProducedTheResults, resourceTypes.other)+".";
+        narrative4+=""+serializeResource(d,processThatProducedTheResults, resourceTypes.other)+".";
         narrative4+=Constants.NARRATIVE_END;
         return narrative4;
     }
     
+    private static String getImplementationdNarrative(DataNarrative d){
+        Resource result = d.getResult();
+        String narrative5 = Constants.getNarrativeStart("Data Narrative 5: Implementation view", "5", Constants.TOOLTIP_NARRATIVE_IMPL);
+        StepCollection execution = d.getWorkflowExecution();
+        Resource template = d.getMethodMetadata();
+        narrative5 += "The method "+serializeResource(d,template, resourceTypes.template)+" has "+execution.getSteps().size() +" steps. They are implemented as follows"+hideText(" (showing in brackets the general step they implement, if any)")+". ";
+        
+        narrative5+= serializeOrderedSteps(d,d.orderSteps(false,execution.getSteps()), resourceTypes.executionAndImplentation)+".";
+        
+        Step processThatProducedTheResults = execution.getStep(d.getExecutionProcessForResult(result.getUri()));
+        narrative5+="</p><p>"+hideText(" The "+serializeResource(d,result, resourceTypes.other)+" results are the product of "+serializeResource(d,processThatProducedTheResults, resourceTypes.other)+".");
+        narrative5+=Constants.NARRATIVE_END;
+        return narrative5;
+    }
+    
     /**
-     * Template for generating an implementation narrative. The template is similar to the 
-     * method one, but stating the software used for each of the steps:
-     * The W method performs N main types of analyses on the original datasets.
-     * The (main Step 1, main step N) produce the main results of the workflow, 
-     * after (motif enumeration goes here, grouped by motif and result respectively).
-     * The R results are the result of the Step component, a Motif goes here step.
+     * Similar to narrative 5, but instead of showing impl, shows the pointers to the scripts and software.
      * @param d
      * @return 
      */
-    private static String getImplementationdNarrative(DataNarrative_OLD d){
-        //THIS NARRATIVE IS MISSING SOME DETAILS ON THE IMPL, and mixing it with motifs
-        // TO REVIEW!!!
-        String narrative4 = "<div class=\"panel panel panel-info\">\n" +
-"		  <div class=\"panel-heading\">\n" +
-"			<h4 class=\"panel-title\">\n" +
-"			  Data Narrative 4: Implementation view  &nbsp;&nbsp;&nbsp;&nbsp;  <button class=\"SeeMore2 btn btn-primary\" data-toggle=\"collapse\" href=\"#collapse4\">See More</button>\n" +
-"			</h4>\n" +
-"		  </div>\n" +
-"		  <div id=\"collapse4\" class=\"panel-collapse collapse\">\n" +
-"			<div class=\"panel-body\">\n" +
-"			<p> \n";
-        //retrieve: steps of the workflow (chain)
-        ArrayList<String> allProcesses = d.getProcesses();
-        narrative4 += "The method <a href=\""+d.getMethodURI()+"\">"+GeneralMethods.splitCamelCase(d.getMethodName())+"</a> ";
-        //motif, steps that are that motif.
-        HashMap<String, ArrayList<String>> motifsAndProcesses = new HashMap<>();
-        ArrayList<String> process;
-        for(String p:allProcesses){
-            ArrayList<String> motifs = d.getMotifsForProcess(p);
-            if(!motifs.isEmpty()){
-                for(String m:motifs){
-                    if(motifsAndProcesses.containsKey(m)){
-                        process = motifsAndProcesses.get(m);
-                    }else{
-                        process = new ArrayList<>();
-                    }
-                    process.add(p);
-                    motifsAndProcesses.put(m, process);
-                }
-            }
+    private static String getSoftwareNarrative(DataNarrative d){
+        //Resource result = d.getResult();
+        String narrative6 = Constants.getNarrativeStart("Data Narrative 6: Software view", "6", Constants.TOOLTIP_NARRATIVE_SOFTWARE);
+        StepCollection execution = d.getWorkflowExecution();
+        Resource template = d.getMethodMetadata();
+        narrative6 += "The method "+serializeResource(d,template, resourceTypes.template)+" has "+execution.getSteps().size() +" steps. ";
+        narrative6+= hideText(serializeOrderedSteps(d,d.orderSteps(false,execution.getSteps()), resourceTypes.other)+".");
+        narrative6+= " The steps use the following software:</p><p>";
+        //narrative6+= serializeResourceList(d, execution.getSteps(), resourceTypes.executionAndCode, false, false);
+        for (Step s:execution.getSteps()){
+            narrative6+= serializeResource(d,s, resourceTypes.executionAndCode);
         }
-        String implementations =" ";
-        int dataAnalysisMotifs = 0;
-        if(motifsAndProcesses.containsKey("http://purl.org/net/wf-motifs#DataAnalysis")){
-                dataAnalysisMotifs = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis").size();
-        }
-        if(dataAnalysisMotifs>0){
-            
-            //if there is only one step, add the rest of the motifs like: after blah and blah, the step is executed.
-            ArrayList<String> m = motifsAndProcesses.get("http://purl.org/net/wf-motifs#DataAnalysis");
-            //dataAnalysisMotifs = 1; //for tests 
-            if(dataAnalysisMotifs == 1){
-                String mainProcess = m.get(0);
-                //tests
-                //mainProcess = "http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES";
-                narrative4+= "performs "+dataAnalysisMotifs +" main type of analysis on the input datasets. The "+
-                        " <a href=\""+mainProcess+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(mainProcess))+"</a> step produces the main results of the workflow";
-                ArrayList<String> dependencies = d.getDependenciesForWorkflowStep(mainProcess);
-                //remove the main step
-                dependencies.remove(mainProcess);//just in case
-                if(dependencies.size()>0){
-                    ArrayList<String> motifs;
-                    if(dependencies.size() ==1){
-                        String dep = dependencies.get(0);
-                        motifs = d.getMotifsForProcess(dep);
-                        if(motifs.size()>0){//at this stage we only consider 1 motif per step.
-                            narrative4+=", after a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.getFileNameFromURL(dep)+").";
-                        }
-                    }else{
-                        String textToAdd ="";
-                        for(String dep:dependencies){
-                            motifs = d.getMotifsForProcess(dep);
-                            if("".equals(textToAdd) && !motifs.isEmpty()){
-                                textToAdd +=", after";
-                            }
-                            if(dependencies.indexOf(dep)==dependencies.size()-1){
-                                if(!motifs.isEmpty()){//at this stage we only consider 1 motif per step.
-                                    textToAdd+="and a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.splitCamelCase(d.getNameForStep(dep))+").";
-                                }
-                            }else
-                                if(!motifs.isEmpty()){//at this stage we only consider 1 motif per step.
-                                    textToAdd+=" a "+motifs.get(0).replace("http://purl.org/net/wf-motifs#","").replace("Data", "")+" step ("+GeneralMethods.splitCamelCase(d.getNameForStep(dep))+"),";
-                                }
-                        }
-                        narrative4 += textToAdd;
-                    }
-                }else{
-                    narrative4+=".";
-                }
-                //retrieve de steps that depend on the main one (easy query)
-            }else{
-                narrative4+= "performs "+dataAnalysisMotifs +" main types of analysis on the input datasets. ";
-                //if there are more, then just say their order
-                
-                //reorder m according to the dependencies.
-                m = d.reorderResults(m);
-                for(String currentStep:m){
-                    int i = m.indexOf(currentStep);
-                    if(i==0){
-                        narrative4+="First, the <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a> step processes the datasets, then the data is analyzed by the";
-                    }
-                    else if(i>=1 &&i<m.size()-1){
-                        narrative4+=" <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a>,";
-                    }else{
-                        if(m.size()>2){
-                            narrative4 = narrative4.substring(0, narrative4.length()-1);
-                            narrative4 +=" steps and finally, ";
-                        }
-                        narrative4+=" <a href=\""+currentStep+"\">"+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+"</a> produces the end results.";
-                    }
-                    implementations +=" The "+GeneralMethods.splitCamelCase(d.getNameForStep(currentStep))+ " component has been implemented with the <a href=\""+d.getImplementationURL(currentStep)+"\">" +d.getImplementationName(currentStep)+"</a> software.";
-                }
-            }
-        }else{
-            narrative4+= "does not have one main type of analysis step.";
-        }
-        narrative4 += implementations;
-        narrative4+="</p><p> The <a href=\"" +d.getResultURI()+"\">"+GeneralMethods.splitCamelCase(d.getResultName())+"</a> results are the product of the ";
-        String [] aux = d.getMethodProcessForResult(d.getResultURI()).split(",");
-        String methodStepURI = aux[0];
-        String methodName = GeneralMethods.splitCamelCase(aux[1]);
-        ArrayList<String> motifsOfStep = d.getMotifsForProcess(methodStepURI);
-        narrative4+="<a href=\""+methodStepURI+"\">"+methodName+"</a>";
-        if(!motifsOfStep.isEmpty()){
-            narrative4+=", a ";
-            if(motifsOfStep.size()>1){
-                for(String a:motifsOfStep){
-                    if(motifsOfStep.indexOf(a) == motifsOfStep.size()-1){
-                        narrative4+=" and "+"<a href=\""+a+"\">"+GeneralMethods.splitCamelCase(a.replace("http://purl.org/net/wf-motifs#", ""))+"</a>";
-                    }else{
-                        narrative4+="<a href=\""+a+"\">"+GeneralMethods.splitCamelCase(a.replace("http://purl.org/net/wf-motifs#", ""))+"</a>"+",";
-                    }
-                }
-            }else{
-                narrative4+="<a href=\""+motifsOfStep.get(0)+"\">"+GeneralMethods.splitCamelCase(motifsOfStep.get(0).replace("http://purl.org/net/wf-motifs#", ""))+"</a>";
-            }
-            narrative4+=" step.";
-        }
-        //implementation
-        narrative4 += " The "+methodName+" component has been implemented with the <a href=\""+d.getImplementationURL(methodStepURI)+"\">" +d.getImplementationName(methodStepURI)+"</a> software.";
-        
-        narrative4+="			</p>\n" +
-            "			</div>\n" +
-            "			\n" +
-            "		  </div>\n" +
-            "		</div>";
-        return narrative4;
+        narrative6+=Constants.NARRATIVE_END;
+        return narrative6;
+    }
+    
+    /**
+     * Function designed to add a span around the text in case we want to hide some of the details
+     * when pressing the see more/see less buttons.
+     * @param inputText
+     * @return 
+     */
+    private static String hideText(String inputText){
+        return "<span class=\"see\">"+inputText+"</span>";
     }
     
     public static void main (String [] args){

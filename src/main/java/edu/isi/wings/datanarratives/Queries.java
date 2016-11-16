@@ -1,7 +1,22 @@
+/*
+ *  Copyright 2016 Daniel Garijo Verdejo, Information Sciences Institute, USC
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
 package edu.isi.wings.datanarratives;
 
-import Elements.Resource;
-import Elements.Step;
+import edu.isi.wings.elements.Resource;
+import edu.isi.wings.elements.Step;
 
 /**
  * Class for storing all the queries needed by the data narratives.
@@ -89,7 +104,50 @@ public class Queries {
                 + "}"; 
     }
     
-    public static final String stepDependsOnStep(String p1, String p2){
-        return "ASK  "+Constants.unionGraph+"  {<"+p1+"> (<http://www.opmw.org/ontology/uses>/<http://www.opmw.org/ontology/isGeneratedBy>)* <"+p2+">.}";
+    public static final String getExecutionProcessForResult(String resultURI){
+        return "select ?step  "+Constants.unionGraph+" "
+                + "where{"
+                + "<"+resultURI+"> <http://purl.org/net/opmv/ns#wasGeneratedBy> ?step."              
+                + "}"; 
+    }
+    
+    public static final String stepDependsOnStep(boolean isTemplate, String p1, String p2){
+        if(isTemplate)
+            return "ASK  "+Constants.unionGraph+"  {<"+p1+"> (<http://www.opmw.org/ontology/uses>/<http://www.opmw.org/ontology/isGeneratedBy>)* <"+p2+">.}";
+        else return "ASK  "+Constants.unionGraph+"  {<"+p1+"> (<http://purl.org/net/opmv/ns#used>/<http://purl.org/net/opmv/ns#wasGeneratedBy>)* <"+p2+">.}";
+    }
+    
+    public static final String getExecutionMetadata(String resultURI){
+        return "select ?wfname ?uri  "+Constants.unionGraph+" where {\n"
+                + "<"+resultURI+">  <http://openprovenance.org/model/opmo#account> ?uri.\n"
+                + "OPTIONAL{?temp <http://www.w3.org/2000/01/rdf-schema#label> ?wfname.}\n"
+                + "}";
+    }
+    
+    //we return the implementation as well to facilitate the implementation view.
+    public static final String getExecutionProcesses(String resultURI){
+        return "select ?process ?name ?impl ?impln ?code "+Constants.unionGraph
+                + " where{"
+                + "<"+resultURI+"> <http://openprovenance.org/model/opmo#account> ?a."
+                + "?process <http://openprovenance.org/model/opmo#account> ?a."
+                + "?process <http://www.opmw.org/ontology/hasExecutableComponent> ?comp."
+                + "?comp <http://www.opmw.org/ontology/hasLocation> ?code."
+                + "?process a <http://www.opmw.org/ontology/WorkflowExecutionProcess>."
+                + "?process <http://www.opmw.org/ontology/correspondsToTemplateProcess> ?impl."
+                + "?impl <"+Constants.RDFS_LABEL + "> ?impln."
+                + "?process <"+Constants.RDFS_LABEL + "> ?name."               
+                + "}";
+    }
+    
+    public static final String getSoftwareMetadata(String stepName){
+        return"select ?lic ?lan ?code ?web "+Constants.unionGraph
+            + "where {"
+            + "?s a <http://ontosoft.org/software#Software>."
+            + "?s <"+Constants.RDFS_LABEL +"> \""+ stepName+"\"."
+            + "OPTIONAL{?s <http://ontosoft.org/software#hasImplementationLanguage> ?lan.}." 
+            + "OPTIONAL{?s <http://ontosoft.org/software#hasLicense> ?lic.}."
+            + "OPTIONAL{?s <http://ontosoft.org/software#hasProjectWebsite>/<http://ontosoft.org/software#hasURI> ?web.}."
+            + "OPTIONAL{?s <http://ontosoft.org/software#hasCodeLocation>/<http://ontosoft.org/software#hasURI> ?code.}"
+                + "}";
     }
 }

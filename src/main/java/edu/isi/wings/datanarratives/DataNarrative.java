@@ -1,15 +1,27 @@
+/*
+ *  Copyright 2016 Daniel Garijo Verdejo, Information Sciences Institute, USC
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
 package edu.isi.wings.datanarratives;
 
-import Elements.Resource;
-import Elements.Step;
-import Elements.WorkflowTemplate;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
+import edu.isi.wings.elements.Resource;
+import edu.isi.wings.elements.Step;
+import edu.isi.wings.elements.StepCollection;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Literal;
+import edu.isi.wings.elements.Software;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -89,9 +101,9 @@ public class DataNarrative {
         }
     }
     
-    public WorkflowTemplate getWorkflowTemplate(){
+    public StepCollection getWorkflowTemplate(){
         Resource r = getMethodMetadata();
-        WorkflowTemplate temp = new WorkflowTemplate(r.getName(), r.getUri());
+        StepCollection temp = new StepCollection(r.getName(), r.getUri());
         //add all the processes. Add all the motifs
         ArrayList<Step> processes = new ArrayList<>();
         String q = Queries.getMethodProcesses(this.result.getUri());
@@ -101,7 +113,8 @@ public class DataNarrative {
             QuerySolution qs = rs.nextSolution();
             String process, name, motif=null; 
             process = qs.getResource("process").getURI();
-            name = qs.getLiteral("name").getString().replace("Workflow template process ", "");
+            //THIS SHOULD BE DONE MORE GENERICALLY WHEN SERIALIZING, NOT HERE.
+            name = qs.getLiteral("name").getString().replace("Workflow template process ", "").replace("Node", "");
             try{
                 motif = qs.getResource("motif").getURI();
             }catch(Exception e){
@@ -127,6 +140,89 @@ public class DataNarrative {
         temp.setSteps(processes);
         return temp;
     }
+    
+    /**
+     * Lightweight method for retrieving the execution name and uri
+     * -future improvement: probably can be merged with the template one-
+     * @return 
+     */
+    public Resource getExecutionMetadata(){
+        String q = Queries.getExecutionMetadata(this.result.getUri());
+        ResultSet rs = kb.selectFromLocalRepository(q);
+        if(rs.hasNext()){
+            String methodName = null, methodURI = null;
+            QuerySolution qs = rs.next();
+            methodURI = qs.getResource("uri").getURI();
+            methodName = qs.getLiteral("wfname").getString();
+            return new Resource(methodName, methodURI);
+        }else{
+            return null;
+        }
+    }
+    
+    //this method could probably merged with getWorkflowTemplate, as we are retrieving steps here as well.
+    public StepCollection getWorkflowExecution(){
+        Resource r = getExecutionMetadata();
+        StepCollection temp = new StepCollection(r.getName(), r.getUri());
+        //add all the processes. Add all the motifs
+        ArrayList<Step> processes = new ArrayList<>();
+        String q = Queries.getExecutionProcesses(this.result.getUri());
+        ResultSet rs = kb.selectFromLocalRepository(q);
+        HashMap<String,ArrayList<String>> steps = new HashMap<>();
+        while(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            String process, name, impl, implName,code; 
+            process = qs.getResource("process").getURI();
+            impl = qs.getResource("impl").getURI();
+            //THIS SHOULD BE DONE MORE GENERICALLY WHEN SERIALIZING, NOT HERE.
+            name = qs.getLiteral("name").getString().replace("Execution process ", "").replace("Node", "");
+            implName = qs.getLiteral("impln").getString().replace("Workflow template process ", "").replace("Node", "");
+            code = qs.getLiteral("code").getString();
+            Step s = new Step(name, process);
+            s.setImplementationOf(new Step(implName, impl));
+            s.setCodeLocation(code);
+            processes.add(s);
+        }
+        temp.setSteps(processes);
+        return temp;
+     }
+    
+    /**
+     * Given a step name, this method aims to find if there is any information
+     * with the step metadata. The Ontosoft vocabulary is used.
+     * Only one software entry is returned.
+     * @param step
+     * @return 
+     */
+    public Software getSoftwareMetadata(Step step){
+        //labels have to be exactly the same as in ontosoft. otherwise this wont work
+        String q = Queries.getSoftwareMetadata(GeneralMethods.splitCamelCase(step.getName()));
+        ResultSet rs = kb.selectFromLocalRepository(q);
+        Software s = new Software(step.getName(),"");//we dont know the software URI at this stage
+        String lic="", lan="", code="", web="";
+        if(rs.hasNext()){
+           QuerySolution qs = rs.nextSolution();
+           //all are optional.
+           try{
+                lic = qs.getResource("lic").getURI();
+           }catch(Exception e){}
+           try{
+                lan = qs.getResource("lan").getURI().replace("http://ontosoft.org/software#", "");
+           }catch(Exception e){}
+           try{
+                code = qs.getLiteral("code").getString();
+           }catch(Exception e){}
+           try{
+                web = qs.getLiteral("web").getString();
+           }catch(Exception e){}
+        }
+        s.setCodeLocation(code);
+        s.setLicense(lic);
+        s.setProgrammingLanguage(lan);
+        s.setWebsite(web);
+        return s;
+    }
+   
     
     /**
      * This function helps finding variable names in results, so as to make them more eye catchy.
@@ -210,13 +306,29 @@ public class DataNarrative {
     }
     
     /**
-     * Method that returns the step of the workflow which produced the result
+     * Method that returns the step of the workflow (template) which produced the result
      * in the execution. We return the URI, name
      * @param result 
      * @return  
      */
     public String getMethodProcessForResult(String result){
         String q = Queries.getMethodProcessForResult(result);
+        ResultSet rs = kb.selectFromLocalRepository(q);
+        if(rs.hasNext()){
+            QuerySolution qs = rs.nextSolution();
+            return qs.getResource("step").getURI();
+        }
+        return null;
+    }
+    
+    /**
+     * Method that returns the step of the workflow (execution) which produced the result
+     * in the execution. We return the URI, name
+     * @param result 
+     * @return  
+     */
+    public String getExecutionProcessForResult(String result){
+        String q = Queries.getExecutionProcessForResult(result);
         ResultSet rs = kb.selectFromLocalRepository(q);
         if(rs.hasNext()){
             QuerySolution qs = rs.nextSolution();
@@ -242,7 +354,7 @@ public class DataNarrative {
         ResultSet rs = kb.selectFromLocalRepository(query);
         while(rs.hasNext()){
             QuerySolution qs = rs.nextSolution();
-            Step s = new Step(qs.getLiteral("name").getString().replace("Workflow template process ", "").replace("Workflow execution process ", ""),qs.getResource("step").getURI());
+            Step s = new Step(qs.getLiteral("name").getString().replace("Workflow template process ", "").replace("Workflow execution process ", "").replace("Node", ""),qs.getResource("step").getURI());
             deps.add(s);
         }
         return deps;
@@ -250,12 +362,13 @@ public class DataNarrative {
     
     /**
      * Method that returns true is the process p1 depends on p2 (at any length in the graph)
+     * @param isTemplate
      * @param p1
      * @param p2
      * @return 
      */
-    public boolean workflowStepDependsOn(Step p1, Step p2){
-        String query = Queries.stepDependsOnStep(p1.getUri(), p2.getUri());
+    public boolean workflowStepDependsOn(boolean isTemplate, Step p1, Step p2){
+        String query = Queries.stepDependsOnStep(isTemplate, p1.getUri(), p2.getUri());
         return kb.askFromLocalRepository(query);
     }
     
@@ -266,10 +379,11 @@ public class DataNarrative {
      * and then 3 and 6 depend on 2 or 4.
      * Each sublist cannot have steps that depend on each other. Therefore, a workflow with 3 consecutive steps [1,2,3]
      * will result in [1][2][3]
+     * @param isTemplate indicates if we are ordering template steps or execution steps
      * @param inputSteps collection of steps to order (it is assumed they belong to the same template)
      * @return 
      */
-    public ArrayList<ArrayList<Step>> orderSteps(ArrayList<Step> inputSteps) {
+    public ArrayList<ArrayList<Step>> orderSteps(boolean isTemplate, ArrayList<Step> inputSteps) {
         //clone the steps into a new structure
         ArrayList<Step>steps = new ArrayList<>();
         for(Step s:inputSteps){
@@ -284,7 +398,7 @@ public class DataNarrative {
             Step p1 = steps.get(i);
             for(Step p:steps){
                 if(!p.equals(p1)){
-                    if(workflowStepDependsOn(p1, p)){
+                    if(workflowStepDependsOn(isTemplate, p1, p)){
                         depends = true;
                         //System.out.println(p1.getUri()+"depends on "+p.getUri());
                     }
