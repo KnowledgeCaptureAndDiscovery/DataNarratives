@@ -25,6 +25,60 @@ import edu.isi.wings.elements.Step;
  */
 public class Queries {
     
+    public static final String constructExecMetadata(String execURI){
+        return "construct {<"+execURI+"> ?p ?o}  "+Constants.unionGraph+" where {\n" +
+        "<"+execURI+"> ?p ?o" +
+        "}";
+    }
+    public static final String constructAccountResourceMetadata(String execURI){
+        return "construct { "
+        + "?s <http://openprovenance.org/model/opmo#account> <"+execURI+">. ?s ?p ?o}  "+Constants.unionGraph+"  where {\n" +
+        "?s <http://openprovenance.org/model/opmo#account> <"+execURI+">. ?s ?p ?o\n" +
+        "}";
+    }
+    public static final String constructGetSoftwareMetadata(String execURI){
+        return "construct { \n" +
+        "?s <http://openprovenance.org/model/opmo#account> <"+execURI+">. \n" +
+        "?s <http://www.opmw.org/ontology/hasExecutableComponent> ?o.\n" +
+        "?o ?p ?q.\n" +
+        "} "+Constants.unionGraph+" \n" +
+        "where \n" +
+        "{\n" +
+        "?s <http://openprovenance.org/model/opmo#account> <"+execURI+">. \n" +
+        "?s <http://www.opmw.org/ontology/hasExecutableComponent> ?o.\n" +
+        "?o ?p ?q\n" +
+        "}";
+    }
+    public static final String constructLoadTempMetadata(String templ){
+        return "construct {<"+templ+"> ?p ?o} "
+                    + Constants.unionGraph+" where {\n" +
+            "<"+templ+"> ?p ?o" +
+            "}";
+    }
+    public static final String constructLoadTemplateProcesses(String templ){
+        return "construct { "
+            + "?s <http://www.opmw.org/ontology/isStepOfTemplate> <"+templ+">. ?s ?p ?o} "
+                    + Constants.unionGraph+" where {\n" +
+            "?s <http://www.opmw.org/ontology/isStepOfTemplate> <"+templ+">. ?s ?p ?o\n" +
+            "}";
+    }
+    public static final String constructLoadTemplateVariables(String templ){
+        return "construct { "
+            + "?s <http://www.opmw.org/ontology/isParameterOfTemplate> <"+templ+">. ?s ?p ?o} "
+                    + Constants.unionGraph+" where {\n" +
+            "?s <http://www.opmw.org/ontology/isParameterOfTemplate> <"+templ+">. ?s ?p ?o\n" +
+            "}";
+    }
+    
+    public static final String constructLoadTemplateParameters(String templ){
+         return "construct { "
+            + "?s <http://www.opmw.org/ontology/isVariableOfTemplate> <"+templ+">. ?s ?p ?o} "
+                    + Constants.unionGraph+" where {\n" +
+            "?s <http://www.opmw.org/ontology/isVariableOfTemplate> <"+templ+">. ?s ?p ?o\n" +
+            "}";
+    }
+    
+    
     public static final String getValueForResourceProperty(Resource resource, String prop){
         return "select distinct ?v "+Constants.unionGraph+" where{"
                 + "<"+resource.getUri()+">"+" <"+prop+"> ?v.}";
@@ -93,7 +147,11 @@ public class Queries {
                 + "?p <http://www.opmw.org/ontology/correspondsToTemplateProcess> ?process."
                 + "?process <"+Constants.RDFS_LABEL + "> ?name."
                 + "OPTIONAL {?process <http://purl.org/net/wf-motifs#hasMotif>"+"?m."
-                + "?m a ?motif}"               
+                + "?m a ?motif."
+                 + "?motif <http://www.w3.org/2000/01/rdf-schema#subClassOf>+ <http://purl.org/net/wf-motifs#DataOperationMotif>."
+                + "FILTER (?motif!=<http://purl.org/net/wf-motifs#DataPreparation>)."
+                + "FILTER (?motif!=<http://purl.org/net/wf-motifs#DataOperationMotif>)."
+                + "}"               
                 + "}";
     }
     public static final String getMethodProcessForResult(String resultURI){

@@ -391,15 +391,51 @@ public class DataNarrativeHTMLSerializer {
     }
     
     public static void main (String [] args){
-        //test skeleton
+        // EXAMPLES FOR THE WEB ANALYTICS SHOWCASE DOMAIN
+        
+        //DETECT TOPICS WORKFLOW
         String workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-DETECTTOPICS-7A1-BF5CF914-816C-4845-AF79-A56672C4BD17";
         String workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/DETECTTOPICS-D751713988987E9331980363E24189CE";
         String resultURI = "http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476159251570";
         String doiFile = "examples\\webAnalytics\\doiAnnotations.ttl";
         String motifAnnotations = "examples\\webAnalytics\\motifAnnotations.ttl";
-        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations);
+        String ontoSoftFile = "examples\\webAnalytics\\ontosoftAnnotations.ttl";
+//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+//        DataNarrative d = new DataNarrative(dc, resultURI);
+//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TOPICS-IMAGE1476159251570.html");
+        
+        //ACCESSIBILITY ANALYTICS
+        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-ACCESSIBILITYANA-28FE1AF0-4994-4B35-B8AE-5678E7F02B1C";
+        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/ACCESSIBILITYANALYTICS-D751713988987E9331980363E24189CE";
+        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476147155422";
+//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+//        DataNarrative d = new DataNarrative(dc, resultURI);
+//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "ACCESSIBILITY-IMAGE1476147155422.html");
+        
+        //UNDERSTANDING USER ACTIVITY
+        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-UNDERSTANDINGUSE-4787F99D-BC79-4914-BC40-343D254BB3CE";
+        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/UNDERSTANDINGUSERACTIVITY-D751713988987E9331980363E24189CE";
+        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/CLUSTERINGRESULT1475981346023";
+//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+//        DataNarrative d = new DataNarrative(dc, resultURI);
+//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "UNDERSTANDING-CLUSTERINGRESULT1475981346023.html");
+        
+        
+        //ADRESS PROBLEMATIC USERS
+        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-ADDRESSPROBLEMAT-40285D81-78C6-4913-BE9D-89AC50B16161";
+        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/ADDRESSPROBLEMATICUSERS-D751713988987E9331980363E24189CE";
+        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/FILTEREDDOCUMENT11475981333362";
+//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+//        DataNarrative d = new DataNarrative(dc, resultURI);
+//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "ADDRESS-FILTEREDDOCUMENT11475981333362.html");
+        
+        //TRENDING WORDS VISUALIZATION
+        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-TRENDINGWORDSVIS-9E34FF2A-1998-4BC8-B6D2-BBFB7212A562";
+        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/TRENDINGWORDSVISUALIZATION-D751713988987E9331980363E24189CE";
+        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1475981286849";
+        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
         DataNarrative d = new DataNarrative(dc, resultURI);
-        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "test.html");
+        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TRENDING-IMAGE1475981286849.html");
     }
     
    

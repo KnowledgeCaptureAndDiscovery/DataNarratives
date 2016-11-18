@@ -25,13 +25,27 @@ public class DataNarrativeContext {
     private final String workflowTemplateURI;
     private final String doiFile;//file associating dois to artifacts
     private final String motifAnnotations;//anotatedMotis
+    
+    //TEMPORAL VARIABLE
+    private final String ontoSoftAnnotations;//optional. Added until the OntoSoft integration is completed.
 
     public DataNarrativeContext(String workflowExecutionURI, String workflowTemplateURI, String doiFile, String motifAnnotations) {
         this.workflowExecutionURI = workflowExecutionURI;
         this.workflowTemplateURI = workflowTemplateURI;
         this.doiFile = doiFile;
         this.motifAnnotations = motifAnnotations;
+        this.ontoSoftAnnotations = "";
     }
+
+    public DataNarrativeContext(String workflowExecutionURI, String workflowTemplateURI, String doiFile, String motifAnnotations, String ontoSoftAnnotations) {
+        this.workflowExecutionURI = workflowExecutionURI;
+        this.workflowTemplateURI = workflowTemplateURI;
+        this.doiFile = doiFile;
+        this.motifAnnotations = motifAnnotations;
+        this.ontoSoftAnnotations = ontoSoftAnnotations;
+    }
+    
+    
 
     public String getDoiFile() {
         return doiFile;
@@ -48,4 +62,10 @@ public class DataNarrativeContext {
     public String getWorkflowTemplateURI() {
         return workflowTemplateURI;
     }
+
+    public String getOntoSoftAnnotations() {
+        return ontoSoftAnnotations;
+    }
+    
+    
 }

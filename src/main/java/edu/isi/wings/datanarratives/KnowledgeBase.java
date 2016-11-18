@@ -15,13 +15,17 @@
  */
 package edu.isi.wings.datanarratives;
 
+import com.hp.hpl.jena.graph.NodeFactory;
 import com.hp.hpl.jena.ontology.OntModel;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.tdb.TDB;
 import com.hp.hpl.jena.util.FileManager;
 import java.io.InputStream;
@@ -44,7 +48,7 @@ public class KnowledgeBase {
     public KnowledgeBase(DataNarrativeContext context){
         System.out.println("Creating Knowledge base...");
         this.knowledgeBase = ModelFactory.createOntologyModel();
-        System.out.println("Loading workflow data...");
+        System.out.println("Loading workflow execution data...");
         this.retrieveRemoteWorkflowExecutionData(context.getWorkflowExecutionURI());
         System.out.println("Loading template data...");
         this.retrieveRemoteWorkflowTemplateData(context.getWorkflowTemplateURI());
@@ -52,76 +56,73 @@ public class KnowledgeBase {
         if(motifs!=null && !motifs.equals("")){
             System.out.println("Loading motifs descriptions...");
             this.readFileIntoKnowledgeBase(motifs);
+            this.assignMotifsToSteps();
         }
         String dois = context.getDoiFile();
         if(dois!=null && !dois.equals("")){
             System.out.println("Loading DOIs descriptions...");
             this.readFileIntoKnowledgeBase(dois);
         }
+        //to do: retrieve OntoSoft components.
+        //to do get the ontosoft whole repo description and put it in the KB. test if this affect efficiency too much
+        //at the moment: file
+        String ontoSoftAnn = context.getOntoSoftAnnotations();
+        if(ontoSoftAnn!=null && !ontoSoftAnn.equals("")){
+            System.out.println("Loading OntoSoft annotation file...");
+            this.readFileIntoKnowledgeBase(ontoSoftAnn);
+        }
         this.readFileIntoKnowledgeBase(context.getMotifAnnotations());
         System.out.println("Load complete.");
     }
     
     private void retrieveRemoteWorkflowExecutionData(String execURI){
-        String queryLoadExecMetadata = "construct {<"+execURI+"> ?p ?o}  "+Constants.unionGraph+" where {\n" +
-        "<"+execURI+"> ?p ?o" +
-        "}";
-        String queryLoadAccountResourceMetadata = "construct { "
-        + "?s <http://openprovenance.org/model/opmo#account> <"+execURI+">. ?s ?p ?o}  "+Constants.unionGraph+"  where {\n" +
-        "?s <http://openprovenance.org/model/opmo#account> <"+execURI+">. ?s ?p ?o\n" +
-        "}";
-        String queryGetSoftwareMetadata = "construct { \n" +
-        "?s <http://openprovenance.org/model/opmo#account> <"+execURI+">. \n" +
-        "?s <http://www.opmw.org/ontology/hasExecutableComponent> ?o.\n" +
-        "?o ?p ?q.\n" +
-        "} "+Constants.unionGraph+" \n" +
-        "where \n" +
-        "{\n" +
-        "?s <http://openprovenance.org/model/opmo#account> <"+execURI+">. \n" +
-        "?s <http://www.opmw.org/ontology/hasExecutableComponent> ?o.\n" +
-        "?o ?p ?q\n" +
-        "}";
-        constructWithOnlineRepository(Constants.endpoint, queryLoadExecMetadata, knowledgeBase);
-        constructWithOnlineRepository(Constants.endpoint, queryLoadAccountResourceMetadata, knowledgeBase);
-        constructWithOnlineRepository(Constants.endpoint, queryGetSoftwareMetadata, knowledgeBase);
-        //knowledgeBase.write(System.out, "TTL");
+        constructWithOnlineRepository(Constants.endpoint, Queries.constructExecMetadata(execURI), knowledgeBase);
+        constructWithOnlineRepository(Constants.endpoint, Queries.constructAccountResourceMetadata(execURI), knowledgeBase);
+        constructWithOnlineRepository(Constants.endpoint, Queries.constructGetSoftwareMetadata(execURI), knowledgeBase);
+//        knowledgeBase.write(System.out, "TTL");
     }
     
     //retrieve workflow template data (and connections)
     private void retrieveRemoteWorkflowTemplateData(String templ){
-        String queryLoadTempMetadata = "construct {<"+templ+"> ?p ?o} "
-                + Constants.unionGraph+" where {\n" +
-        "<"+templ+"> ?p ?o" +
-        "}";
-        String queryLoadTemplateProcesses = "construct { "
-        + "?s <http://www.opmw.org/ontology/isStepOfTemplate> <"+templ+">. ?s ?p ?o} "
-                + Constants.unionGraph+" where {\n" +
-        "?s <http://www.opmw.org/ontology/isStepOfTemplate> <"+templ+">. ?s ?p ?o\n" +
-        "}";
-        String queryLoadTemplateVariables = "construct { "
-        + "?s <http://www.opmw.org/ontology/isParameterOfTemplate> <"+templ+">. ?s ?p ?o} "
-                + Constants.unionGraph+" where {\n" +
-        "?s <http://www.opmw.org/ontology/isParameterOfTemplate> <"+templ+">. ?s ?p ?o\n" +
-        "}";
-        String queryLoadTemplateParameters = "construct { "
-        + "?s <http://www.opmw.org/ontology/isVariableOfTemplate> <"+templ+">. ?s ?p ?o} "
-                + Constants.unionGraph+" where {\n" +
-        "?s <http://www.opmw.org/ontology/isVariableOfTemplate> <"+templ+">. ?s ?p ?o\n" +
-        "}";
+        constructWithOnlineRepository(Constants.endpoint, Queries.constructLoadTempMetadata(templ), knowledgeBase);
+        constructWithOnlineRepository(Constants.endpoint, Queries.constructLoadTemplateProcesses(templ), knowledgeBase);
+        constructWithOnlineRepository(Constants.endpoint, Queries.constructLoadTemplateVariables(templ), knowledgeBase);
+        constructWithOnlineRepository(Constants.endpoint, Queries.constructLoadTemplateParameters(templ), knowledgeBase);
+    }
+    
+    //method that will perform a construct queries to make all the steps that have a motif
+    //in the form of hasMotif [a motif]
+    private void assignMotifsToSteps(){
+        //load motif Ontology.
+        knowledgeBase.read("http://purl.org/net/wf-motifs#");
+//        String q = "construct {\n"
+//                + "?r <http://purl.org/net/wf-motifs#hasMotif> [a ?m].} \nwhere{\n"
+//                + "?r a ?c.\n"
+//                + "?c <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?m.\n"
+//                + "?m <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://purl.org/net/wf-motifs#DataOperationMotif>\n"
+//                + "FILTER (?m!=?c)"
+//                + "FILTER (?m!=<http://purl.org/net/wf-motifs#DataOperationMotif>)"
+//                + "FILTER (?m!=<http://purl.org/net/wf-motifs#DataPreparation>)}";
+////        System.out.println(q);
+        String q = "select distinct ?r ?m where {?r a ?c. "
+                + "?c <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?m."
+                + "?m <http://www.w3.org/2000/01/rdf-schema#subClassOf>+ <http://purl.org/net/wf-motifs#DataOperationMotif>."
+                + "FILTER (?m!=<http://purl.org/net/wf-motifs#DataPreparation>)."
+                + "FILTER (?m!=<http://purl.org/net/wf-motifs#DataOperationMotif>)."
+                + "FILTER (?m!=?c)}";
         
-//        ResultSet rd = GeneralMethods.queryOnlineRepository(Constants.endpoint, "Select ?p ?o  from <urn:x-arq:UnionGraph> where {\n" +
-//        "<"+templ+"> ?p ?o}");
-//        System.out.println("Select ?p ?o  from <urn:x-arq:UnionGraph> where {\n" +
-//        "<"+templ+"> ?p ?o}");
-//        while (rd.hasNext()){
-//            QuerySolution qs = rd.nextSolution();
-//            System.out.println(qs.getResource("p").getURI());
-//        }
-        
-        constructWithOnlineRepository(Constants.endpoint, queryLoadTempMetadata, knowledgeBase);
-        constructWithOnlineRepository(Constants.endpoint, queryLoadTemplateProcesses, knowledgeBase);
-        constructWithOnlineRepository(Constants.endpoint, queryLoadTemplateVariables, knowledgeBase);
-        constructWithOnlineRepository(Constants.endpoint, queryLoadTemplateParameters, knowledgeBase);
+        ResultSet rs = selectFromLocalRepository(q);
+        //The construct returns too many results, this way I can filter the response
+        OntModel tempModel = ModelFactory.createOntologyModel();
+        while (rs.hasNext()){
+            QuerySolution qs = rs.next();
+            String m = qs.getResource("?m").getURI();
+            Resource re= qs.getResource("?r");
+            tempModel.add(qs.getResource("?r"), tempModel.createProperty("http://purl.org/net/wf-motifs#hasMotif"), tempModel.createClass(m).createIndividual() );
+//            System.out.println(re.getURI()+ " "+ m);
+        }
+        knowledgeBase.addSubModel(tempModel, false);
+        //knowledgeBase.write(System.out, "TTL");
     }
     
     /**
@@ -166,10 +167,17 @@ public class KnowledgeBase {
         return qe.execAsk();
     }
     
+    public Model constructInLocalRepository(String queryIn){
+        Query query = QueryFactory.create(queryIn);
+        QueryExecution qe = QueryExecutionFactory.create(query, this.knowledgeBase);
+        return qe.execConstruct();
+        //.write(System.out, "TTL")
+    }
+    
     private void readFileIntoKnowledgeBase (String file){
         InputStream in = FileManager.get().open(file);
         if (in == null) {
-            throw new IllegalArgumentException("DOI File: " + file + " not found");
+            throw new IllegalArgumentException("File: " + file + " not found");
         }
         try{
             knowledgeBase.read(in, null, "TTL");

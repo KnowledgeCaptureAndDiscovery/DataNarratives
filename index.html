@@ -16,6 +16,17 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script>
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();   
+               $(".seeless").click(function(){
+			$(".see").hide();
+		});
+               $(".seemore").click(function(){
+       		$(".see").show();
+               });
+});
+	</script>
 
   </head>
    <body>
@@ -24,7 +35,7 @@
       <div class="jumbotron">
 		  <h1>DAta NArratives (DANA)</h2>
 		  <p>Data Narratives are containers of information about computationally generated data. </p>
-		  <p>Find Data Narratives examples <a href="http://dgarijo.github.io/DataNarratives/examples/">on Github</a></p>
+		  <p>Check out some Data Narratives <a href="http://dgarijo.github.io/DataNarratives/examples/">examples</a> or browse the <a href="https://github.com/dgarijo/DataNarratives/">code</a> on Github</a>.</p>
 	  </div>
 	  <p>
 		  Data narratives have three major components: 
@@ -33,44 +44,46 @@
 	  <p>
 	  Different narrative accounts can be generated, each for a separate audience with different content and details.  Data narratives help make science more transparent, because they ensure that the resources are persistent (always accessible) and that the generation of the data is presented in a way that humans can easily use.
 	  </p>
-	  <p>For example, consider the result <a href="https://dx.doi.org/10.6084/m9.figshare.3406603.v1"> term-topic matrix visualization</a>, product of a workflow for training topic visualization. A possible data narrative, focused on the execution view, would be the following: 
+	  <p>For example, consider the result <a href="http://www.opmw.org/uploads/DetectTopics-7a1-bf5cf914-816c-4845-af79-a56672c4bd17/data/Image-b9lezva5r8yn7hz4aqt51ouaz">Image1476159251570 </a>, product of a workflow for topic detection. A possible data narrative, focused on the execution view, would be the following: 
 	  
-	<div class="panel panel panel-primary">
-	  <div class="panel-heading">
-		<h4 class="panel-title">
-		  <a aria-expanded="true" class="" data-toggle="collapse" href="#collapse1">Data Narrative 1: Execution view</a>
-		</h4>
-	  </div>
-	  <div style="" aria-expanded="true" id="collapse1" class="panel-collapse collapse in">
-		<div class="panel-body">
-		<p> 
-			The <a href="http://www.opmw.org/export/4.0/page/resource/WorkflowTemplate/TOPICDETECTION-D751713988987E9331980363E24189CE">topic detection method</a> was run on the <a href="http://www.opmw.org/uploads/TopicDetection-9-1cb15026-dc53-43dc-bc08-107b695fc81e/data/Reuters_R8_train">Reuters_R8_train</a> and <a href="http://www.opmw.org/uploads/TopicDetection-9-1cb15026-dc53-43dc-bc08-107b695fc81e/data/Englisch_Stopwords">Englisch_Stopwords</a> datasets, with iterations set to 100, number of topics set to 10 and batch size set to 10. <a href="http://www.opmw.org/export/4.0/page/resource/WorkflowExecutionArtifact/PLOTIMAGE1464529964358">The term-topic matrix visualization</a> results are stored <a href=" http://www.opmw.org/uploads/TopicDetection-7-0710855c-b2f9-4ba4-ba2c-5cb67b2dd68d/data/PlotImage-djsxeunevsc665ji7gyoc9lj5">online</a> (DOI <a href="https://dx.doi.org/10.6084/m9.figshare.3406603.v1">https://dx.doi.org/10.6084/m9.figshare.3406603.v1</a>). 
-		</p>
-		</div>
-		
-	  </div>
-	</div>
-	 
-	<p>While a narrative focused on the data view would be: </p>
-	<div class="panel panel panel-primary">
+	<div class="panel panel panel-info">
 		  <div class="panel-heading">
 			<h4 class="panel-title">
-			  <a aria-expanded="true" class="" data-toggle="collapse" href="#collapse2">Data Narrative 2: Data view </a>
+			  <span data-toggle="tooltip" data-html="true" title="" data-original-title="The &lt;i&gt;&lt;strong&gt;Execution view&lt;/strong&gt;&lt;/i&gt; shows the information of the overall method, inputs and parameters. If a DOI is present, it will be shown as well.">Data Narrative 1: Execution view</span>  &nbsp;&nbsp;&nbsp;&nbsp;  <button class="btn btn-primary" data-toggle="collapse" href="#collapse1" aria-expanded="true">Hide</button>
 			</h4>
 		  </div>
-		  <div style="" aria-expanded="true" id="collapse2" class="panel-collapse collapse in">
+		  <div id="collapse1" class="panel-collapse collapse in" aria-expanded="true" style="">
 			<div class="panel-body">
-			<p> 
-				The <a href=" http://www.opmw.org/uploads/TopicDetection-7-0710855c-b2f9-4ba4-ba2c-5cb67b2dd68d/data/PlotImage-djsxeunevsc665ji7gyoc9lj5">term-topic matrix visualization results</a> have been derived from the <a href="http://www.opmw.org/uploads/TopicDetection-9-1cb15026-dc53-43dc-bc08-107b695fc81e/data/Reuters_R8_train">Reuters_R8_train</a>  and <a href="http://www.opmw.org/uploads/TopicDetection-9-1cb15026-dc53-43dc-bc08-107b695fc81e/data/Englisch_Stopwords">Englisch_Stopwords</a> datasets.
-			</p>
-			</div>
+<p>
+			<button class="btn btn-primary btn-xs seemore">See more</button>
+			<button class="btn btn-primary btn-xs seeless">See less</button>
+&nbsp;<span class="glyphicon glyphicon-info-sign text-info" data-toggle="tooltip" data-placement="right" data-original-title="The see more button will display all the text of the narrative, while the see less button will hide some details."></span>			</p>			<p> 
+	The <a href="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/DETECTTOPICS-D751713988987E9331980363E24189CE">Detect Topics</a>  method was run on dataset <a href="http://www.opmw.org/uploads/DetectTopics-7a1-bf5cf914-816c-4845-af79-a56672c4bd17/data/stopW.txt">stop W.txt</a> <span class="see">(input WordsToRemove)</span> and dataset <a href="http://www.opmw.org/uploads/DetectTopics-7a1-bf5cf914-816c-4845-af79-a56672c4bd17/data/File.txt">File.txt</a> <span class="see">(input DocumentToFilter)</span>, with <a href="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/NUMBER1476159251570">NUMBER1476159251570</a>  set to 10 and <a href="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/ITERATIONS1476159251570">ITERATIONS1476159251570</a>  set to 5. The <a href="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476159251570">Image1476159251570</a> results are stored <a href="http://www.opmw.org/uploads/DetectTopics-7a1-bf5cf914-816c-4845-af79-a56672c4bd17/data/Image-b9lezva5r8yn7hz4aqt51ouaz">online</a>.			</p>
+<p class="small"><i>Text automatically generated by <a href="https://github.com/dgarijo/DataNarratives/">DANA</a></i>.</p>			</div>
 			
 		  </div>
-	</div>
-	<p>Other narratives may focus on the method view used to produced the result, step by step view or a software view with the description of the particular algorithms and implementations used to obtain the results. <a href="http://dgarijo.github.io/DataNarratives/examples/staticExample/topicTraining/">Browse the rest of the Data Narratives of the term-topic matrix visualization result</a>.
-      <!--<footer class="footer">
-        <p>&copy; 2016</p>
-      </footer>-->
+		</div>
+	 
+	<p>While a narrative focused on the data view would be: </p>
+	<div class="panel panel panel-info">
+		  <div class="panel-heading">
+			<h4 class="panel-title">
+			  <span data-toggle="tooltip" data-html="true" title="" data-original-title="The &lt;i&gt;&lt;strong&gt;Data view&lt;/strong&gt;&lt;/i&gt; shows on the inputs used to obtain the results.">Data Narrative 2: Data view</span>  &nbsp;&nbsp;&nbsp;&nbsp;  <button class="btn btn-primary" data-toggle="collapse" href="#collapse2" aria-expanded="true">Hide</button>
+			</h4>
+		  </div>
+		  <div id="collapse2" class="panel-collapse collapse in" aria-expanded="true" style="">
+			<div class="panel-body">
+<p>
+			<button class="btn btn-primary btn-xs seemore">See more</button>
+			<button class="btn btn-primary btn-xs seeless">See less</button>
+&nbsp;<span class="glyphicon glyphicon-info-sign text-info" data-toggle="tooltip" data-placement="right" data-original-title="The see more button will display all the text of the narrative, while the see less button will hide some details."></span>			</p>			<p> 
+ The <a href="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476159251570">Image1476159251570</a> results have been derived from the dataset <a href="http://www.opmw.org/uploads/DetectTopics-7a1-bf5cf914-816c-4845-af79-a56672c4bd17/data/File.txt">File.txt</a> <span class="see">(input DocumentToFilter)</span> and dataset <a href="http://www.opmw.org/uploads/DetectTopics-7a1-bf5cf914-816c-4845-af79-a56672c4bd17/data/stopW.txt">stop W.txt</a> <span class="see">(input WordsToRemove)</span>.			</p>
+<p class="small"><i>Text automatically generated by <a href="https://github.com/dgarijo/DataNarratives/">DANA</a></i>.</p>			</div>
+			
+		  </div>
+		</div>
+	<p>Other narratives may focus on the method view used to produced the result, step by step view or a software view with the description of the particular algorithms and implementations used to obtain the results. <a href="http://dgarijo.github.io/DataNarratives/examples/webAnalytics/ACCESSIBILITY-IMAGE1476147155422.html/">Browse the rest of the Data Narratives of the image results</a> if you want to see other narratives.
+      
 
     </div> <!-- /container -->
     

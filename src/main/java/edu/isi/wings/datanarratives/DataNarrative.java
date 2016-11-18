@@ -20,6 +20,7 @@ import edu.isi.wings.elements.Step;
 import edu.isi.wings.elements.StepCollection;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
+import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.Literal;
 import edu.isi.wings.elements.Software;
 import java.util.ArrayList;
@@ -41,11 +42,11 @@ public class DataNarrative {
     public DataNarrative(DataNarrativeContext context, String resultURI) {
         this.context = context;
         //normally it would be created from the context; this is a test.
-        kb = new KnowledgeBase("C:\\Users\\dgarijo\\Dropbox (OEG-UPM)\\NetBeansProjects\\DatNarratives\\kb.ttl");
+        //kb = new KnowledgeBase("C:\\Users\\dgarijo\\Dropbox (OEG-UPM)\\NetBeansProjects\\DatNarratives\\kb.ttl");
+        kb= new KnowledgeBase(context);
         //end test
         this.result = new Resource(resultURI, resultURI);
-        //result.setName(this.getVariableNameForResource(result));
-        //I like this more than the variable name for the results. It can be changed
+        
         result.setName(this.getValueForProperty(result, Constants.RDFS_LABEL).replace("Workflow execution artifact: ", ""));
         result.setLocation(this.getValueForProperty(result, Constants.OPMW_LOCATION));        
     }
@@ -108,6 +109,7 @@ public class DataNarrative {
         ArrayList<Step> processes = new ArrayList<>();
         String q = Queries.getMethodProcesses(this.result.getUri());
         ResultSet rs = kb.selectFromLocalRepository(q);
+        //ResultSetFormatter.out(System.out, rs);
         HashMap<String,ArrayList<String>> steps = new HashMap<>();
         while(rs.hasNext()){
             QuerySolution qs = rs.nextSolution();
@@ -168,7 +170,6 @@ public class DataNarrative {
         ArrayList<Step> processes = new ArrayList<>();
         String q = Queries.getExecutionProcesses(this.result.getUri());
         ResultSet rs = kb.selectFromLocalRepository(q);
-        HashMap<String,ArrayList<String>> steps = new HashMap<>();
         while(rs.hasNext()){
             QuerySolution qs = rs.nextSolution();
             String process, name, impl, implName,code; 
@@ -196,7 +197,7 @@ public class DataNarrative {
      */
     public Software getSoftwareMetadata(Step step){
         //labels have to be exactly the same as in ontosoft. otherwise this wont work
-        String q = Queries.getSoftwareMetadata(GeneralMethods.splitCamelCase(step.getName()));
+        String q = Queries.getSoftwareMetadata(step.getName());
         ResultSet rs = kb.selectFromLocalRepository(q);
         Software s = new Software(step.getName(),"");//we dont know the software URI at this stage
         String lic="", lan="", code="", web="";
@@ -422,7 +423,7 @@ public class DataNarrative {
         return orderedList;
     }
     
-    public static void main(String[] args){
+    /*public static void main(String[] args){
         String workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-DETECTTOPICS-7A1-BF5CF914-816C-4845-AF79-A56672C4BD17";
         String workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/DETECTTOPICS-D751713988987E9331980363E24189CE";
         String resultURI = "http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476159251570";
@@ -436,5 +437,5 @@ public class DataNarrative {
 //        
 //        System.out.println(test.getResult().getName());
         System.out.println(test.getMethodInputs().get(0).getLocation());
-    }
+    }*/
 }
