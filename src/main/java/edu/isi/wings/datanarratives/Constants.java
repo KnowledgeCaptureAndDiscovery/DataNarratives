@@ -22,7 +22,8 @@ package edu.isi.wings.datanarratives;
 public class Constants {
     /*constants for querying and accessing data*/
     //public static String endpoint = "http://www.opmw.org/sparql";
-    public static String endpoint = "http://seagull.isi.edu:3030/ds/query";
+//    public static String endpoint = "http://seagull.isi.edu:3030/ds/query";
+    public static String endpoint = "http://disk.isi.edu:3030/ds/query";
     public static String unionGraph = "from <urn:x-arq:UnionGraph>";
     
     /*constants for properties*/
@@ -38,7 +39,7 @@ public class Constants {
     /*Constants for serializing the html document*/
     public static final String TOOLTIP_NARRATIVE_EXEC="The <i><strong>Execution view</strong></i> shows the information of the overall method, inputs and parameters. If a DOI is present, it will be shown as well.";
     public static final String TOOLTIP_NARRATIVE_DATA="The <i><strong>Data view</strong></i> shows on the inputs used to obtain the results.";
-    public static final String TOOLTIP_NARRATIVE_METHOD="The <i><strong>Method view</strong></i> shows the main steps of the workflow. If there is only one main step, this view will summarize the functionality of the rest of the steps";
+    public static final String TOOLTIP_NARRATIVE_METHOD="The <i><strong>Functionality view</strong></i> shows the main steps of the workflow. If there is only one main step, this view will summarize the functionality of the rest of the steps";
     public static final String TOOLTIP_NARRATIVE_ABSTRACT="The <i><strong>Dependency view</strong></i> describes the workflow at a general level, without going into the details.";
     public static final String TOOLTIP_NARRATIVE_IMPL="The <i><strong>Implementation view</strong></i> explains the workflow in terms of how each step is implemented in the execution that produced the results.";
     public static final String TOOLTIP_NARRATIVE_SOFTWARE="The <i><strong>Software view</strong></i> provides details on the software implementations used on each step of the workflow.";

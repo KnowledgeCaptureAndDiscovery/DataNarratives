@@ -79,14 +79,14 @@
 		<div class="panel panel-primary">
 		  <div class="panel-heading">
 			<h4 class="panel-title">
-			  Data Narrative 3: Method view <a data-toggle="collapse" href="#collapse3">(Show more)</a>  <a data-toggle="collapse" href="#collapse3">(Show less)</a>
+			  Data Narrative 3: Functionality view <a data-toggle="collapse" href="#collapse3">(Show more)</a>  <a data-toggle="collapse" href="#collapse3">(Show less)</a>
 			</h4>
 		  </div>
 		  <div id="collapse3" class="panel-collapse collapse">
 			<div class="panel-body">
 			
 			<p>
-			<a href="">Reaeration empirical</a> performs two main types of analyses in the initial dataset. The <a href="">RaerationEmpirical</a> step is the step that compares the Dissolved Oxygen, Temperature, Depth, and Velocity to determine the rate of reaeration, or the K2 value.  The relationship between these inputs is determined through regression on past data. Reaeration is the process by which oxygen is absorbed by the stream from the air. After applying the <a href="">HourlyAverages</a> step, the <a href="">Metabolism</a> step is executed to produce the target results.
+			<a href="">Reaeration empirical</a> performs two main types of analyses in the initial dataset. Fisrt, the <a href="">RaerationEmpirical</a> step compares the Dissolved Oxygen, Temperature, Depth, and Velocity to determine the rate of reaeration, or the K2 value. Then, the <a href="">Metabolism</a> step is executed to produce the target results.
 			</p>
 			
 			</div>
@@ -97,13 +97,13 @@
 		<div class="panel panel-primary">
 		  <div class="panel-heading">
 			<h4 class="panel-title">
-			  Data Narrative 4: Abstract view <a data-toggle="collapse" href="#collapse5">(Show more)</a>  <a data-toggle="collapse" href="#collapse1">(Show less)</a>
+			  Data Narrative 4: Dependency view <a data-toggle="collapse" href="#collapse5">(Show more)</a>  <a data-toggle="collapse" href="#collapse1">(Show less)</a>
 			</h4>
 		  </div>
 		  <div id="collapse5" class="panel-collapse collapse">
 			<div class="panel-body">
 			<p>
-			The <a href="">Reaeration empirical</a> method has 3 steps. The first one, <a href="">Waterflow_Hourly_Averages</a> step, uses an input dataset (WaterflowInputs) to produce a result. Next, the <a href="">Raeration_Empirica</a> step consumes that output to produce another result. The final step is the <a href="">metabolisma</a> step, which produced the <a href="">Metabolism_03-02-2010</a> results.
+			The <a href="">Reaeration empirical</a> method has 3 steps. First, the input data is analyzed by <a href="">Waterflow_Hourly_Averages</a>, followed by  <a href="">Raeration_Empirica</a> (using the output from <a href="">Waterflow_Hourly_Averages</a>). The final step is the <a href="">metabolism</a> step, which produced the <a href="">Metabolism_03-02-2010</a> results.
 			</p>
 			</div>
 		  </div>

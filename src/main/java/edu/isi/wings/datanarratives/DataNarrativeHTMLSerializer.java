@@ -51,9 +51,9 @@ public class DataNarrativeHTMLSerializer {
         //data view
         htmlPage+= getDataOrientedNarrative(d);
         //method view (motif)
-        htmlPage+= getMethodNarrative(d);
+        htmlPage+= getFunctionalityNarrative(d);
         //step view (abstract) TO DO
-        htmlPage+= getAbstractMethodNarrative(d);
+        htmlPage+= getAbstractDependencyNarrative(d);
         //implementation view
         htmlPage+= getImplementationdNarrative(d);
         htmlPage+= getSoftwareNarrative(d);
@@ -300,9 +300,9 @@ public class DataNarrativeHTMLSerializer {
      * @param d
      * @return 
      */
-    private static String getMethodNarrative(DataNarrative d){
+    private static String getFunctionalityNarrative(DataNarrative d){
         Resource result = d.getResult();
-        String narrative3 = Constants.getNarrativeStart("Data Narrative 3: Method view", "3", Constants.TOOLTIP_NARRATIVE_METHOD);
+        String narrative3 = Constants.getNarrativeStart("Data Narrative 3: Functionality view", "3", Constants.TOOLTIP_NARRATIVE_METHOD);
         //retrieve: steps of the workflow (chain)
         StepCollection template = d.getWorkflowTemplate();
         narrative3 += "The method "+serializeResource(d,template, resourceTypes.template)+" ";
@@ -329,7 +329,7 @@ public class DataNarrativeHTMLSerializer {
     }
     
     
-    private static String getAbstractMethodNarrative(DataNarrative d){
+    private static String getAbstractDependencyNarrative(DataNarrative d){
         Resource result = d.getResult();
         String narrative4 = Constants.getNarrativeStart("Data Narrative 4: Dependency view", "4", Constants.TOOLTIP_NARRATIVE_ABSTRACT);
         StepCollection template = d.getWorkflowTemplate();
@@ -433,9 +433,17 @@ public class DataNarrativeHTMLSerializer {
         workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-TRENDINGWORDSVIS-9E34FF2A-1998-4BC8-B6D2-BBFB7212A562";
         workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/TRENDINGWORDSVISUALIZATION-D751713988987E9331980363E24189CE";
         resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1475981286849";
+//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+//        DataNarrative d = new DataNarrative(dc, resultURI);
+//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TRENDING-IMAGE1475981286849.html");
+        
+        //TEST RAVALI DOMAIN
+        workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-PEPTIDE_SEARCH-A-7FA05399-1913-4E1A-919E-4490E1163AEA";
+        workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
+        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209";
         DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
         DataNarrative d = new DataNarrative(dc, resultURI);
-        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TRENDING-IMAGE1475981286849.html");
+        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TEST-MERGEDPEPXML1479478029209.html");
     }
     
    
