@@ -6,4 +6,4 @@ DANA is a project to create different narratives for workflow results. The aim o
 
 Incoming updates: a list of data narratives for genomics, water quality and text analytics workflows!
 
-Check the description online: http://dgarijo.github.io/DataNarratives/
+Check the description online: http://knowledgecaptureanddiscovery.github.io/DataNarratives/
