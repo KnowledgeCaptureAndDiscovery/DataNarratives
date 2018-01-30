@@ -1,0 +1,12 @@
+//Author - Shreyas Kolpe
+Met Daniel at ISI and discussed the initial mockup of the feedback system.
+
+Came up with some possible use cases for the system -
+1. Editing the link label in a narrative.
+2. Editing entire sentences.
+3. Changing the details associated with a link (add/remove information) by retrieving from the Knowledge Base. (in the future can be integrated with the workflow visualization)
+4. Merging two narratives.
+
+Set the agenda for the next one-two weeks -
+1. Create storyboard like mockups for the use cases mentioned.
+2. Undertake technology survey for the project. Initially, can start with static webpages for prototyoing, and then move to a server based system.
