@@ -1,0 +1,9 @@
+//Author - Shreyas Kolpe
+
+For Week 1, completed the following - 
+1. Read through published material sent by Daniel to understand about DANA and the creation of workflows. 
+2. Submitted a summary of the feedback system, outlining its requirements.
+3. Created an intial mockup for a use case regarding the feedback system. The use case is about directly editing the text by changing the details of a link (add/remove information) by retrieving information from the Knowledge Base.
+4. Met with Daniel on Jan 26, and discussed the mockup.
+
+Meanwhile, going through the DataNarrative project code to understand it and for adding the feedback system to it.
