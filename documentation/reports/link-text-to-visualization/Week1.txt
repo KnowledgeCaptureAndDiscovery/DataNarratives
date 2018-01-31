@@ -1,0 +1,10 @@
+/**
+	Author: Shravya Gorur Sheshadri
+			Vijetha P V
+	Date: 23rd Jan, 2018
+**/
+
+Completed tasts:
+1. Created mockup for linking textual entities of DaNa to the workflow.
+2. Worked on mockup for exhibiting the reverse linking of workflow to text by highlighting corresponding entity.
+3. Incorporated changes as suggested by Daniel Garijo.

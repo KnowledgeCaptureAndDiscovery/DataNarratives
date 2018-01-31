@@ -1,0 +1,16 @@
+/**
+	Author: Shravya Gorur Sheshadri
+			Vijetha P V
+	Date: 30th Jan, 2018
+**/
+
+Progress:
+1. Understanding the overall-project structure of the Workflow-explorer project in order to re-use the workflow visualization
+   functionality.
+
+Documentation on Workflow-Explorer project codebase:
+1. The project is built using ReactJS and native Javascript.
+2. 'index.html' contains the code of landing page for workflow-explorer.
+3. The 'renderVisualization' function, which is an essential component in 'visualization.js' takes care of rendering the steps, displaying inputs and outputs of the step and association among them. 
+4. The code for displaying visualization is handled by the value set for the boolean variable 'isIndexpage'. This variable is responsible for both landing page and workflow main page along with 'renderVisualization' function.
+5. The renderVisualization function is called from the changeTabs.js which is essentially on the page load. The default rendering is done for workflowData. Clicking the Execution Tab, will render the associated executionData. 
