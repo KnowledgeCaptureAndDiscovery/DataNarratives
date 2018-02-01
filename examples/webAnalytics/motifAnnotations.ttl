@@ -1,0 +1,20 @@
+@prefix wfm:  <http://purl.org/net/wf-motifs#> .
+
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_RESULTSORTERV21> wfm:hasMotif [a wfm:Sort].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_RESULTSORTERV2> wfm:hasMotif [a wfm:Sort].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_ALIGNEMENTRESULTMERGER> wfm:hasMotif [a wfm:Combine].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_FORMATPDBTOCOMPAREPROTEINSTRUCTURES> wfm:hasMotif [a wfm:FormatTransformation].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV2> wfm:hasMotif [a wfm:DataAnalysis].
+
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_DOCKING> wfm:hasMotif [a wfm:DataAnalysis].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_SIGRESULTMERGER> wfm:hasMotif [a wfm:Combine].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPAREDISSIMILARPROTEINSTRUCTURES> wfm:hasMotif [a wfm:DataAnalysis].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_URLCHECKER> wfm:hasMotif [a wfm:DataCleaning].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_FORMATSTEPTOCOMPAREDISSIMILARPROTEINSTRUCTURES> wfm:hasMotif [a wfm:FormatTransformation].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_IDEALLIGANDCHECKER> wfm:hasMotif [a wfm:DataCleaning].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_LISTMERGER> wfm:hasMotif [a wfm:Combine].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_CREATECLIPFILES> wfm:hasMotif [a wfm:InputAugmentation].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_MAKEGRAPHNETWORK> wfm:hasMotif [a wfm:DataVisualization].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_REMOVESIGNIFICANTPAIRS> wfm:hasMotif [a wfm:Filter].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_COMPARELIGANDBINDINGSITESV21> wfm:hasMotif [a wfm:DataAnalysis].
+<http://www.opmw.org/export/resource/WorkflowTemplateProcess/ABSTRACTGLOBALWORKFLOW2_CREATEIDEALLIGANDS> wfm:hasMotif [a wfm:InputAugmentation].

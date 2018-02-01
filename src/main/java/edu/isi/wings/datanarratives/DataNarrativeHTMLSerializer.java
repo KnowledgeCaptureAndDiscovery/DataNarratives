@@ -441,9 +441,23 @@ public class DataNarrativeHTMLSerializer {
         workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-PEPTIDE_SEARCH-A-7FA05399-1913-4E1A-919E-4490E1163AEA";
         workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
         resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209";
+        
+        //VARIANT CALLER
+        motifAnnotations = "examples\\spellbook\\motifAnnotations.ttl";
+        workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-VARIANTCALLING-2-278FE1EC-E086-4DBB-A1E0-1D49303A8E92";
+        workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/VARIANTCALLING-D751713988987E9331980363E24189CE";
+        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/INDELCALLS1496098149950";
+//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+//        DataNarrative d = new DataNarrative(dc, resultURI);
+//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TEST-VARIANT_CALLING.html");
+        
+        //VARIANT RESEQUENCING
+        workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-VARIANTCALLING_R-472B670A-2813-4B6B-A2A7-BA72D0CDF00F";
+        workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/VARIANTCALLING_RESEQUENCING-D751713988987E9331980363E24189CE";
+        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/FILTDATAFILE1496101618223";
         DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
         DataNarrative d = new DataNarrative(dc, resultURI);
-        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TEST-MERGEDPEPXML1479478029209.html");
+        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TEST-VARIANT_CallingResequencing.html");
     }
     
    

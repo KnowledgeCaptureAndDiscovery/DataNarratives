@@ -1,0 +1,83 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+#OntoSoft annotations for the fake domain. These annotations use the real OntoSoft vocabulary. The components are not available in OntoSoft. That is the reason why they are created in this document.
+
+<http://omics.ontosoft.org/repository/software/Software-O9bYhxeW6J1>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#Perl> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#GPLv2> ;
+  <http://ontosoft.org/software#hasProjectWebsite> [<http://ontosoft.org/software#hasURI> "http://example.org/formattingMallet"];
+  <http://ontosoft.org/software#hasCodeLocation> [<http://ontosoft.org/software#hasURI> "http://example.org/githubRepo"];
+  rdfs:label "FormatMallet" .
+
+<http://omics.ontosoft.org/repository/software/Software-O9bYhxeW6Jon>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#C> ;
+  <http://ontosoft.org/software#hasProjectWebsite> [<http://ontosoft.org/software#hasURI> "http://www.cs.princeton.edu/~blei/lda-c/"];
+  rdfs:label "LDA" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O1>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#Java> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#GPLv2> ;
+  <http://ontosoft.org/software#hasProjectWebsite> [<http://ontosoft.org/software#hasURI> "http://example.org/stopWords"];
+  <http://ontosoft.org/software#hasCodeLocation> [<http://ontosoft.org/software#hasURI> "http://example.org/stopWordsRepo"];
+  rdfs:label "StopWords" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O2>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#Java> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#GPLv3> ;
+  rdfs:label "PlotTopics" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O3>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#CreativeCommons> ;
+  rdfs:label "RemoveMarkup" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O4>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#Javascript> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#GPLv3> ;
+  <http://ontosoft.org/software#hasProjectWebsite> [<http://ontosoft.org/software#hasURI> "http://example.org/removeStopWords"];
+  rdfs:label "RemoveStopWords" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O5>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#C> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#BSD> ;
+  <http://ontosoft.org/software#hasProjectWebsite> [<http://ontosoft.org/software#hasURI> "http://example.org/qs"];
+  <http://ontosoft.org/software#hasCodeLocation> [<http://ontosoft.org/software#hasURI> "http://example.org/repoQuickSort"];
+  rdfs:label "QuickSort" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O6>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#Java> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#GPLv2> ;
+  <http://ontosoft.org/software#hasProjectWebsite> [<http://ontosoft.org/software#hasURI> "http://example.org/formattingMallet"];
+  <http://ontosoft.org/software#hasCodeLocation> [<http://ontosoft.org/software#hasURI> "http://example.org/githubRepo"];
+  rdfs:label "TagCloud" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O7>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#C++> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#GPLv2> ;
+  rdfs:label "RemoveStopWords" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O8>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasImplementationLanguage> <http://ontosoft.org/software#C> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#CreativeCommons> ;
+  <http://ontosoft.org/software#hasCodeLocation> [<http://ontosoft.org/software#hasURI> "http://example.org/removeBadUsers"];
+  rdfs:label "RemoveUsers" .
+  
+<http://omics.ontosoft.org/repository/software/Software-O9>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasCodeLocation> [<http://ontosoft.org/software#hasURI> "http://example.org/githubRepo"];
+  rdfs:label "JoinReports" .
+  
+<http://omics.ontosoft.org/repository/software/Software-10>
+  a <http://ontosoft.org/software#Software> ;
+  <http://ontosoft.org/software#hasLicense> <http://ontosoft.org/software#GPLv2> ;
+  <http://ontosoft.org/software#hasCodeLocation> [<http://ontosoft.org/software#hasURI> "http://example.org/githubKMEANS"];
+  rdfs:label "KMeans" .

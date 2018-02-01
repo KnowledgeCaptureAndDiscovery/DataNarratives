@@ -1,0 +1,16 @@
+@prefix wfm:  <http://purl.org/net/wf-motifs#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# variant caller
+<http://disk.isi.edu/uploads/VariantCalling-2-278fe1ec-e086-4dbb-a1e0-1d49303a8e92/ont/components/library.owl#VariantMetricsCalc> rdfs:subClassOf wfm:DataVisualization.
+<http://disk.isi.edu/uploads/VariantCalling-2-278fe1ec-e086-4dbb-a1e0-1d49303a8e92/ont/components/library.owl#IndelRealignment> rdfs:subClassOf wfm:DataAnalysis.
+
+#Variant calling resequencing
+
+<http://disk.isi.edu/uploads/VariantCalling_R-472b670a-2813-4b6b-a2a7-ba72d0cdf00f/ont/components/library.owl#Annotate_MAFFormatClass> rdfs:subClassOf wfm:FormatTransformation.
+
+<http://disk.isi.edu/uploads/VariantCalling_R-472b670a-2813-4b6b-a2a7-ba72d0cdf00f/ont/components/library.owl#JoinDataFilesClass> rdfs:subClassOf wfm:Combine.
+
+<http://disk.isi.edu/uploads/VariantCalling_R-472b670a-2813-4b6b-a2a7-ba72d0cdf00f/ont/components/library.owl#FilterDataFilesClass> rdfs:subClassOf wfm:Filter.
+
+<http://disk.isi.edu/uploads/VariantCalling_R-472b670a-2813-4b6b-a2a7-ba72d0cdf00f/ont/components/library.owl#PolyScanClass> rdfs:subClassOf wfm:DataAnalysis.
