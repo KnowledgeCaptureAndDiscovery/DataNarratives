@@ -1,0 +1,7 @@
+//Author -  Shreyas Kolpe and Sanjana Srinivasa.
+Feb 5th - Worked on spellbook example, analyzing the missing meta data in the DataNarrative and gained insights on new ideas for Feedback System.
+          Also, discussed the report on mockup.
+     
+Feb 11th - Discussed the mockup for merge.
+            Technology Survey for implementing Feedback System as a static web page.
+            -> HTML5, CSS3, BootStrap, JQuery, JavaScript(still researching framework).
