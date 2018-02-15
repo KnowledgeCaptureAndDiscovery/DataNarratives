@@ -1,0 +1,8 @@
+/**
+	Author: Shravya Gorur Sheshadri
+			Vijetha P V
+	Date: 13th Feb, 2018
+**/
+
+1. Discussed the progress on rendering visualization to data narrative static page and showed demo. 
+2. Discussed problems faced in rendering certain data narratives and link to its corresponding workflow visualization.
