@@ -1,0 +1,10 @@
+//Author -  Shreyas Kolpe and Sanjana Srinivasa.
+
+Summary of last meeting:
+
+1. To include metadata of the dataset which could appear in a box whenever you hover your mouse over it.
+2. For the software view, we could arrange to get the extra details when clicked on the software view and not change the original narrative.
+3. The 'Merge' operation has been dropped for now.
+4. The user makes minor edits in the Editor (in the current 'edit session') and when they are ready to save the changes, they click on 'Record Edit' to save it. At this point, metadata about the changes is captured, and the edit session is added to the history of edit sessions of that particular narrative. No changes are made to the narrative displayed on the web page.
+5. The history of edits made on the narrative can be brought up by clicking on the 'Edit History' button. As you mentioned, one way to show these is a ranked order based on votes. For now, the mockup shows them in chronological order, but the voting mechanism can be implemented too.
+6. 'Edit Text' allows editing the hyperlinks also. So, the entire HTML content of the narratives can be edited. 
