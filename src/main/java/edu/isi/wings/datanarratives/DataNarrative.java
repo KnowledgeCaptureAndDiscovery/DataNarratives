@@ -46,7 +46,7 @@ public class DataNarrative {
         kb= new KnowledgeBase(context);
         //end test
         this.result = new Resource(resultURI, resultURI);
-        
+        System.out.println(result.getUri());
         result.setName(this.getValueForProperty(result, Constants.RDFS_LABEL).replace("Workflow execution artifact: ", ""));
         result.setLocation(this.getValueForProperty(result, Constants.OPMW_LOCATION));        
     }
@@ -76,9 +76,14 @@ public class DataNarrative {
      */
     public String getValueForProperty(Resource r, String property){
         String q = Queries.getValueForResourceProperty(r, property);
+        
         ResultSet rs = kb.selectFromLocalRepository(q);
+        System.out.println(q +"hereeee vj ");
+       
         if (rs.hasNext()){
             QuerySolution qs = rs.nextSolution();
+            System.out.println(" result here eeee " + qs.toString());
+            System.out.println("result" +qs.getLiteral("?v").getString());
             return qs.getLiteral("?v").getString();
         }
         return null;
@@ -422,6 +427,16 @@ public class DataNarrative {
         }
         return orderedList;
     }
+
+	public String getWorkflowTemplateVisualization() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getWorkflowExecutionVisualization() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
     /*public static void main(String[] args){
         String workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-DETECTTOPICS-7A1-BF5CF914-816C-4845-AF79-A56672C4BD17";

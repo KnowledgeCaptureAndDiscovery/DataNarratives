@@ -44,7 +44,7 @@ public class DataNarrativeHTMLSerializer {
         
         
         htmlPage+="<div class=\"row\">\n";
-        htmlPage+="<div class=\"col-xs-12 col-md-12\">\n" +
+        htmlPage+="<div class=\"col-xs-8 col-md-8\">\n" +
 "	  <div class=\"panel-group\">\n";
         //insert data narratives here
         htmlPage+= getExecutionNarrative(d);
@@ -62,7 +62,7 @@ public class DataNarrativeHTMLSerializer {
 "	</div>";
         
         //Wf visualizations here
-/*        htmlPage+="<div class=\"col-xs-6 col-md-4\">";
+       htmlPage+="<div class=\"col-xs-6 col-md-4\">";
         //vis go here
         //replace visualizations with the right ones
         htmlPage+="<div class=\"panel panel-primary\">\n" +
@@ -72,6 +72,14 @@ public class DataNarrativeHTMLSerializer {
 "			</h4>\n" +
 "		  </div>\n" +
 "		  <div id=\"collapseWf\" class=\"panel-collapse collapse \">\n" +
+"<div class=\"bigCanvas\">  \n" + 
+" \n" + 
+"    <div class=\"visualization-container\" id=\"viz\" style=\"width:65%;float:left\">\n" + 
+"        <svg>\n" + 
+"        </svg>\n" + 
+"        <img class=\"lazyload\" id='spinner' src=\"../images/spin.gif\"/ style=\"display:none\">\n" + 
+"\n" + 
+"    </div>" +
 "			<img src=\""+d.getWorkflowTemplateVisualization()+"\" width=\"100%\"/>\n" +
 "		  </div>\n" +
 "		</div>\n" +
@@ -86,9 +94,10 @@ public class DataNarrativeHTMLSerializer {
 "			<img src=\""+d.getWorkflowExecutionVisualization()+"\" width=\"100%\"/>\n" +
 "		  </div>\n" +
 "		</div>";
-        htmlPage+="</div>";*/
+        htmlPage+="</div>";
         
         htmlPage+=Constants.HTML_BODY_END;
+        
         try{
             File f = new File(outPath);
             f.createNewFile();
@@ -397,9 +406,13 @@ public class DataNarrativeHTMLSerializer {
         String workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-DETECTTOPICS-7A1-BF5CF914-816C-4845-AF79-A56672C4BD17";
         String workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/DETECTTOPICS-D751713988987E9331980363E24189CE";
         String resultURI = "http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476159251570";
-        String doiFile = "examples\\webAnalytics\\doiAnnotations.ttl";
-        String motifAnnotations = "examples\\webAnalytics\\motifAnnotations.ttl";
-        String ontoSoftFile = "examples\\webAnalytics\\ontosoftAnnotations.ttl";
+        String doiFile = "examples//webAnalytics//doiAnnotations.ttl";
+        String motifAnnotations = "examples//webAnalytics//motifAnnotations.ttl";
+      //  doiFile = "examples//highlyConnectedDrugs//doiAnnotations.ttl";
+        //motifAnnotations = "examples//highlyConnectedDrugs//motifAnnotations.ttl";
+       String ontoSoftFile = "examples//webAnalytics//ontosoftAnnotations.ttl";
+      
+       //ontoSoftFile =null;
 //        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
 //        DataNarrative d = new DataNarrative(dc, resultURI);
 //        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TOPICS-IMAGE1476159251570.html");
@@ -413,51 +426,55 @@ public class DataNarrativeHTMLSerializer {
 //        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "ACCESSIBILITY-IMAGE1476147155422.html");
         
         //UNDERSTANDING USER ACTIVITY
-        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-UNDERSTANDINGUSE-4787F99D-BC79-4914-BC40-343D254BB3CE";
-        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/UNDERSTANDINGUSERACTIVITY-D751713988987E9331980363E24189CE";
-        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/CLUSTERINGRESULT1475981346023";
-//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
-//        DataNarrative d = new DataNarrative(dc, resultURI);
-//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "UNDERSTANDING-CLUSTERINGRESULT1475981346023.html");
-        
-        
-        //ADRESS PROBLEMATIC USERS
-        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-ADDRESSPROBLEMAT-40285D81-78C6-4913-BE9D-89AC50B16161";
-        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/ADDRESSPROBLEMATICUSERS-D751713988987E9331980363E24189CE";
-        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/FILTEREDDOCUMENT11475981333362";
-//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
-//        DataNarrative d = new DataNarrative(dc, resultURI);
-//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "ADDRESS-FILTEREDDOCUMENT11475981333362.html");
-        
-        //TRENDING WORDS VISUALIZATION
-        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-TRENDINGWORDSVIS-9E34FF2A-1998-4BC8-B6D2-BBFB7212A562";
-        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/TRENDINGWORDSVISUALIZATION-D751713988987E9331980363E24189CE";
-        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1475981286849";
-//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
-//        DataNarrative d = new DataNarrative(dc, resultURI);
-//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TRENDING-IMAGE1475981286849.html");
-        
+//        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-UNDERSTANDINGUSE-4787F99D-BC79-4914-BC40-343D254BB3CE";
+//        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/UNDERSTANDINGUSERACTIVITY-D751713988987E9331980363E24189CE";
+//        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/CLUSTERINGRESULT1475981346023";
+////        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+////        DataNarrative d = new DataNarrative(dc, resultURI);
+////        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "UNDERSTANDING-CLUSTERINGRESULT1475981346023.html");
+//        
+//        
+//        //ADRESS PROBLEMATIC USERS
+//        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-ADDRESSPROBLEMAT-40285D81-78C6-4913-BE9D-89AC50B16161";
+//        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/ADDRESSPROBLEMATICUSERS-D751713988987E9331980363E24189CE";
+//        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/FILTEREDDOCUMENT11475981333362";
+////        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+////        DataNarrative d = new DataNarrative(dc, resultURI);
+////        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "ADDRESS-FILTEREDDOCUMENT11475981333362.html");
+//        
+//        //TRENDING WORDS VISUALIZATION
+//        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-TRENDINGWORDSVIS-9E34FF2A-1998-4BC8-B6D2-BBFB7212A562";
+//        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/TRENDINGWORDSVISUALIZATION-D751713988987E9331980363E24189CE";
+//        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1475981286849";
+////        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+////        DataNarrative d = new DataNarrative(dc, resultURI);
+////        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TRENDING-IMAGE1475981286849.html");
+//        
         //TEST RAVALI DOMAIN
-        workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-PEPTIDE_SEARCH-A-7FA05399-1913-4E1A-919E-4490E1163AEA";
-        workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
-        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209";
+//      workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-PEPTIDE_SEARCH-A-7FA05399-1913-4E1A-919E-4490E1163AEA";
+//     workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
+//        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209";
+                   //http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209
         
-        //VARIANT CALLER
-        motifAnnotations = "examples\\spellbook\\motifAnnotations.ttl";
-        workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-VARIANTCALLING-2-278FE1EC-E086-4DBB-A1E0-1D49303A8E92";
-        workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/VARIANTCALLING-D751713988987E9331980363E24189CE";
-        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/INDELCALLS1496098149950";
-//        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
-//        DataNarrative d = new DataNarrative(dc, resultURI);
-//        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TEST-VARIANT_CALLING.html");
-        
-        //VARIANT RESEQUENCING
-        workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-VARIANTCALLING_R-472B670A-2813-4B6B-A2A7-BA72D0CDF00F";
-        workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/VARIANTCALLING_RESEQUENCING-D751713988987E9331980363E24189CE";
-        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/FILTDATAFILE1496101618223";
+//        //VARIANT CALLER
+//       // motifAnnotations = "examples\\spellbook\\motifAnnotations.ttl";
+//        workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-VARIANTCALLING-2-278FE1EC-E086-4DBB-A1E0-1D49303A8E92";
+//        workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/VARIANTCALLING-D751713988987E9331980363E24189CE";
+//        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/INDELCALLS1496098149950";
+////        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
+////        DataNarrative d = new DataNarrative(dc, resultURI);
+////        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TEST-VARIANT_CALLING.html");
+//        
+//        //VARIANT RESEQUENCING
+//        workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-VARIANTCALLING_R-472B670A-2813-4B6B-A2A7-BA72D0CDF00F";
+//        workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/VARIANTCALLING_RESEQUENCING-D751713988987E9331980363E24189CE";
+//        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/FILTDATAFILE1496101618223";
         DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
         DataNarrative d = new DataNarrative(dc, resultURI);
-        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TEST-VARIANT_CallingResequencing.html");
+       // DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TEST-VARIANT_CallingResequencing.html");
+        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "ACCESSIBILITY-IMAGE_VIJSHRAV.html");
+       
+       
     }
     
    

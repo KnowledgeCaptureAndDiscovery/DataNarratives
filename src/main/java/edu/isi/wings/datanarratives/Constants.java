@@ -22,8 +22,8 @@ package edu.isi.wings.datanarratives;
 public class Constants {
     /*constants for querying and accessing data*/
     //public static String endpoint = "http://www.opmw.org/sparql";
-//    public static String endpoint = "http://seagull.isi.edu:3030/ds/query";
-    public static String endpoint = "http://disk.isi.edu:3030/ds/query";
+  //  public static String endpoint = "http://seagull.isi.edu:3030/ds/query";
+   public static String endpoint = "http://disk.isi.edu:3030/ds/query";
     public static String unionGraph = "from <urn:x-arq:UnionGraph>";
     
     /*constants for properties*/
@@ -101,20 +101,49 @@ public class Constants {
 "			</div>\n" +
 "        </div>\n" +
 "      </nav>";
+    public static final String HTML_SCRIPT = " <script src=\"https://cdn.jsdelivr.net/npm/lazyload@2.0.0-beta.1/lazyload.js\"></script>\n" + 
+			"    \n" + 
+			"    <script type=\"text/javascript\" src=\"js/jquery-latest.js\">\n" + 
+			"    </script>\n" + 
+			"    <script type=\"text/javascript\" src=\"js/jquery-ui.js\">\n" + 
+			"    </script>\n" + 
+			"    <script src=\"js/aes.js\"></script>\n" + 
+			"    <!--script src=\"js/bundle.js\">\n" + 
+			"    </script-->\n" + 
+			"    <script src=\"js/query.js\">\n" + 
+			"    </script>\n" + 
+			"    <script type=\"text/javascript\" src=\"js/d3.v4.min.js\">\n" + 
+			"    </script>\n" + 
+			"    <script src=\"js/workflowInfoScript.js\">\n" + 
+			"    </script>\n" + 
+			"    <script src=\"js/dagre-d3.min.js\">\n" + 
+			"    </script>\n" + 
+			"    <script src=\"js/d3.min.js\">\n" + 
+			"    </script>\n" + 
+			"    <script src=\"js/visualization.js\">\n" + 
+			"    </script>\n" + 
+			"    <script src=\"js/workflow-searchbar.js\">\n" + 
+			"    </script>\n" + 
+			"    <script src=\"js/change-tabs.js\">\n" + 
+			"    </script>\n" + 
+			"    <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\">\n" + 
+			"    </script>" ;
     public static final String HTML_BODY_END = "</div> \n" +
-"    </div>\n" +
-"  </body>\n"+
-"  <script>\n" +
-"  $('.SeeMore2').click(function(){\n" +
-"		var $this = $(this);\n" +
-"		$this.toggleClass('SeeMore2');\n" +
-"		if($this.hasClass('SeeMore2')){\n" +
-"			$this.text('Show');			\n" +
-"		} else {\n" +
-"			$this.text('Hide');\n" +
-"		}\n" +
-"	});\n" +
-"  </script>" +
-"</html>";
+    		"    </div>\n" +
+    		"  </body>\n"+
+    		"  <script>\n" +
+    		"  $('.SeeMore2').click(function(){\n" +
+    		"		var $this = $(this);\n" +
+    		"		$this.toggleClass('SeeMore2');\n" +
+    		"		if($this.hasClass('SeeMore2')){\n" +
+    		"			$this.text('Show');			\n" +
+    		"		} else {\n" +
+    		"			$this.text('Hide');\n" +
+    		"		}\n" +
+    		"	});\n" +
+    		"  </script>" + HTML_SCRIPT +
+    		"</html>";
     
 }
+  
+	

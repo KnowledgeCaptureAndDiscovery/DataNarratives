@@ -155,7 +155,7 @@ public class KnowledgeBase {
      */
     public ResultSet selectFromLocalRepository(String queryIn){
         Query query = QueryFactory.create(queryIn);
-        //System.out.println(queryIn);
+        System.out.println(" querrrryyyyy " +query);
         QueryExecution qe = QueryExecutionFactory.create(query, this.knowledgeBase);
         ResultSet rs = qe.execSelect(); 
         return rs;
