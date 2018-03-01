@@ -74,7 +74,7 @@ public class DataNarrativeHTMLSerializer {
 "		  <div id=\"collapseWf\" class=\"panel-collapse collapse \">\n" +
 "<div class=\"bigCanvas\">  \n" + 
 " \n" + 
-"    <div class=\"visualization-container\" id=\"viz\" style=\"width:65%;float:left\">\n" + 
+"    <div class=\"visualization-container\" id=\"viz\" style=\"width:100%;float:left\">\n" + 
 "        <svg>\n" + 
 "        </svg>\n" + 
 "        <img class=\"lazyload\" id='spinner' src=\"../images/spin.gif\"/ style=\"display:none\">\n" + 
@@ -406,8 +406,8 @@ public class DataNarrativeHTMLSerializer {
         String workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-DETECTTOPICS-7A1-BF5CF914-816C-4845-AF79-A56672C4BD17";
         String workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/DETECTTOPICS-D751713988987E9331980363E24189CE";
         String resultURI = "http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476159251570";
-        String doiFile = "examples//webAnalytics//doiAnnotations.ttl";
-        String motifAnnotations = "examples//webAnalytics//motifAnnotations.ttl";
+        String doiFile = "examples//highlyConnectedDrugs//doiAnnotations.ttl";
+        String motifAnnotations = "examples//highlyConnectedDrugs//motifAnnotations.ttl";
       //  doiFile = "examples//highlyConnectedDrugs//doiAnnotations.ttl";
         //motifAnnotations = "examples//highlyConnectedDrugs//motifAnnotations.ttl";
        String ontoSoftFile = "examples//webAnalytics//ontosoftAnnotations.ttl";
@@ -418,9 +418,9 @@ public class DataNarrativeHTMLSerializer {
 //        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TOPICS-IMAGE1476159251570.html");
         
         //ACCESSIBILITY ANALYTICS
-        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-ACCESSIBILITYANA-28FE1AF0-4994-4B35-B8AE-5678E7F02B1C";
-        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/ACCESSIBILITYANALYTICS-D751713988987E9331980363E24189CE";
-        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476147155422";
+//        workflowExecutionURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionAccount/ACCOUNT-ACCESSIBILITYANA-28FE1AF0-4994-4B35-B8AE-5678E7F02B1C";
+//        workflowTemplateURI="http://www.opmw.org/export/4.0/resource/WorkflowTemplate/ACCESSIBILITYANALYTICS-D751713988987E9331980363E24189CE";
+//        resultURI="http://www.opmw.org/export/4.0/resource/WorkflowExecutionArtifact/IMAGE1476147155422";
 //        DataNarrativeContext dc = new DataNarrativeContext(workflowExecutionURI, workflowTemplateURI, doiFile, motifAnnotations, ontoSoftFile);
 //        DataNarrative d = new DataNarrative(dc, resultURI);
 //        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "ACCESSIBILITY-IMAGE1476147155422.html");
@@ -451,10 +451,10 @@ public class DataNarrativeHTMLSerializer {
 ////        DataNarrativeHTMLSerializer.dataNarrativeToHTML(d, "TRENDING-IMAGE1475981286849.html");
 //        
         //TEST RAVALI DOMAIN
-//      workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-PEPTIDE_SEARCH-A-7FA05399-1913-4E1A-919E-4490E1163AEA";
-//     workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
-//        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209";
-                   //http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209
+      workflowExecutionURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionAccount/ACCOUNT-PEPTIDE_SEARCH-A-7FA05399-1913-4E1A-919E-4490E1163AEA";
+     workflowTemplateURI="http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
+        resultURI="http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209";
+//                   http://www.opmw.org/export/omics/resource/WorkflowExecutionArtifact/MERGEDPEPXML1479478029209
         
 //        //VARIANT CALLER
 //       // motifAnnotations = "examples\\spellbook\\motifAnnotations.ttl";

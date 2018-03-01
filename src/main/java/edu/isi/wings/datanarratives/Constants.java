@@ -22,7 +22,7 @@ package edu.isi.wings.datanarratives;
 public class Constants {
     /*constants for querying and accessing data*/
     //public static String endpoint = "http://www.opmw.org/sparql";
-  //  public static String endpoint = "http://seagull.isi.edu:3030/ds/query";
+//    public static String endpoint = "http://seagull.isi.edu:3030/ds/query";
    public static String endpoint = "http://disk.isi.edu:3030/ds/query";
     public static String unionGraph = "from <urn:x-arq:UnionGraph>";
     

@@ -1,4 +1,4 @@
-var endpoint ="http://seagull.isi.edu:3030/ds/";
+var endpoint;
 var endpoints = [
     "http://seagull.isi.edu:3030/ds/", 
     "http://disk.isi.edu:3030/ds/"
@@ -90,6 +90,7 @@ function getExecutionNumber(workflowURI, currentelement) {
 
 
 var getexampleWorkflowData = function(workflowURI, i) {
+	endpoint="http://disk.isi.edu:3030/";
     var sparql = 'select ?step ?input ?output from <urn:x-arq:UnionGraph> where{{?step <http://www.opmw.org/ontology/isStepOfTemplate> <' +
       workflowURI + '>.?step <http://www.opmw.org/ontology/uses> ?input.}UNION{?step <http://www.opmw.org/ontology/isStepOfTemplate> <' +
       workflowURI +'>.?output <http://www.opmw.org/ontology/isGeneratedBy> ?step.}}';

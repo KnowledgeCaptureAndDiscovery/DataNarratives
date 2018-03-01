@@ -1,4 +1,5 @@
 endpoint = localStorage.getItem("endpoint");
+endpoint="http://disk.isi.edu:3030/ds/";
 
 /*
     @params: function "handler" that can be called when ajax call finishes
@@ -51,7 +52,7 @@ var getWorkflowData = function(workflowURI, handler) {
     var sparql = 'select ?step ?input ?output from <urn:x-arq:UnionGraph> where{{?step <http://www.opmw.org/ontology/isStepOfTemplate> <' + workflowURI + '>.?step <http://www.opmw.org/ontology/uses> ?input.}UNION{?step <http://www.opmw.org/ontology/isStepOfTemplate> <' + workflowURI +'>.?output <http://www.opmw.org/ontology/isGeneratedBy> ?step.}}';
     
     var endpointURI = endpoint + "query?query=" + escape(sparql) + "&format=json";
-    
+    console.log("endpointURI "+endpointURI);
     $('svg').hide();
     $('#spinner').show();
     
@@ -158,7 +159,7 @@ var getWorkflowMetadata = function(workflowURI, handler)  {
     + workflowURI + '><http://purl.org/dc/terms/modified> ?modified}.optional{<' 
     + workflowURI + '><http://www.opmw.org/ontology/createdInWorkflowSystem> ?system}.optional{<' 
     + workflowURI + '><http://www.opmw.org/ontology/hasNativeSystemTemplate> ?download}}';
-    
+    console.log("endpoint "+endpoint);
     var endpointURI = endpoint + 'query?query=' + escape(sparql) + '&format=json';
     
     $.ajax({

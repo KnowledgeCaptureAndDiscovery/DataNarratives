@@ -61,44 +61,44 @@ var setExecutionMetadata = function(res) {
 }
 
 var setWorkflowMetadata = function(res) {
-    //console.log(res);
-    if(res.results.bindings[0].contributer.value != null)  {
-        document.getElementById('contributer-value').textContent = 'contributor: ' + res.results.bindings[0].contributer.value.substring(6);
-        document.getElementById('placeholder1').innerHTML = 'contributor: ' + res.results.bindings[0].contributer.value.substring(6);
-    } 
-    else {
-        document.getElementById('contributer-value').textContent = 'N/A';
-    }
-    if(res.results.bindings[0].modified.value != null)  {
-        document.getElementById('modified-value').textContent = 'modified on: ' + new Date(res.results.bindings[0].modified.value).toString();
-    }
-    else {
-        document.getElementById('modified-value').textContent = 'N/A';
-    }
-    if(res.results.bindings[0].system.value != null)  {
-        document.getElementById('system-value').textContent = 'created by system: ' + res.results.bindings[0].system.value;
-    }
-    else {
-        document.getElementById('system-value').textContent = 'N/A';
-    }
-    if(res.results.bindings[0].version.value != null)  {
-        document.getElementById('version-value').textContent = 'version Number: ' + res.results.bindings[0].version.value;
-    }
-    else {
-        document.getElementById('version-value').textContent = 'N/A';
-    }
-    if(res.results.bindings[0].download.value != null)  {
-        document.getElementById('DownloadTemplate-link').href = res.results.bindings[0].download.value;
-        document.getElementById('DownloadTemplate-link').download = res.results.bindings[0].download.value;
-    }
+//    console.log(res);
+//    if(res.results.bindings[0].contributer.value != null)  {
+//        document.getElementById('contributer-value').textContent = 'contributor: ' + res.results.bindings[0].contributer.value.substring(6);
+//        document.getElementById('placeholder1').innerHTML = 'contributor: ' + res.results.bindings[0].contributer.value.substring(6);
+//    } 
+//    else {
+//        document.getElementById('contributer-value').textContent = 'N/A';
+//    }
+//    if(res.results.bindings[0].modified.value != null)  {
+//        document.getElementById('modified-value').textContent = 'modified on: ' + new Date(res.results.bindings[0].modified.value).toString();
+//    }
+//    else {
+//        document.getElementById('modified-value').textContent = 'N/A';
+//    }
+//    if(res.results.bindings[0].system.value != null)  {
+//        document.getElementById('system-value').textContent = 'created by system: ' + res.results.bindings[0].system.value;
+//    }
+//    else {
+//        document.getElementById('system-value').textContent = 'N/A';
+//    }
+//    if(res.results.bindings[0].version.value != null)  {
+//        document.getElementById('version-value').textContent = 'version Number: ' + res.results.bindings[0].version.value;
+//    }
+//    else {
+//        document.getElementById('version-value').textContent = 'N/A';
+//    }
+//    if(res.results.bindings[0].download.value != null)  {
+//        document.getElementById('DownloadTemplate-link').href = res.results.bindings[0].download.value;
+//        document.getElementById('DownloadTemplate-link').download = res.results.bindings[0].download.value;
+//    }
 }
 
 
-var workflowURI = "http://www.opmw.org/export/4.0/resource/WorkflowTemplate/ACCESSIBILITYANALYTICS-D751713988987E9331980363E24189CE";
+var workflowURI = "http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
 
-document.getElementById("RDFImage-link1").href = workflowURI;
-document.getElementById('workflow-name').innerHTML
-    = "Selected template: " + stripNameFromURI(workflowURI).replace(/\-d.*/g,""); 
+//document.getElementById("RDFImage-link1").href = workflowURI;
+//document.getElementById('workflow-name').innerHTML
+//    = "Selected template: " + stripNameFromURI(workflowURI).replace(/\-d.*/g,""); 
 
 populateSearchBar(function(res) { 
     //executes after ajax call returns
