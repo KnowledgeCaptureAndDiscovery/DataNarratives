@@ -94,16 +94,18 @@ var setWorkflowMetadata = function(res) {
 }
 
 
-var workflowURI = "http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
+var workflowURI = document.getElementById('templateWorkflow').href; //"http://www.opmw.org/export/omics/resource/WorkflowTemplate/PEPTIDE_SEARCH-D751713988987E9331980363E24189CE";
+
+
 
 //document.getElementById("RDFImage-link1").href = workflowURI;
 //document.getElementById('workflow-name').innerHTML
 //    = "Selected template: " + stripNameFromURI(workflowURI).replace(/\-d.*/g,""); 
 
-populateSearchBar(function(res) { 
-    //executes after ajax call returns
-    searchbarAutocomplete(parseAutocomplete(res));
-});
+//populateSearchBar(function(res) { 
+//    //executes after ajax call returns
+//    searchbarAutocomplete(parseAutocomplete(res));
+//});
 
 getWorkflowData(workflowURI, function(res) {
     renderVisualization(res, false, false);

@@ -1,5 +1,6 @@
 endpoint = localStorage.getItem("endpoint");
-endpoint="http://disk.isi.edu:3030/ds/";
+//endpoint="http://disk.isi.edu:3030/ds/";
+endpoint ="http://seagull.isi.edu:3030/ds/";
 
 /*
     @params: function "handler" that can be called when ajax call finishes

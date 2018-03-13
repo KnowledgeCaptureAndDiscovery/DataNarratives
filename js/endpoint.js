@@ -1,4 +1,4 @@
-var endpoint;
+var endpoint="http://seagull.isi.edu:3030/ds/";//"http://disk.isi.edu:3030/ds/" ; 
 var endpoints = [
     "http://seagull.isi.edu:3030/ds/", 
     "http://disk.isi.edu:3030/ds/"
