@@ -15,8 +15,8 @@ function getWorkflowURI() {
     // Matches everything after the first '='
     var regex = /=(.*)/;
     var encryptedURI = regex.exec(querystring);
-    var workflowURI = CryptoJS.AES.decrypt(encryptedURI[1], "csci401-Spring-2017").toString(CryptoJS.enc.Utf8);
-    localStorage.setItem('workflow-uri', workflowURI);
+//    var workflowURI = CryptoJS.AES.decrypt(encryptedURI[1], "csci401-Spring-2017").toString(CryptoJS.enc.Utf8);
+//    localStorage.setItem('workflow-uri', workflowURI);
     if(workflowURI.length==0)
     	{
     		workflowURI = document.getElementById('executionWorkflow').href;
@@ -24,14 +24,20 @@ function getWorkflowURI() {
     return workflowURI;
 }
 
-var renderVisualization = function (res, isTrace, isIndexpage) {
+var renderVisualization = function (res, isTrace, isIndexpage,isExecution) {
     vis = {};
     svg = {};
     svgGroup = {};
     zoom = null;
     if(!isIndexpage)  {
         d3.select("svg").remove();
-        d3.select('.visualization-container').append('svg');
+        if(isExecution)
+        {
+        		console.log("here");
+        		d3.select('.visualization-container2').append('svg');
+        }
+        else
+        		d3.select('.visualization-container').append('svg');
     }
     else {
         d3.selectAll('.visualization-container:nth-child('+(isIndexpage-1)+')').append('svg');
@@ -340,34 +346,34 @@ var addTraces = function(traces) {
     var select = document.getElementById("dropdown-content");
 
     //populates selection box options
-    for(var i = 0; i < traces.length; i++) {
-        var opt = traces[i];
-        var el = document.createElement("a");
-        el.textContent = stripNameFromURI(opt.execution.value);
-        el.value = opt.execution.value;
-        select.appendChild(el);
-    }
-    $("#dropdown-content a").on('click', function() {
-        document.getElementById('execution-name').innerHTML = "Selected execution: " + $(this).text();
-        localStorage.setItem('workflow-uri', $(this).val());
-        $("#collapseSummaryLegend ul").children().remove();
-        summaryList = [];
-        $("#collapseSummaryLegend").collapse('hide');
-        getExecutionData($(this).val(), function(res, executionID) {
-            renderVisualization(res, true);
-            getExecutionMetadata(executionID, function(res) {
-                setExecutionMetadata(res);
-				clearAllPanels();
-            })
-        });
-        document.getElementById("RDFImage-link2").href = $(this).val();
-        //document.getElementById("RDFLink2").innerHTML = $(this).text();
-    });
+//    for(var i = 0; i < traces.length; i++) {
+//        var opt = traces[i];
+//        var el = document.createElement("a");
+//        el.textContent = stripNameFromURI(opt.execution.value);
+//        el.value = opt.execution.value;
+//        select.appendChild(el);
+//    }
+//    $("#dropdown-content a").on('click', function() {
+//        document.getElementById('execution-name').innerHTML = "Selected execution: " + $(this).text();
+//        localStorage.setItem('workflow-uri', $(this).val());
+//        $("#collapseSummaryLegend ul").children().remove();
+//        summaryList = [];
+//        $("#collapseSummaryLegend").collapse('hide');
+//        getExecutionData($(this).val(), function(res, executionID) {
+//            renderVisualization(res, true);
+//            getExecutionMetadata(executionID, function(res) {
+//                setExecutionMetadata(res);
+//				clearAllPanels();
+//            })
+//        });
+//        document.getElementById("RDFImage-link2").href = $(this).val();
+//        //document.getElementById("RDFLink2").innerHTML = $(this).text();
+//    });
     
     
     //select.selectedIndex = 0;
-    document.getElementById('execution-name').innerHTML = "Selected execution: " + $($("#dropdown-content a")[0]).text();
-    document.getElementById("RDFImage-link2").href = $($("#dropdown-content a")[0]).val();
+//    document.getElementById('execution-name').innerHTML = "Selected execution: " + $($("#dropdown-content a")[0]).text();
+//    document.getElementById("RDFImage-link2").href = $($("#dropdown-content a")[0]).val();
     //document.getElementById("RDFLink2").innerHTML = select.options[select.selectedIndex].value;
 }
 

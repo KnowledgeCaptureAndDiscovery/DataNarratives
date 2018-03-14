@@ -38,6 +38,7 @@ var getInputs = function(workflow, handler) {
         jsonp :'callback',
         url :endpointURI,
         success: function(res) {
+        		console.log("results " +JSON.stringify(res.results.bindings));
             if (res.results.bindings) {
                 handler(res.results.bindings);
             }

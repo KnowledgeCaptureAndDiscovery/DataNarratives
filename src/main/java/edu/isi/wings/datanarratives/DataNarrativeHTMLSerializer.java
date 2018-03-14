@@ -94,7 +94,7 @@ public class DataNarrativeHTMLSerializer {
 "		  <div id=\"collapseEx\" class=\"panel-collapse collapse\">\n" +
 "<div class=\"bigCanvas\">  \n" + 
 " \n" + 
-"    <div class=\"visualization-container\" id=\"viz\" style=\"width:100%;\">\n" + 
+"    <div class=\"visualization-container2\" id=\"viz2\" style=\"width:100%;\">\n" + 
 "        <svg>\n" + 
 "        </svg>\n" + 
 //"        <img class=\"lazyload\" id='spinner' src=\"../images/spin.gif\"/ style=\"display:none\">\n" + 

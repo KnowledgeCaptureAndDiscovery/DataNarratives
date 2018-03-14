@@ -1,29 +1,29 @@
 $(document).ready(function() {
     $(".executionTab").click(function() {
-        $("#summaryLegend").show();
-        $("#DownloadTemplate-link").hide();
+//        $("#summaryLegend").show();
+//        $("#DownloadTemplate-link").hide();
         $('.nav-tabs a[href="#execution"]').tab('show');
         // remove any panels showing on page 
         clearAllPanels();
         getExecutionIDs(getWorkflowURI(), function(res, executionID) {
-            renderVisualization(res, true);
+            renderVisualization(res, true,false,true);
             getExecutionMetadata(executionID, function(res) {
                 setExecutionMetadata(res);
             })
         })
-        $("#selecttrace").show();
-        document.getElementById('workflow-name').style.display = "none";
-        document.getElementById('execution-name').style.display = "inline-block";
-        document.getElementById('RDFImage-bar1').style.display = "none";
-        document.getElementById('RDFImage-bar2').style.display = "inline-block";
+//        $("#selecttrace").show();
+//        document.getElementById('workflow-name').style.display = "none";
+//        document.getElementById('execution-name').style.display = "inline-block";
+//        document.getElementById('RDFImage-bar1').style.display = "none";
+//        document.getElementById('RDFImage-bar2').style.display = "inline-block";
     });
     
     $(".workflowTab").click(function() {
-        $("#summaryLegend").hide();
-        $("#selecttrace").hide();
+//        $("#summaryLegend").hide();
+//        $("#selecttrace").hide();
         // remove any panels showing on page 
         clearAllPanels();
-        $("#DownloadTemplate-link").show();
+//        $("#DownloadTemplate-link").show();
         $('.nav-tabs a[href="#workflow"]').tab('show');  
         getWorkflowData(workflowURI, function(res) {
             renderVisualization(res, false);
@@ -32,31 +32,31 @@ $(document).ready(function() {
             setWorkflowMetadata(res);
         });
                 
-        $("#dropdown-content").children().remove();
-        document.getElementById('execution-name').style.display = "none";
-        document.getElementById('workflow-name').style.display = "inline-block";
-        document.getElementById('execution-name').innerHTML = "";
-        document.getElementById('RDFImage-bar1').style.display = "inline-block";
-        document.getElementById('RDFImage-bar2').style.display = "none";
+//        $("#dropdown-content").children().remove();
+//        document.getElementById('execution-name').style.display = "none";
+//        document.getElementById('workflow-name').style.display = "inline-block";
+//        document.getElementById('execution-name').innerHTML = "";
+//        document.getElementById('RDFImage-bar1').style.display = "inline-block";
+//        document.getElementById('RDFImage-bar2').style.display = "none";
     });
 });
 
 var setExecutionMetadata = function(res) {
     if (res.results.hasOwnProperty('bindings')) {
-        document.getElementById('status-value').textContent = 'status: ' + res.results.bindings[0].status.value.toLowerCase();
-        document.getElementById('placeholder2').innerHTML = 'status: ' + res.results.bindings[0].status.value.toLowerCase();
-        document.getElementById('label-value').textContent = 'label: '+res.results.bindings[0].label.value;
-        document.getElementById('start-time-value').textContent = 'start time: ' + new Date(res.results.bindings[0].start.value).toString();
-        document.getElementById('end-time-value').textContent = 'end time: ' + new Date(res.results.bindings[0].end.value).toString();
-        document.getElementById('rights-value').textContent = 'license: ' + res.results.bindings[0].rights.value;
-        document.getElementById('controller-value').textContent = 'controller: '+res.results.bindings[0].controller.value.split("Agent/")[1].toLowerCase();
-    } else {
-        document.getElementById('status-value').textContent = 'N/A';
-        document.getElementById('label-value').textContent = 'N/A';
-        document.getElementById('start-time-value').textContent = 'N/A';
-        document.getElementById('end-time-value').textContent = 'N/A';
-        document.getElementById('rights-value').textContent = 'N/A';
-        document.getElementById('controller-value').textContent = 'N/A';
+//        document.getElementById('status-value').textContent = 'status: ' + res.results.bindings[0].status.value.toLowerCase();
+//        document.getElementById('placeholder2').innerHTML = 'status: ' + res.results.bindings[0].status.value.toLowerCase();
+//        document.getElementById('label-value').textContent = 'label: '+res.results.bindings[0].label.value;
+//        document.getElementById('start-time-value').textContent = 'start time: ' + new Date(res.results.bindings[0].start.value).toString();
+//        document.getElementById('end-time-value').textContent = 'end time: ' + new Date(res.results.bindings[0].end.value).toString();
+//        document.getElementById('rights-value').textContent = 'license: ' + res.results.bindings[0].rights.value;
+//        document.getElementById('controller-value').textContent = 'controller: '+res.results.bindings[0].controller.value.split("Agent/")[1].toLowerCase();
+//    } else {
+//        document.getElementById('status-value').textContent = 'N/A';
+//        document.getElementById('label-value').textContent = 'N/A';
+//        document.getElementById('start-time-value').textContent = 'N/A';
+//        document.getElementById('end-time-value').textContent = 'N/A';
+//        document.getElementById('rights-value').textContent = 'N/A';
+//        document.getElementById('controller-value').textContent = 'N/A';
     }
 }
 
@@ -129,6 +129,8 @@ $(window).resize(function() {
     }*/
     $("#viz svg").height(canvasheight-1);
     $("#viz").height(canvasheight-1);
+    $("#viz2 svg").height(canvasheight-1);
+    $("#viz2").height(canvasheight-1);
 });
 
 $("#viz").bind("DOMSubtreeModified",function(){
@@ -138,4 +140,12 @@ $("#viz").bind("DOMSubtreeModified",function(){
     }*/
     $("#viz svg").height(canvasheight-1);
     $("#viz").height(canvasheight-1);
+});
+
+
+$("#viz2").bind("DOMSubtreeModified",function(){
+    var canvasheight = $(window).height() - $("#myTopnav").height() - $("#switchtabs").height();
+  
+    $("#viz2 svg").height(canvasheight-1);
+    $("#viz2").height(canvasheight-1);
 });

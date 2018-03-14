@@ -36,8 +36,11 @@ function checkOversize(currentelement)  {
     var variable = document.getElementById("accordionVariables");
     var toplegend = document.getElementsByClassName("rightCanvas")[0];
     var left = document.getElementById("viz");
-
+    var left2= document.getElementById("viz2");
     if(processnodes.clientHeight + variable.clientHeight + toplegend.clientHeight + 100> left.clientHeight)  {
+        return true;
+    }
+    else  if(processnodes.clientHeight + variable.clientHeight + toplegend.clientHeight + 100> left2.clientHeight)  {
         return true;
     }
     //console.log(processnodes.clientHeight, variable.clientHeight,toplegend.clientHeight,left.clientHeight);
@@ -109,7 +112,24 @@ function addProcessInfo(processURI, inputsArray, outputsArray) {
 				removeProcessInfo(sectionsShowing[0]);
 			}
 		}
-		
+		if($("#viz2").height() > 650)  {
+			if (processInfosCount == 3) {
+				// remove a process
+				removeProcessInfo(sectionsShowing[0]);
+			}
+		}
+		else if($("#viz2").height() > 550){
+			if (processInfosCount == 2) {
+				// remove a process
+				removeProcessInfo(sectionsShowing[0]);
+			}
+		}
+		else {
+			if (processInfosCount == 1) {
+				// remove a process
+				removeProcessInfo(sectionsShowing[0]);
+			}
+		}
 
 		
 		
