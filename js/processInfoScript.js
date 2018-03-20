@@ -18,7 +18,8 @@ function addProcessInfo(processURI, inputsArray, outputsArray) {
         translateVisualization();
 		console.log("should reize");
 		$vis.animate({
-                "width": "63%"
+                "width": "63%",
+                	"height" : "400px"
             }, "slow");
 	}
 	// check that process div thing is not over count
@@ -158,7 +159,8 @@ function addVariableInfo(variableURI, usedBy, generatedBy, variableType) {
 		console.log("should reize");
         translateVisualization();
 		$vis.animate({
-                "width": "63%"
+                "width": "63%",
+                "height" : "400px"
             }, "slow");
 	}
 	// check that variable div thing is not over count
@@ -300,7 +302,8 @@ $(document).on('click', '.glyphicon-remove-circle', function () {
 		console.log("should reize");
 		unhighlightAllPuts();
 		$vis.animate({
-                "width": "100%"
+                "width": "100%",
+                "height" : "400px"
             }, "slow");
 	}
 });
@@ -322,7 +325,8 @@ $(document).on('click', '.glyphicon-remove-sign', function () {
 		console.log("should reize");
 		unhighlightAllPuts();
 		$vis.animate({
-                "width": "100%"
+                "width": "100%",
+                "height" : "400px"
             }, "slow");
 	}
 });
@@ -346,7 +350,8 @@ function removeVariableInfo(removeID) {
 		console.log("should reize");
 		unhighlightAllPuts();
 		$vis.animate({
-							"width": "100%"
+							"width": "100%",
+							"height" : "400px"
 					}, "slow");
 	}
 }
@@ -371,7 +376,8 @@ function removeProcessInfo(removeID) {
 		console.log("should reize");
 		unhighlightAllPuts();
 		$vis.animate({
-                "width": "100%"
+                "width": "100%",
+                "height" : "400px"
             }, "slow");
 	}
 }

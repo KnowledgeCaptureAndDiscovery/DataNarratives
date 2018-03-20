@@ -65,7 +65,7 @@ public class DataNarrativeHTMLSerializer {
        htmlPage+="<div class=\"col-xs-6 col-md-4\">";
         //vis go here
         //replace visualizations with the right ones
-        htmlPage+="<div class=\"panel panel-primary workflowTab\">\n" +
+        htmlPage+="<div class=\"panel panel-primary workflowTab template\">\n" +
 "		  <div class=\"panel-heading\">\n" +
 "			<h4 class=\"panel-title\">\n" +
 "			  <a data-toggle=\"collapse\" href=\"#collapseWf\">Workflow Visualization (Abstract method)</a>\n" +
@@ -75,7 +75,7 @@ public class DataNarrativeHTMLSerializer {
 "		  <div id=\"collapseWf\" class=\"panel-collapse collapse \">\n" +
 "<div class=\"bigCanvas\">  \n" + 
 " \n" + 
-"    <div class=\"visualization-container\" id=\"viz\" style=\"width:100%;\">\n" + 
+"    <div class=\"visualization-container\" id=\"viz\" style=\"width:100%;height:400px;\">\n" + 
 "        <svg>\n" + 
 "        </svg>\n" + 
 //"        <img class=\"lazyload\" id='spinner' src=\"../images/spin.gif\"/ style=\"display:none\">\n" + 
@@ -84,7 +84,7 @@ public class DataNarrativeHTMLSerializer {
 //"			<img src=\""+d.getWorkflowTemplateVisualization()+"\" width=\"100%\"/>\n" +
 "		  </div>\n" +
 "		</div>\n" +
-"		\n" +
+"		</div>\n" +
 "		<div class=\"panel panel-primary executionTab\">\n" +
 "		  <div class=\"panel-heading\">\n" +
 "			<h4 class=\"panel-title\">\n" +
@@ -94,7 +94,7 @@ public class DataNarrativeHTMLSerializer {
 "		  <div id=\"collapseEx\" class=\"panel-collapse collapse\">\n" +
 "<div class=\"bigCanvas\">  \n" + 
 " \n" + 
-"    <div class=\"visualization-container2\" id=\"viz2\" style=\"width:100%;\">\n" + 
+"    <div class=\"visualization-container2\" id=\"viz2\" style=\"width:100%;height:400px;\">\n" + 
 "        <svg>\n" + 
 "        </svg>\n" + 
 //"        <img class=\"lazyload\" id='spinner' src=\"../images/spin.gif\"/ style=\"display:none\">\n" + 
@@ -102,7 +102,7 @@ public class DataNarrativeHTMLSerializer {
 "    </div>" +
 "		  </div>\n" +
 "		  </div>\n" +
-"		</div>";
+"		";
         htmlPage+="</div>";
         
         htmlPage+=Constants.HTML_BODY_END;

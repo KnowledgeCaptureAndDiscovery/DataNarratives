@@ -37,12 +37,12 @@ function checkOversize(currentelement)  {
     var toplegend = document.getElementsByClassName("rightCanvas")[0];
     var left = document.getElementById("viz");
     var left2= document.getElementById("viz2");
-    if(processnodes.clientHeight + variable.clientHeight + toplegend.clientHeight + 100> left.clientHeight)  {
-        return true;
-    }
-    else  if(processnodes.clientHeight + variable.clientHeight + toplegend.clientHeight + 100> left2.clientHeight)  {
-        return true;
-    }
+//    if(processnodes.clientHeight + variable.clientHeight + toplegend.clientHeight + 100> left.clientHeight)  {
+//        return true;
+//    }
+//    else  if(processnodes.clientHeight + variable.clientHeight + toplegend.clientHeight + 100> left2.clientHeight)  {
+//        return true;
+//    }
     //console.log(processnodes.clientHeight, variable.clientHeight,toplegend.clientHeight,left.clientHeight);
     return false;
 }
@@ -166,7 +166,7 @@ function addProcessInfo(processURI, inputsArray, outputsArray) {
 				l = outputsArray.length;
 		}
 		// adding inputs and outputs to the table
-		var tableBody = $newPanel.find("table")[0];
+		var tableBody = document.createElement("tbody");
 		var newTableBody = document.createElement("tbody");
 		newTableBody.setAttribute("class", "process_info_table_body");
 		for (var i = 0; i < l; i++) {
@@ -192,8 +192,8 @@ function addProcessInfo(processURI, inputsArray, outputsArray) {
 			var codeURI = endpoint + 'query?query=' + escape(code) + '&format=json'; 
 			$.get(codeURI, function(data,status)  {
 				//console.log(data);
-				$newPanel.find("#DownloadImage-variable-link").attr("href", data.results.bindings[0].software.value);
-				$newPanel.find("#DownloadImage-variable-link").attr("download", data.results.bindings[0].software.value);
+//				$newPanel.find("#DownloadImage-variable-link").attr("href", data.results.bindings[0].software.value);
+//				$newPanel.find("#DownloadImage-variable-link").attr("download", data.results.bindings[0].software.value);
 			});
 		}
 		// add new panel to the page
@@ -457,7 +457,10 @@ function removeVariableInfo(removeID) {
 function removeProcessInfo(removeID) {
     var divToRemove = document.getElementById(removeID);
 		console.log(divToRemove);
-    divToRemove.remove();
+	if (divToRemove != null) {
+		divToRemove.remove();
+	}	
+    
 		// remove from lists that are keeping track of which processes are currently showing on page
 		processInfosCount = processInfosCount - 1;
 		for (var i = 0; i < sectionsShowing.length; i++) {
