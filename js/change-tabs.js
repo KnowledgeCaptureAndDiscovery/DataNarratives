@@ -4,7 +4,7 @@ $(document).ready(function() {
 //        $("#DownloadTemplate-link").hide();
         $('.nav-tabs a[href="#execution"]').tab('show');
         // remove any panels showing on page 
-        clearAllPanels();
+//        clearAllPanels();
         getExecutionIDs(getWorkflowURI(), function(res, executionID) {
             renderVisualization(res, true,false,true);
             getExecutionMetadata(executionID, function(res) {
@@ -22,7 +22,7 @@ $(document).ready(function() {
 //        $("#summaryLegend").hide();
 //        $("#selecttrace").hide();
         // remove any panels showing on page 
-        clearAllPanels();
+//        clearAllPanels();
 //        $("#DownloadTemplate-link").show();
         $('.nav-tabs a[href="#workflow"]').tab('show');  
         getWorkflowData(workflowURI, function(res) {

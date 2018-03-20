@@ -65,8 +65,8 @@ public class DataNarrativeHTMLSerializer {
        htmlPage+="<div class=\"col-xs-6 col-md-4\">";
         //vis go here
         //replace visualizations with the right ones
-        htmlPage+="<div class=\"panel panel-primary workflowTab template\">\n" +
-"		  <div class=\"panel-heading\">\n" +
+        htmlPage+="<div class=\"panel panel-primary \">\n" +
+"		  <div class=\"panel-heading workflowTab\">\n" +
 "			<h4 class=\"panel-title\">\n" +
 "			  <a data-toggle=\"collapse\" href=\"#collapseWf\">Workflow Visualization (Abstract method)</a>\n" +
 "			</h4>\n" +
@@ -85,8 +85,8 @@ public class DataNarrativeHTMLSerializer {
 "		  </div>\n" +
 "		</div>\n" +
 "		</div>\n" +
-"		<div class=\"panel panel-primary executionTab\">\n" +
-"		  <div class=\"panel-heading\">\n" +
+"		<div class=\"panel panel-primary\">\n" +
+"		  <div class=\"panel-heading executionTab\">\n" +
 "			<h4 class=\"panel-title\">\n" +
 "			  <a data-toggle=\"collapse\" href=\"#collapseEx\">Workflow Execution Visualization</a>\n" +
 "			</h4>\n" +
