@@ -1,0 +1,129 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/iron-label/iron-label.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-iconset-svg/iron-iconset-svg.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="shared-styles.html">
+<dom-module id="my-view2">
+    <template>
+  
+      <style include="shared-styles">
+        :host {
+          display: block;
+  
+          padding: 10px;
+        }
+        iron-label {
+          display: block;
+        }
+        
+        paper-dropdown-menu {
+          display: block;
+        }
+  
+        paper-radio-group {
+          display: block;
+        }
+        
+        paper-checkbox {
+          display: block;
+        }
+      </style>
+  
+     
+      <h1>Demonstrating some form elements</h1>
+      <iron-form>
+        
+        <form method="get" action="/form/handler">
+  
+          <iron-label>
+              Text Input 
+              <paper-input always-float-label label="Floating label"></paper-input>
+          </iron-label>
+          
+          <br/>
+  
+          <iron-label>
+            Drop Down Menu
+            <paper-dropdown-menu label="select an option">
+              <paper-listbox slot="dropdown-content">
+                <paper-item>option 1</paper-item>
+                <paper-item>option 2</paper-item>
+                <paper-item>option 3</paper-item>
+                <paper-item>option 4</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+          </iron-label>
+        
+          <br/>
+  
+          <iron-label>
+            Radio Button Group
+            <paper-radio-group selected="small" allow-empty-selected>
+              <paper-radio-button name="small">Small</paper-radio-button>
+              <paper-radio-button name="medium">Medium</paper-radio-button>
+              <paper-radio-button name="large">Large</paper-radio-button>
+            </paper-radio-group>
+          </iron-label>
+  
+          <br/>
+  
+          <iron-label>
+            Toggle Some Property
+            <paper-toggle-button checked></paper-toggle-button>
+          </iron-label>
+          
+          <br/>
+  
+          <iron-label>
+            Checkboxes
+            <paper-checkbox name="cheese" value="yes" checked>Check Me</paper-checkbox>
+            <paper-checkbox name="cheese" value="no">Check Me too</paper-checkbox>
+          </iron-label>
+          
+          <br/>
+  
+  
+          <iron-label>
+            Different Types of Buttons
+            <paper-button class="pink">link</paper-button>
+            <paper-button raised class="indigo">raised</paper-button>
+            <paper-button toggles raised class="green">toggles</paper-button>
+            <paper-button disabled class="disabled">disabled</paper-button>
+          </iron-label>
+        </form>
+      </iron-form>
+  
+  
+    </template>
+  
+    <script>
+      class MyView2 extends Polymer.Element {
+        static get is() { return 'my-view2'; }
+      }
+  
+      window.customElements.define(MyView2.is, MyView2);
+    </script>
+  </dom-module>
+  
