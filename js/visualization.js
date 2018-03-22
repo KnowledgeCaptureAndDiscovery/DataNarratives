@@ -11,16 +11,13 @@ var summaryList = [];
 
 
 function getWorkflowURI() {
-    var querystring = window.location.search;
+//    var querystring = window.location.search;
     // Matches everything after the first '='
-    var regex = /=(.*)/;
-    var encryptedURI = regex.exec(querystring);
-//    var workflowURI = CryptoJS.AES.decrypt(encryptedURI[1], "csci401-Spring-2017").toString(CryptoJS.enc.Utf8);
+//    var regex = /=(.*)/;
+//    var encryptedURI = regex.exec(querystring);
+////    var workflowURI = CryptoJS.AES.decrypt(encryptedURI[1], "csci401-Spring-2017").toString(CryptoJS.enc.Utf8);
 //    localStorage.setItem('workflow-uri', workflowURI);
-    if(workflowURI.length==0)
-    	{
-    		workflowURI = document.getElementById('executionWorkflow').href;
-    	}
+//    workflowURI = document.getElementById('executionWorkflow').href;
     return workflowURI;
 }
 

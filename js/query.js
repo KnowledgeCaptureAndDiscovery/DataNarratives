@@ -91,7 +91,7 @@ var getExecutionIDs = function (workflowURI, handler) {
         error: function(){
         },
         success: function(res) {
-            getExecutionData(res.results.bindings[0].execution.value, handler);
+            getExecutionData(document.getElementById("executionWorkflow").href, handler);
             addTraces(res.results.bindings)
         }
     })
@@ -161,7 +161,6 @@ var getWorkflowMetadata = function(workflowURI, handler)  {
     + workflowURI + '><http://purl.org/dc/terms/modified> ?modified}.optional{<' 
     + workflowURI + '><http://www.opmw.org/ontology/createdInWorkflowSystem> ?system}.optional{<' 
     + workflowURI + '><http://www.opmw.org/ontology/hasNativeSystemTemplate> ?download}}';
-    console.log("endpoint "+endpoint);
     var endpointURI = endpoint + 'query?query=' + escape(sparql) + '&format=json';
     
     $.ajax({
