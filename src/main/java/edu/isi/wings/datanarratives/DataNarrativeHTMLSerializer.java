@@ -192,10 +192,10 @@ public class DataNarrativeHTMLSerializer {
             case executionArtifact:
                 return "<a href=\""+r.getLocation()+"\">"+GeneralMethods.getFileNameFromURL(r.getLocation())+"</a> ";
             case parameter:
-                return "<a href=\""+r.getUri()+"\">"+GeneralMethods.getFileNameFromURL(r.getUri())+"</a> ";
+                return "<a onmouseout=\"unHightlightNode(\'"+r.getUri()+"\')\" onmouseover=\"hightlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.getFileNameFromURL(r.getUri())+"</a> ";
             case template:
                 //templates may have an hyphen, remove
-                return "<a href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase(GeneralMethods.removeHypen(r.getName()))+"</a> ";
+                return "<a onmouseout=\"unHightlightNode(\'"+r.getUri()+"\')\" onmouseover=\"hightlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase(GeneralMethods.removeHypen(r.getName()))+"</a> ";
             case processAndMotif:
                 String serialization = serializeResource(d, r, resourceTypes.other);
                 ArrayList<String> motifs = ((Step)r).getMotifs();
@@ -226,7 +226,7 @@ public class DataNarrativeHTMLSerializer {
                     return s;
             default:
                 //by default, get the name plus URI, without camelcase.
-                return "<a href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase((r.getName()))+"</a>";
+                return "<a onmouseout=\"unHightlightNode(\'"+r.getUri()+"\')\" onmouseover=\"hightlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase((r.getName()))+"</a>";
         }
     }
     /**
