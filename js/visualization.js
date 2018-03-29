@@ -374,11 +374,42 @@ var addTraces = function(traces) {
     //document.getElementById("RDFLink2").innerHTML = select.options[select.selectedIndex].value;
 }
 
+var hightlightNode = function(nodeUri) {
+	svg.selectAll('g.node rect, g.node ellipse').each( function(uri) {
+		var node = vis.node(uri);
+		if(node.uri == nodeUri) {
+              d3.select(this)
+                  .attr('stroke', 'red')
+                  .attr('stroke-width', '4px');
+		}
+      
+	});
+}
+
+var unHightlightNode = function(nodeUri) {
+	svg.selectAll('g.node rect, g.node ellipse').each( function(uri) {
+		var node = vis.node(uri);
+		if(node.uri == nodeUri) {
+              d3.select(this)
+                  .attr('stroke', null)
+                  .attr('stroke-width', null);
+		}
+      
+	});
+}
+
+
 var highlightPuts = function(putsArray) {
-    svg.selectAll('g.node ellipse').each( function(id) {
-        var node = vis.node(id);
+	
+    svg.selectAll('g.node ellipse').each( function(uri) {
+        var node = vis.node(uri);
+//        d3.select(node)
+//        .attr('stroke', 'red')
+//        .attr('stroke-width', '4px');
         for (var i = 0; i < putsArray.length; i++) {
             if (putsArray[i] == node.uri) {
+            	console.log(node.uri);
+//            	console.log(this);
                 d3.select(this)
                     .attr('stroke', 'red')
                     .attr('stroke-width', '4px');
@@ -388,8 +419,8 @@ var highlightPuts = function(putsArray) {
 }
 
 var unhighlightAllPuts = function() {
-    svg.selectAll('g.node ellipse').each( function(id) {
-        var node = vis.node(id);
+    svg.selectAll('g.node ellipse').each( function(uri) {
+        var node = vis.node(uri);
         d3.select(this)
             .attr('stroke', null)
             .attr('stroke-width', null);
@@ -425,6 +456,7 @@ var setupNodeOnClick = function (svg, vis) {
         });
             
         if (node.type == 'process') {
+//        		hightlightProcess(node.uri);
             addProcessInfo(node.uri, processInputMapping[node.uri], processOutputMapping[node.uri]);
             highlightPuts(processInputMapping[node.uri]);
             highlightPuts(processOutputMapping[node.uri]);
