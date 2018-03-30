@@ -1,3 +1,5 @@
 //Author -  Shreyas Kolpe and Sanjana Srinivasa.
 
-DANA static page in polymer.
+1. DANA static page in polymer was created similar to the existing DATA NARRATIVE view.
+2. Each view was a paper card element with buttons.
+
