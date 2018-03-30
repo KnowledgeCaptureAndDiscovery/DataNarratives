@@ -110,6 +110,7 @@ var renderVisualization = function (res, isTrace, isIndexpage,isExecution) {
                     style: "fill: #FFCC99;",
                     uri: step,
                     type: 'process'
+                    
                 });
                 j++;
             }
@@ -280,6 +281,7 @@ var renderVisualization = function (res, isTrace, isIndexpage,isExecution) {
         if(!isIndexpage)  {
             svg.attr('height', vis.graph().height * scale + yTopMargin);
             setupNodeOnClick(svg, vis);
+            
         }   
     }
     
@@ -374,6 +376,11 @@ var addTraces = function(traces) {
     //document.getElementById("RDFLink2").innerHTML = select.options[select.selectedIndex].value;
 }
 
+var processClicked = function(){
+	
+	console.log(" process clicked ");
+}
+
 var hightlightNode = function(nodeUri) {
 	svg.selectAll('g.node rect, g.node ellipse').each( function(uri) {
 		var node = vis.node(uri);
@@ -397,6 +404,8 @@ var unHightlightNode = function(nodeUri) {
       
 	});
 }
+
+
 
 
 var highlightPuts = function(putsArray) {
@@ -447,16 +456,17 @@ var unhighlightPuts = function(putsArray) {
 var setupNodeOnClick = function (svg, vis) {
     //setup on click listeners for every node
     svg.selectAll('g.node').on('click', function(id) {
+    	
         var node = vis.node(id);
-        
+        console.log(" was clicked" + node.uri);
+        $("a[href^='http://'").css("background-color","white");
+        $("a[href$='"+ node.uri+ "']").css("background-color","yellow");
         svg.selectAll('g.node ellipse').each(function() {
             d3.select(this)
                 .attr('stroke', null)
                 .attr('stroke-width', null);
-        });
-            
+        });    
         if (node.type == 'process') {
-//        		hightlightProcess(node.uri);
             addProcessInfo(node.uri, processInputMapping[node.uri], processOutputMapping[node.uri]);
             highlightPuts(processInputMapping[node.uri]);
             highlightPuts(processOutputMapping[node.uri]);
