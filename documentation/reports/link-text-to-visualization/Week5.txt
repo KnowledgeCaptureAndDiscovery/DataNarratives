@@ -5,7 +5,7 @@
 **/
 
 1. Added highlight to the visualization element on hover of textual narrative link.
-2. Added highlight to the textual narrative link on hover of the visualization element.
+2. Added highlight to the textual narrative link on click of the visualization element.
 3. Rendering the correct visualization for the execution workflow based on execution URI being used in the textual data narrative.( There was a different execution of the workflow being displayed earlier).
 4. Corrected rendering for visualization. 
 
