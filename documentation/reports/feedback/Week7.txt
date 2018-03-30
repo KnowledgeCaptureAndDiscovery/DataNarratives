@@ -1,2 +1,5 @@
 //Author -  Shreyas Kolpe and Sanjana Srinivasa.
 
+1. Included resizable panel to hold views and narrative editor.
+2. Dynamically loaded narrative content from JSON file.
+3. Added Edit Functionality which opens the Narrative Editor with the view loaded.
