@@ -1,0 +1,7 @@
+{
+  "name": "feedback-app",
+  "short_name": "feedback-app",
+  "description": "The single page web app of the feedback system",
+  "start_url": "/",
+  "display": "standalone"
+}

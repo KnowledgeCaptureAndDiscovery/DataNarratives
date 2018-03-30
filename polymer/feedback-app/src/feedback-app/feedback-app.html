@@ -1,0 +1,254 @@
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/app-layout/app-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="/bower_components/app-layout/demo/sample-content.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/polymer/lib/utils/gestures.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html"> 
+<link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="/bower_components/resizable-panels/resizable-panels.html">
+<link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="/bower_components/iron-collapse-button/iron-collapse-button.html">
+
+<dom-module id="feedback-app">
+  
+    <template>
+        <custom-style>
+            <style is="custom-style">
+              html, body {
+                margin: 0;
+                font-family: 'Roboto', 'Noto', sans-serif;
+                -webkit-font-smoothing: antialiased;
+                background: #f1f1f1;
+                max-height: 368px;
+              }
+              app-toolbar {
+                background-color: #4285f4;
+                color: #fff;
+              }
+          
+              paper-icon-button {
+                --paper-icon-button-ink-color: white;
+              }
+          
+              /* app-header {
+                @apply --layout-fixed-top;
+                color: #fff;
+                --app-header-background-rear-layer: {
+                  background-color: #ef6c00;
+                };
+              } */
+              
+              #main-content{
+                display: flex;
+              }
+              #narrative-views{
+                border-width: 2px;
+                border-style:solid;
+                border-color: chocolate;
+                margin-top: 0px;
+                margin-right: 0px;
+                display: list-item;
+                padding: 20px;
+              }
+              #narrative-editor{
+                border-style: dotted;
+                border-width: 4px;
+                border-color: coral;
+                margin-top: 0px;
+                margin-left: 0px;
+                width: 500px;
+                position: fixed;
+              }
+              sample-content {
+                padding-top: 64px;
+              }
+              
+              paper-card{
+                color: black;
+                width: 100%;
+              }
+              paper-tooltip{
+                --paper-tooltip-delay-in: 500;
+                font-size: 12pt;
+              }
+              .panel { 
+                padding: 20px; 
+                color: white; 
+                width: 100%;
+                height: 100%;
+                /* max-width: 100%; */
+              }
+              .p1 { 
+                background-color: white; 
+                width: 100%;
+                height: 100%;
+                /* max-width: 100%;  */
+                overflow-y: auto;
+              }
+              .p2 { 
+                background-color: beige; 
+                width: 50%;
+                height: 100%;
+                /* max-width: 50%  */
+              }
+              #card-body{
+                margin:20px;
+              }
+              /* paper-card {
+                margin-top: 64px;
+              } */
+          </style>
+        </custom-style>
+    
+        <app-header-layout>
+          <app-header>
+            <app-toolbar>
+              DANA: DAta NArratives
+            </app-toolbar>
+          </app-header>
+    
+          <resizable-panels>
+            <div class="panel p1" id="view">
+              <paper-card id="viewone">
+                <paper-toolbar on-click="_toggleCollapse">
+                    <div slot="top" class="title" id="cardtitle">{{narratives.title}}</div>
+                </paper-toolbar>
+                <paper-tooltip id="cardtooltip" for="cardtitle" position="top">{{narratives.tooltip_text}}</paper-tooltip>
+                <iron-collapse id="collapse">
+                  <div id="card-body">
+                      <div class="card-actions" >
+                          <div class="horizontal justified">
+                              <paper-button on-click="openEditor">Edit</paper-button>
+                              <paper-button on-click="seeMore" data-args="#viewone">See More</paper-button>
+                              <paper-button on-click="seeLess" data-args="#viewone">See Less</paper-button>
+                          </div>
+                      </div>
+                      
+                      <div class="card-content" id="cardcontent">{{narratives.text}}</div>
+                  </div>
+                    
+                </iron-collapse>
+                
+                    
+              </paper-card>
+    
+              <br/>
+    
+              </div>
+              <div class="panel p2" id="editor" hidden$="{{hide}}">
+                  <paper-card>
+                      <paper-toolbar>
+                          <div slot="top" class="title">Narrative Editor</div>
+                      </paper-toolbar>
+                      <div class="card-actions">
+                          <div class="horizontal justified">
+                              <paper-button>Edit Links</paper-button>
+                              <paper-button>Edit Text</paper-button>
+                              <paper-button>Record Edits</paper-button>
+                              <paper-button  on-click="closeEditor">Close</paper-button>
+                          </div>
+                      </div>
+    
+                      <div class="card-content" id="editorarea"></div>
+                    
+                  </paper-card>
+                  
+              </div>
+            </resizable-panels>
+    
+        </app-header-layout>
+       
+       
+      </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class FeedbackApp extends Polymer.Element {
+      static get is() { return 'feedback-app'; }
+      static get properties(){
+        return {
+          hide: {
+            type: Boolean,
+            value: true
+          },
+          hidden: {
+            type: Boolean,
+            value: false
+          },
+          narratives: {
+            title: {
+              type: String,
+              value: ""
+            },
+            tooltip_text: {
+              type: String,
+              value: ""
+            },
+            text: {
+              type: String,
+              value: ""
+            }
+          }
+        }
+      }
+      seeLess(e){
+        var cardid = e.target.getAttribute('data-args');
+        var card = Polymer.dom(this.root).querySelector(cardid);
+        $(card).find(".see").hide();
+      }
+      seeMore(e){
+        var cardid = e.target.getAttribute('data-args');
+        var card = Polymer.dom(this.root).querySelector(cardid);
+        $(card).find(".see").show(); 
+      }
+      openEditor(){
+        if(this.hide == true){
+          this.$.editor.style.width = "50%";
+          this.$.view.style.width = "50%";
+          this.$.editorarea.innerHTML = this.$.cardcontent.innerHTML;
+          this.hide = false;
+        }
+      }
+      closeEditor(){
+        if(this.hide == false){
+          this.hide = true;
+          this.$.editorarea.innerHTML = "";
+          this.$.view.style.width = "100%"; 
+        }
+      }
+      _toggleCollapse(e) {
+        // if (!e.target.classList.contains('card-content')) {
+        //   this.$.collapse.toggle();
+        // }
+        this.$.collapse.toggle();
+	    }
+      ready(){
+        super.ready();
+        var _self = this;
+        $.get("/src/feedback-app/data_narratives.json", function(data){
+          _self.$.cardtitle.innerHTML= data[0].title;
+          _self.$.cardcontent.innerHTML = data[0].text;
+          _self.$.cardtooltip.innerHTML = data[0].tooltip_text;
+          // _self.narratives = data[0];
+          // _self.$.cardcontent.innerHTML = $.parseJSON(_self.$.cardcontent.innerHTML);
+        });
+      }
+    }
+
+    window.customElements.define(FeedbackApp.is, FeedbackApp);
+  </script>
+</dom-module>
