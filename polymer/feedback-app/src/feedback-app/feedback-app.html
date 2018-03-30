@@ -1,3 +1,4 @@
+<!-- Import scripts - webcomponents(js) and jquery and web componenents (.html) -->
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
@@ -20,6 +21,19 @@
 <link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="/bower_components/iron-collapse-button/iron-collapse-button.html">
 
+<!-- 
+Define the web component feedback-app in <dom-module>
+Definition consists of structure - defined in <template> tag, and scripts defined in <script> tag 
+Style and custom style is also included in <template>
+In Polymer, the web component defined by <dom-module> is associated with an ES6/JavaScript class
+Using this web component (simply dropping it in an HTML document)creates an instance of the associated class in the browser
+The web component defines a 'shadow DOM' i.e. its internal components (other HTML tags or web componenets)
+are visible to the instance but not to the DOM tree
+Each web component has properties which could be data or methods
+Both one-way and two-way binding between the properties in the object and attributes or content of 
+tags in the <template> are allowed. 
+-->
+
 <dom-module id="feedback-app">
   
     <template>
@@ -40,15 +54,7 @@
               paper-icon-button {
                 --paper-icon-button-ink-color: white;
               }
-          
-              /* app-header {
-                @apply --layout-fixed-top;
-                color: #fff;
-                --app-header-background-rear-layer: {
-                  background-color: #ef6c00;
-                };
-              } */
-              
+        
               #main-content{
                 display: flex;
               }
@@ -105,12 +111,15 @@
               #card-body{
                 margin:20px;
               }
-              /* paper-card {
-                margin-top: 64px;
-              } */
+              
           </style>
         </custom-style>
     
+        <!--
+          The structure of the document is created by putting in tags - 
+          HTML or web components (user-defined or from a library).
+          <app-header-layout> positions an <app-header> and other content
+        -->
         <app-header-layout>
           <app-header>
             <app-toolbar>
@@ -118,24 +127,49 @@
             </app-toolbar>
           </app-header>
     
+          <!--
+            <resizable-panels> creates resizable panels (horizontally by default) - each of which is placed in a <div>
+            -->  
           <resizable-panels>
+            <!--
+              The first panel is for placing the narrative views
+            -->
             <div class="panel p1" id="view">
+              <!--
+                Each narrative is placed in a <paper-card>
+                It contains a heading like <paper-toolbar>, 
+                <paper-tooltip> for displaying tooltip text,
+                followed by the actual body of the card.
+                This body is encapsulated in an <iron-collapse> tag
+                for collapsing or expanding the card. The body contains
+                buttons in <paper-button> and a <div> for holding the narrative
+                text
+                The contents into <paper-toolbar>, <paper-tooltip> and the body
+                are loaded when the element loads in the ready() method.
+                Right now, there is only one narrative displayed.
+                -->
               <paper-card id="viewone">
                 <paper-toolbar on-click="_toggleCollapse">
-                    <div slot="top" class="title" id="cardtitle">{{narratives.title}}</div>
+                    <div slot="top" class="title" id="cardtitle"></div>
                 </paper-toolbar>
-                <paper-tooltip id="cardtooltip" for="cardtitle" position="top">{{narratives.tooltip_text}}</paper-tooltip>
+                <paper-tooltip id="cardtooltip" for="cardtitle" position="top"></paper-tooltip>
                 <iron-collapse id="collapse">
                   <div id="card-body">
-                      <div class="card-actions" >
+                      <div class="card-actions">
                           <div class="horizontal justified">
+                            <!--
+                              Clicking the 'Edit' button opens the narrative editor - the second <div> as panel
+                              Clicking the 'See More' button will show hidden parts of the test
+                              Clicking the 'See Less' button will hide hideable parts of the text
+                              The event handlers are defined in the <script> tag as instance methods of FeedbackApp
+                              -->
                               <paper-button on-click="openEditor">Edit</paper-button>
                               <paper-button on-click="seeMore" data-args="#viewone">See More</paper-button>
                               <paper-button on-click="seeLess" data-args="#viewone">See Less</paper-button>
                           </div>
                       </div>
                       
-                      <div class="card-content" id="cardcontent">{{narratives.text}}</div>
+                      <div class="card-content" id="cardcontent"></div>
                   </div>
                     
                 </iron-collapse>
@@ -146,6 +180,11 @@
               <br/>
     
               </div>
+              <!-- 
+                The second panel is for dislaying the narrative editor
+                The narrative editor is inserted with the text content of the 
+                view which caused the opening of the editor
+              -->
               <div class="panel p2" id="editor" hidden$="{{hide}}">
                   <paper-card>
                       <paper-toolbar>
@@ -153,6 +192,10 @@
                       </paper-toolbar>
                       <div class="card-actions">
                           <div class="horizontal justified">
+                            <!--
+                              Clicking 'Close' button will clear the narrative editor of its contents
+                              and close it
+                            --> 
                               <paper-button>Edit Links</paper-button>
                               <paper-button>Edit Text</paper-button>
                               <paper-button>Record Edits</paper-button>
@@ -181,14 +224,18 @@
       static get is() { return 'feedback-app'; }
       static get properties(){
         return {
+          /*
+          The 'hide' property is used to hide or reveal the <div> containing narrative editor
+          */
           hide: {
             type: Boolean,
             value: true
           },
-          hidden: {
-            type: Boolean,
-            value: false
-          },
+          /*
+          The narrative property is not used right now
+          It will be used to try to bind the contents of the <paper-card> to properties
+          instead of filling innerHTML as of now
+          */
           narratives: {
             title: {
               type: String,
@@ -205,16 +252,26 @@
           }
         }
       }
+      /*
+        Hide all <span> tags with class "see"
+      */
       seeLess(e){
         var cardid = e.target.getAttribute('data-args');
         var card = Polymer.dom(this.root).querySelector(cardid);
         $(card).find(".see").hide();
       }
+      /*
+        Show all <span> tags with class "see"
+      */
       seeMore(e){
         var cardid = e.target.getAttribute('data-args');
         var card = Polymer.dom(this.root).querySelector(cardid);
         $(card).find(".see").show(); 
       }
+      /*
+        Open the <div> containing the narrative editor and populate it with the 
+        contents of the view that caused the editor to open
+      */ 
       openEditor(){
         if(this.hide == true){
           this.$.editor.style.width = "50%";
@@ -223,6 +280,9 @@
           this.hide = false;
         }
       }
+      /*
+        Close the editor
+      */
       closeEditor(){
         if(this.hide == false){
           this.hide = true;
@@ -230,12 +290,16 @@
           this.$.view.style.width = "100%"; 
         }
       }
+      /*
+        Toggle the card to expand or collapse
+      */
       _toggleCollapse(e) {
-        // if (!e.target.classList.contains('card-content')) {
-        //   this.$.collapse.toggle();
-        // }
         this.$.collapse.toggle();
 	    }
+      /*
+        ready event. It makes an ajax call to retrieve narratives from a JSON file
+        Then it manipulates the shadow DOM to insert the data
+      */
       ready(){
         super.ready();
         var _self = this;
@@ -248,7 +312,11 @@
         });
       }
     }
-
+    /*
+      Most crucially, establish a binding between the name of the web component
+      'feedback-app', which is returned by FeedbackApp.is and the class FeedbackApp
+      This is called registration
+    */
     window.customElements.define(FeedbackApp.is, FeedbackApp);
   </script>
 </dom-module>
