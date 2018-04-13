@@ -14,7 +14,8 @@
     "resizable-panels": "kcmr/resizable-panels#^2.0.4",
     "paper-tooltip": "PolymerElements/paper-tooltip#^2.1.1",
     "iron-collapse": "PolymerElements/iron-collapse#^2.2.0",
-    "iron-collapse-button": "jifalops/iron-collapse-button#^1.0.1"
+    "iron-collapse-button": "jifalops/iron-collapse-button#^1.0.1",
+    "paper-input": "PolymerElements/paper-input#^2.2.2"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
