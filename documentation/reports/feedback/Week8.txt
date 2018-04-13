@@ -1,2 +1,4 @@
 //Author -  Shreyas Kolpe and Sanjana Srinivasa.
 
+Accomplished the functionality for multiple views of Narrative.
+Highlight and functionality for the edit link label button was achieved.
