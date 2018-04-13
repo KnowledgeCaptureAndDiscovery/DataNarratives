@@ -128,6 +128,18 @@ tags in the <template> are allowed.
               #link-to-edit {
                 color: white;
               }
+              paper-button.red {
+                background-color: var(--paper-red-500);
+                color: white;
+              } 
+              paper-button.green {
+                background-color: var(--paper-green-500);
+                color: white;
+              }
+              .editor-toolbar {
+                background-color: #41f4b5;
+
+              }         
           </style>
         </custom-style>
     
@@ -225,14 +237,14 @@ tags in the <template> are allowed.
               -->
               <div class="panel p2" id="editor" hidden$="{{hideEditor}}" edit-state$="{{editState}}">
                   <paper-card>
-                      <paper-toolbar>
+                      <paper-toolbar class="editor-toolbar">
                           <div slot="top" class="title">Narrative Editor</div>
                       </paper-toolbar>
                       <div class="card-actions">
                           <div class="horizontal justified">
                               <paper-button on-click="editLinkMode">Edit Links</paper-button>
                               <paper-button on-click="editTextMode">Edit Text</paper-button>
-                              <paper-button on-click="recordEdits">Record Edits</paper-button>
+                              <paper-button on-click="recordEdits">Save</paper-button>
                               <paper-button on-click="closeEditor">Close</paper-button>
                           </div>
                       </div>
@@ -240,6 +252,8 @@ tags in the <template> are allowed.
                       <div class="card-content" id="editorarea">
                         <div id="display"></div>
                         <paper-textarea id="textarea" label="Edit the text" hidden$="{{hideTextEditor}}"></paper-textarea>
+                        <paper-button class="custom green" hidden$="{{hideTextEditor}}">OK</paper-button>
+                        <paper-button class="custom red" hidden$="{{hideTextEditor}}">Cancel</paper-button>
                       </div>
                       
 
@@ -256,7 +270,8 @@ tags in the <template> are allowed.
                         <a id="header"></a>
                       </h4>
                       <paper-input id="input" label="Edit the label"></paper-input>
-                      <paper-button on-click="saveLinkLabel">Save</paper-button>
+                      <paper-button class="custom green" on-click="saveLinkLabel">OK</paper-button>
+                      <paper-button class="custom red">Cancel</paper-button>
                     </div>
                   </paper-card>
     
@@ -573,7 +588,8 @@ tags in the <template> are allowed.
         // editState = 5 or 'record edits' state.
         // Currently, prints the Array editedLinks to the console.
         else if(newValue == 5){
-          alert(this.editedLinks);
+          
+          // alert(this.editedLinks);
         }
       }
       
