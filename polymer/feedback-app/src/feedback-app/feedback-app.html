@@ -161,53 +161,46 @@ tags in the <template> are allowed.
                 buttons in <paper-button> and a <div> for holding the narrative
                 text
                 The contents into <paper-toolbar>, <paper-tooltip> and the body
-                are loaded when the element loads in the ready() method.
-                Right now, there is only one narrative displayed.
+                are data-binded with respective subproperties of each element
+                in the narratives property.
+                The same template is stamped on to each element in narratives to
+                create as many <paper-card> components as there are views. To this
+                end, <dom-repeat> is used.
                 -->
 
               <!--
-                  Clicking the 'Edit' button opens the narrative editor - the second <div> as panel
-                  Clicking the 'See More' button will show hidden parts of the test
-                  Clicking the 'See Less' button will hide hideable parts of the text
-                  The event handlers are defined in the <script> tag as instance methods of FeedbackApp
-                  -->
-
-              <!-- <paper-card id="viewone">
-                <paper-toolbar on-click="_toggleCollapse">
-                    <div slot="top" class="title" id="cardtitle"></div>
-                </paper-toolbar>
-                <paper-tooltip id="cardtooltip" for="cardtitle" position="top"></paper-tooltip>
-                <iron-collapse id="collapse">
-                  <div id="card-body">
-                      <div class="card-actions">
-                          <div class="horizontal justified">
-                            
-                              <paper-button on-click="openEditor">Edit</paper-button>
-                              <paper-button on-click="seeMore" data-args="#viewone">See More</paper-button>
-                              <paper-button on-click="seeLess" data-args="#viewone">See Less</paper-button>
-                          </div>
-                      </div>
-                      
-                      <div class="card-content" id="cardcontent"></div>
-                  </div>
-                    
-                </iron-collapse>    
-              </paper-card> -->
-
+                'items' here is the attribute to be set to an Array propoerty supplied by
+                the class FeedbackApp.
+              -->
               <dom-repeat items="{{narratives}}">
                   <template>
                       <paper-card>
+                          <!--
+                            Since the 'id' attribute cannot be assigned uniquely to each <paper-card>
+                            in the <dom-repeat> syntax, another attribute called 'identity' is created and 
+                            data-binded with the 'index' property automatically created by <dom-repeat>
+                            as the index of the element of the 'items' array.
+                          -->
                           <paper-toolbar on-click="toggleCollapse" identity$="{{index}}">
+                              <!--
+                                Similar to 'index', <dom-repeat> also provides another property - 'item'
+                                as an alias or reference to the current element in the 'items' array to 
+                                which the <dom-repeat> template is being applied.
+                                In this case, each 'item' refers to a narrative view. Therefore its subproperties
+                                title, tooltip_text and text are data-binded at the respective places.
+                              --> 
                               <div slot="top" id="cardtooltip" class="title">{{item.title}}</div>
                           </paper-toolbar>
                           <paper-tooltip id="cardtooltip" for="cardtitle" position="top">{{item.tooltip_text}}</paper-tooltip>
                           <iron-collapse identity$="{{index}}">
-                            <!-- <iron-collapse id="collapse"+> -->
-      
-                           
                             <div class="card-body">
-                              <!-- <div class="card-body"> -->
-                                <div class="card-actions" >
+                                <div class="card-actions">
+                                    <!--
+                                    Clicking the 'Edit' button opens the narrative editor - the second <div> as panel
+                                    Clicking the 'See More' button will show hidden parts of the test
+                                    Clicking the 'See Less' button will hide hideable parts of the text
+                                    The event handlers are defined in the <script> tag as instance methods of FeedbackApp
+                                    -->
                                     <div class="horizontal justified">
                                         <paper-button on-click="openEditor" identity$="{{index}}">Edit</paper-button>
                                         <paper-button on-click="seeMore" identity$="{{index}}">See More</paper-button>
@@ -216,13 +209,9 @@ tags in the <template> are allowed.
                                 </div>
                                 
                                 <div class="card-content" identity$="{{index}}">{{item.text}}</div>
-                                <!-- <div class="card-content">{{narrative.text}}</div> -->
                             </div>
-                              
                           </iron-collapse>
-                          
-                              
-                        </paper-card>
+                      </paper-card>
                   </template>
                 </dom-repeat>
     
@@ -254,6 +243,11 @@ tags in the <template> are allowed.
                       
                   </paper-card>
                   
+                  <!--
+                    This <paper-card> is a small box that pops up whenever a user clicks on a link to edit.
+                    It contains a header with the href of the link, a <paper-input> to change the label
+                    and a 'Save' button to save the label.
+                  -->
                   <paper-card id="link-editor" hidden$="{{hideLinkEditor}}">
                     <div class="card-content">
                       <h4>
@@ -264,6 +258,10 @@ tags in the <template> are allowed.
                     </div>
                   </paper-card>
     
+                  <!--
+                    This <div> will be used to hold the box where the text of the narrative
+                    can be directly edited on clicking 'Edit Text' button.
+                  -->
                   <div id="text-editor" hidden$="{{hideTextEditor}}">
                     <!-- <div class="card-content"> -->
                       <paper-textarea id="text-area" label="Edit the text">
@@ -271,13 +269,11 @@ tags in the <template> are allowed.
                       <paper-button on-click="saveEditedText"></paper-button>
                     <!-- </div> -->
                   </div>
-                  
-    
+                
               </div>
             </resizable-panels>
     
         </app-header-layout>
-       
        
       </template>
 
@@ -305,7 +301,7 @@ tags in the <template> are allowed.
             value: true
           },
           /*
-          The 'hideTextEditor' property will be used to hide or reveal the <paper-card> containing the editor for links
+          The 'hideTextEditor' property will be used to hide or reveal the <paper-card> containing the editor for links.
           */
           hideTextEditor: {
             type: Boolean,
@@ -314,16 +310,24 @@ tags in the <template> are allowed.
           /*
           The narrative property is used to bind the contents of the <paper-card> iteratively to elements of an Array
           property (narratives) by dom-repeat. An element in narratives represents the JSON data correspondong to 
-          narrative of a single view
+          narrative of a single view.
           */
           narratives: {
             type: Array,
             value: []
           },
+          /*
+          The property narrativeToEdit is one of two state variables - it keeps a record of which narrative view is being
+          edited currently and by consequence which edited view will be recorded. 
+          */
           narrativeToEdit: {
             type: Number,
             value: -1
           },
+          /*
+          The editStateDictionary property exists mainly to assist programmers and debuggers to keep a handy reference for the 
+          state of the system.
+          */
           editStateDictionary: {
             value: {
               0: "editor closed",
@@ -331,14 +335,29 @@ tags in the <template> are allowed.
               2: "edit links",
               3: "edit link label",
               4: "edit text",
-              5: "recorded edits"
+              5: "record edits"
             }
           },
+          /*
+          The editState property is the other state variable which keeps track of the current state of the editing process.
+          The event handling has been restructured to be similar to the observer pattern. The event handlers relevant to
+          editing change a single property - editState, on changing which an observer method - editStateChange is notifed.
+          This method is passed both the old value and new value of the observed property as arguments. It can examine these 
+          values to take the appropriate action.
+          The values taken by editState can be used as a key in editStateDictionary to get a human understandale string 
+          description of the state.
+          Its default value on loading the page is 0 - corresponding to 'editor closed' state.
+          */
           editState: {
             type: Number,
             value: 0,
             observer: "editStateChange"
           },
+          /*
+          The linkToEdit property encapsulates information about the particular link that is being edited - its link label.
+          It has three subproperties - the href attribute of the link, the value of the label before editing and the 
+          value of the label after editing.
+          */
           linkToEdit: {
             value: {
               href: {
@@ -355,6 +374,9 @@ tags in the <template> are allowed.
               }
             }
           },
+          /*
+          The links edited so far are pushed on to the Array - editedLinks
+          */
           editedLinks: {
             type: Array,
             value: []
@@ -362,7 +384,8 @@ tags in the <template> are allowed.
         };
       }
       /*
-        Hide all <span> tags with class "see"
+        Hide all <span> tags with class "see". This is of course applied to the relevant <div>
+        by selecting on the 'identity' attribute of the 'See More' button which triggered this event. 
       */
       seeLess(e){
         var identity = e.target.getAttribute("identity");
@@ -378,21 +401,6 @@ tags in the <template> are allowed.
         $(div).find(".see").show();
       }
       /*
-        Open the <div> containing the narrative editor and populate it with the 
-        contents of the view that caused the editor to open
-      */ 
-      openEditor(e){
-        var identity = e.target.getAttribute("identity");
-        this.narrativeToEdit = identity;
-        this.editState = 1;
-      }
-      /*
-        Close the editor
-      */
-      closeEditor(){
-        this.editState = 0;
-      }
-      /*
         Toggle the card to expand or collapse
       */
       toggleCollapse(e) {
@@ -401,21 +409,64 @@ tags in the <template> are allowed.
         $(div).html(this.narratives[identity].text);
         Polymer.dom(this.root).querySelector("iron-collapse[identity='"+identity+"']").toggle();
       }
+      /*
+        Has the effect of ppen the <div> containing the narrative editor and populate it with the 
+        contents of the view that caused the editor to open.
+        As a matter of implementation, it sets the narrativeToEdit property with the 'identity'
+        attribute of the 'Edit' button which caused the editor to open. Additionally, it sets the 
+        editState property to 1 - corresponding to the 'editor opened' state. The observer on editState
+        which is editStateChange makes the changes.
+      */ 
+      openEditor(e){
+        var identity = e.target.getAttribute("identity");
+        this.narrativeToEdit = identity;
+        this.editState = 1;
+      }
+      /*
+        Close the editor by setting editState to 0.
+      */
+      closeEditor(){
+        this.editState = 0;
+      }
+      /*
+        Enter into 'edit links' state by setting editState to 2.
+      */
       editLinkMode() {
         this.editState = 2;
       }
+      /*
+        Enter into 'edit text' state by setting editState to 4.
+      */
       editTextMode() {
         this.editState = 4;
       }
+      /*
+        Clicking on the 'Save' button after editing a link label will transition
+        to the 'edit links' state by setting editState to 2.
+      */
       saveLinkLabel(e) {
         this.editState = 2;
       }
+      /*
+        Clicking on the 'Save' button after editing the text should transition to
+        the 'editor opened' state by setting editState to 1.
+      */
       saveEditedText(e){
         this.editState = 1;
       }
+      /*
+        Clicking on the 'Record Edits' button after making several changes and 'Save's
+        should transition to the 'record edits' state by setting editState to 5.
+      */
       recordEdits() {
         this.editState = 5;
       }
+      /*
+        This event handling method called editLinkHandler method is to be associated with
+        all the <a> elements in the text of the narrative when the state is 'edit links'.
+        Thus, this handler is imperatively added while tranisitioning into 'edit links'
+        and removed while transitioning out.
+      */
       editLinkHandler(e){
         console.log("In the editLinkHandler method");
         var _self = document.querySelector("feedback-app");
@@ -427,6 +478,12 @@ tags in the <template> are allowed.
         _self.editState = 3;
         return false;
       }
+      /*
+        The 'supermethod' which is the observer on editState property. It includes all the code
+        for styling changes and the actual manipulation of DOM and data model.
+        It implicitly receives the old and new values of the observed property. Based on these values,
+        appropriate action is taken.
+      */
       editStateChange(newValue, oldValue){
         console.log(newValue+" : "+this.editStateDictionary[newValue]);
         if(oldValue == 4){
