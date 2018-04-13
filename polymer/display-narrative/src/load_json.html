@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Testing the loading of JSON file</title>
+	<script type="text/javascript">
+		function loadJSON(callback){
+			var xobj = new XMLHttpRequest();
+			xobj.overrideMimeType("application/json");
+			xobj.open('GET', "data_narratives.json", true);
+			xobj.onreadystatechange = function(){
+				if(xobj.readyState == 4 && xobj.status == 200){
+					callback(xobj.responseText);
+				}
+			};
+			xobj.send(null);
+		}
+		function init(){
+			loadJSON(function(response) {
+				var js_obj = JSON.parse(response);
+				document.getElementById('demo').innerHTML = js_obj[0].title + "<br/>"+js_obj[0].tooltip_text+"<br/>"+js_obj[0].text;
+			});
+		}
+		init();
+	</script>
+</head>
+<body>
+	<p id="demo"></p>
+</body>
+</html>

@@ -238,9 +238,11 @@ tags in the <template> are allowed.
                       </div>
     
                       <div class="card-content" id="editorarea">
-    
+                        <div id="display"></div>
+                        <paper-textarea id="textarea" label="Edit the text" hidden$="{{hideTextEditor}}"></paper-textarea>
                       </div>
                       
+
                   </paper-card>
                   
                   <!--
@@ -262,13 +264,13 @@ tags in the <template> are allowed.
                     This <div> will be used to hold the box where the text of the narrative
                     can be directly edited on clicking 'Edit Text' button.
                   -->
-                  <div id="text-editor" hidden$="{{hideTextEditor}}">
+                  <!-- <div id="text-editor" hidden$="{{hideTextEditor}}">
                     <!-- <div class="card-content"> -->
-                      <paper-textarea id="text-area" label="Edit the text">
+                      <!-- <paper-textarea id="text-area" label="Edit the text">
                       </paper-textarea>
-                      <paper-button on-click="saveEditedText"></paper-button>
+                      <paper-button on-click="saveEditedText"></paper-button> -->
                     <!-- </div> -->
-                  </div>
+                  <!-- </div> -->
                 
               </div>
             </resizable-panels>
@@ -305,7 +307,7 @@ tags in the <template> are allowed.
           */
           hideTextEditor: {
             type: Boolean,
-            value: false
+            value: true
           },
           /*
           The narrative property is used to bind the contents of the <paper-card> iteratively to elements of an Array
@@ -410,7 +412,7 @@ tags in the <template> are allowed.
         Polymer.dom(this.root).querySelector("iron-collapse[identity='"+identity+"']").toggle();
       }
       /*
-        Has the effect of ppen the <div> containing the narrative editor and populate it with the 
+        Has the effect of opening the <div> containing the narrative editor and populate it with the 
         contents of the view that caused the editor to open.
         As a matter of implementation, it sets the narrativeToEdit property with the 'identity'
         attribute of the 'Edit' button which caused the editor to open. Additionally, it sets the 
@@ -485,32 +487,42 @@ tags in the <template> are allowed.
         appropriate action is taken.
       */
       editStateChange(newValue, oldValue){
+        // Logging to console for debugging purposes
         console.log(newValue+" : "+this.editStateDictionary[newValue]);
         if(oldValue == 4){
-          // this.hideTextEditor = true;
+          this.hideTextEditor = true;
         }
-        // Closing the editor
+
+        // editState = 0 or 'editor closed' state. 
+        // Clear the contents of the editor and make it hidden
         if(newValue == 0){
-          Polymer.dom(this.root).querySelector("#editorarea").innerHTML = "";
-          Polymer.dom(this.root).querySelector("#text-editor").innerHTML = "";
+          Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML = "";
+          Polymer.dom(this.root).querySelector("#editor #textarea").innerHTML = "";
           this.narrativeToEdit = -1;
           Polymer.dom(this.root).querySelector("#view").style.width = "";
           Polymer.dom(this.root).querySelector("#editor").style.width = "";
           this.hideEditor = true;
         }
-        // Opening the editor
+
+        // editState = 1 or 'editor opened' state.
+        // Open the editor panel and populate it with the contents of the card which caused
+        // editor to open
         else if(newValue == 1){
           this.hideEditor = false;
           Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
           Polymer.dom(this.root).querySelector("#view").style.width = "50%";
-          Polymer.dom(this.root).querySelector("#editorarea").innerHTML = Polymer.dom(this.root).querySelector(".card-content[identity='"+this.narrativeToEdit+"']").innerHTML; 
+          Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML = Polymer.dom(this.root).querySelector(".card-content[identity='"+this.narrativeToEdit+"']").innerHTML; 
         }
-        // Going to 'Edit Links' state
+        
+        // editState = 2 or 'edit links' satate.
+        // There are two changes - change the styling of <a> elements in the editor and
+        // associate the handler editLinkHandler with the click event on these <a> elements.
         else if(newValue == 2){
-          // Coming from 'Edit Link Label' state
+          // If coming from 'edit link label' state, save the link label, if edited
+          // by pushing it on to the Array editedLinks
           if(oldValue == 3){
             var inputTextElement = Polymer.dom(this.root).querySelector("#input");
-            var linkElement = Polymer.dom(this.root).querySelector("#editorarea a[href='"+this.linkToEdit.href+"']");
+            var linkElement = Polymer.dom(this.root).querySelector("#editorarea #display a[href='"+this.linkToEdit.href+"']");
             var valueAfterSave = inputTextElement.value;
             if(valueAfterSave != this.linkToEdit.valueBeforeEdit){
               this.linkToEdit.valueAfterEdit = valueAfterSave;
@@ -521,37 +533,45 @@ tags in the <template> are allowed.
             this.hideLinkEditor = true;
           }
           
-          var editorArea = Polymer.dom(this.root).querySelector("#editorarea");
+          var editorArea = Polymer.dom(this.root).querySelector("#editorarea #display");
           $(editorArea).find("a").css("color", "red");
           $(editorArea).find("a").css("text-decoration", "none");
           $(editorArea).find("a").on("click", this.editLinkHandler);
         }
-        // Going to 'Edit Link Label' state 
+
+        // editState = 3 or 'edit llnk label' state.
+        // Just un-hide the link-editor <paper-card> 
         else if(newValue == 3){
           this.hideLinkEditor = false;
         }
-        // Going to 'Edit Text' state
+
+        // editState = 4 or 'edit text' state.
+        // Need to manipulate <paper-textarea> to fill it with HTML corresponding to the text of the view
         else if(newValue == 4){
+          var editorArea = Polymer.dom(this.root).querySelector("#editorarea #display");
           $(editorArea).find("a").css("color", "");
           $(editorArea).find("a").css("text-decoration", "");
           $(editorArea).find("a").off("click");
           this.hideLinkEditor = true;
           // var editorArea = Polymer.dom(this.root).querySelector("#editorarea #narrative-dis");
           // console.log(editorArea.innerHTML);
-          // var textEditor = Polymer.dom(this.root).querySelector("#text-editor");
-          var editorArea = Polymer.dom(this.root).querySelector("#editorarea");
-          var textArea = Polymer.dom(this.root).querySelector("#text-area");
-          console.log(textEditor);
-          console.log(editorArea);
-          console.log(textArea);
+          var textEditor = Polymer.dom(this.root).querySelector("#editorarea #textarea");
+          // var editorArea = Polymer.dom(this.root).querySelector("#editorarea");
+          // var textArea = Polymer.dom(this.root).querySelector("#text-area");
+          // console.log(textEditor);
+          // console.log(editorArea);
+          // console.log(textArea);
           // var textEditor = this.$.text-area;
           // console.log(textEditor);
           
           // console.log(narrativeDisplay.innerHTML);
-          // textEditor.value = editorArea.innerHTML;
+          textEditor.value = editorArea.innerHTML;
           this.hideTextEditor = false;
           
         }
+
+        // editState = 5 or 'record edits' state.
+        // Currently, prints the Array editedLinks to the console.
         else if(newValue == 5){
           alert(this.editedLinks);
         }
