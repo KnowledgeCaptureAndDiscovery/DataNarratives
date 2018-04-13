@@ -2,3 +2,4 @@
 
 Accomplished the functionality for multiple views of Narrative.
 Highlight and functionality for the edit link label button was achieved.
+Functionality to the edit text button was added.
