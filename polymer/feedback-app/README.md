@@ -31,3 +31,15 @@ $ polymer test
 ```
 
 Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+
+## Running a Server with node.js
+
+As prerequisites, install node.js on your machine (find installers [here](https://nodejs.org/en/download/), or use a package manager). The Node Package Manager (npm) is also installed with node.
+
+Install some modules necessary 
+
+```
+$ npm install express
+$ npm install body-parser
+```
+
