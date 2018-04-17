@@ -12,7 +12,7 @@
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="/bower_components/paper-progress/paper-progress.html">
+<!-- <link rel="import" href="/bower_components/paper-progress/paper-progress.html"> -->
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/polymer/lib/utils/gestures.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html"> 
@@ -23,7 +23,7 @@
 <link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="/bower_components/iron-collapse-button/iron-collapse-button.html">
-<link rel="import" href="/bower_components/polymer/elements/dom-repeat.html">
+<!-- <link rel="import" href="/bower_components/polymer/elements/dom-repeat.html"> -->
 
 <!-- 
 Define the web component feedback-app in <dom-module>
@@ -51,7 +51,7 @@ tags in the <template> are allowed.
                 max-height: 368px;
               }
               app-toolbar {
-                background-color: #4285f4;
+                background-color: #49274a;
                 color: #fff;
               }
           
@@ -117,7 +117,7 @@ tags in the <template> are allowed.
                 /* overflow-y: scroll; */
               }
               .p2 { 
-                background-color: beige; 
+                background-color: white; 
                 width: 50%;
                 /* height: 100%; */
                 /* max-width: 50%  */
@@ -140,9 +140,24 @@ tags in the <template> are allowed.
                 color: white;
               }
               .editor-toolbar {
-                background-color: #41f4b5;
+                background-color: #675682;
 
-              }         
+              }
+              .view-head{
+                background-color: #5f0f4e;
+              }
+              #editor {
+                /* height: 150px; */
+                width: 1px;
+                /* opacity: 0; */
+                transition: all .75s ease;
+              }
+
+              #editor.show {
+                /* opacity: 1; */
+                /* height: 150px; */
+                width: 500px;
+              }       
           </style>
         </custom-style>
     
@@ -196,7 +211,7 @@ tags in the <template> are allowed.
                             data-binded with the 'index' property automatically created by <dom-repeat>
                             as the index of the element of the 'items' array.
                           -->
-                          <paper-toolbar on-click="toggleCollapse" identity$="{{index}}">
+                          <paper-toolbar class="view-head" on-click="toggleCollapse" identity$="{{index}}">
                               <!--
                                 Similar to 'index', <dom-repeat> also provides another property - 'item'
                                 as an alias or reference to the current element in the 'items' array to 

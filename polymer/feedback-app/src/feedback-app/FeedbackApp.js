@@ -151,41 +151,69 @@ class FeedbackApp extends Polymer.Element {
     // Open the editor panel and populate it with the contents of the card which caused
     // editor to open
     else if(newValue == 1){
+        // var div = Polymer.dom(this.root).querySelector("#editor");
+        // $(div).toggleClass('show')
         if(oldValue == 5){
-        if(this.editedLinks.length == 0){
-            Polymer.dom(this.root).querySelector("#warning").innerHTML = "You haven't made any edits";
-        }
-        else{
-            var metadata = {};
-            metadata.timeStamp = Date.now();
-            metadata.workflowURL = this.workflowURL;
-            metadata.originNarrativeIndex = this.narrativeToEdit;
-            metadata.originNarrativeTitle = this.narratives[this.narrativeToEdit].title;
-            metadata.originNarrativeText = this.narratives[this.narrativeToEdit].text;
-            metadata.editedNarrativeText = Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML;
-            metadata.editName = Polymer.dom(this.root).querySelector("#edit-name").value;
-            metadata.editDescription = Polymer.dom(this.root).querySelector("#edit-description").value;
-            metadata.editReason = Polymer.dom(this.root).querySelector("#edit-reason").value;
-            metadata.editedLinks = this.editedLinks;
-            console.info(metadata);
-            var URL = "/src/feedback-app/data_store.json";
+            if(this.editedLinks.length == 0){
+                Polymer.dom(this.root).querySelector("#warning").innerHTML = "You haven't made any edits";
+            }
+            else{
+                var metadata = {};
+                metadata.timeStamp = Date.now();
+                metadata.workflowURL = this.workflowURL;
+                metadata.originNarrativeIndex = this.narrativeToEdit;
+                metadata.originNarrativeTitle = this.narratives[this.narrativeToEdit].title;
+                metadata.originNarrativeText = this.narratives[this.narrativeToEdit].text;
+                metadata.editedNarrativeText = Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML;
+                metadata.editName = Polymer.dom(this.root).querySelector("#edit-name").value;
+                metadata.editDescription = Polymer.dom(this.root).querySelector("#edit-description").value;
+                metadata.editReason = Polymer.dom(this.root).querySelector("#edit-reason").value;
+                metadata.editedLinks = this.editedLinks;
+                console.info(metadata);
+                $.ajax({
+                    url: "http://localhost:8080/",
+                    type: "POST",
+                    dataType: "json",
+                    data: JSON.stringify(metadata),
+                    contentType: "application/json",
+                    cache: false,
+                    timeout: 5000,
+                    complete: function() {
+                    //called when complete
+                    console.log('process complete');
+                    },
 
-            var dataObject = { 'newWeekEntry': "aaa", 'oldWeekEntry': "zdfdfc" };
+                    success: function(data) {
+                    console.log(data);
+                    console.log('process success');
+                },
 
-            // alert(JSON.stringify(dataObject));
-
-            $.ajax({
-                url: URL,
-                type: 'PUT',    
-                data: JSON.stringify(dataObject),
-                contentType: 'application/json',
-                success: function(result) {
-                    alert("success?");
-                }
-            });
-            var date = new Date(metadata.timeStamp);
-            this.hideSaveEditsBox = true;
-        }
+                    error: function(jqXHR, exception) {
+                        var msg = '';
+                        if (jqXHR.status === 0) {
+                            msg = 'Not connected.\n Verify Network.';
+                        } else if (jqXHR.status == 404) {
+                            msg = 'Requested page not found. [404]';
+                        } else if (jqXHR.status == 500) {
+                            msg = 'Internal Server Error [500].';
+                        } else if (exception === 'parsererror') {
+                            msg = 'Requested JSON parse failed.';
+                        } else if (exception === 'timeout') {
+                            msg = 'Time out error.';
+                        } else if (exception === 'abort') {
+                            msg = 'Ajax request aborted.';
+                        } else {
+                            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                        }
+                        console.log(msg);
+                    },
+                });
+                Polymer.dom(this.root).querySelector("#edit-name").value = "";
+                Polymer.dom(this.root).querySelector("#edit-description").value = "";
+                Polymer.dom(this.root).querySelector("#edit-reason").value = "";
+                this.editedLinks.length = 0;
+                this.hideSaveEditsBox = true;
+            }
         
         }
         this.hideEditor = false;
@@ -250,33 +278,33 @@ class FeedbackApp extends Polymer.Element {
     // Currently, prints the Array editedLinks to the console.
     else if(newValue == 5){
         this.hideSaveEditsBox = false;
-    }
+    }  
     }
     /*
     Hide all <span> tags with class "see". This is of course applied to the relevant <div>
     by selecting on the 'identity' attribute of the 'See More' button which triggered this event. 
     */
     seeLess(e){
-    var identity = e.target.getAttribute("identity");
-    var div = Polymer.dom(this.root).querySelector(".card-content[identity='"+identity+"']");
-    $(div).find(".see").hide();
+        var identity = e.target.getAttribute("identity");
+        var div = Polymer.dom(this.root).querySelector(".card-content[identity='"+identity+"']");
+        $(div).find(".see").hide();
     }
     /*
     Show all <span> tags with class "see"
     */
     seeMore(e){
-    var identity = e.target.getAttribute("identity");
-    var div = Polymer.dom(this.root).querySelector(".card-content[identity='"+identity+"']");
-    $(div).find(".see").show();
+        var identity = e.target.getAttribute("identity");
+        var div = Polymer.dom(this.root).querySelector(".card-content[identity='"+identity+"']");
+        $(div).find(".see").show();
     }
     /*
     Toggle the card to expand or collapse
     */
     toggleCollapse(e) {
-    var identity = e.target.getAttribute("identity");
-    var div = Polymer.dom(this.root).querySelector(".card-content[identity='"+identity+"']");
-    $(div).html(this.narratives[identity].text);
-    Polymer.dom(this.root).querySelector("iron-collapse[identity='"+identity+"']").toggle();
+        var identity = e.target.getAttribute("identity");
+        var div = Polymer.dom(this.root).querySelector(".card-content[identity='"+identity+"']");
+        $(div).html(this.narratives[identity].text);
+        Polymer.dom(this.root).querySelector("iron-collapse[identity='"+identity+"']").toggle();
     }
     /*
     Has the effect of opening the <div> containing the narrative editor and populate it with the 
@@ -287,69 +315,68 @@ class FeedbackApp extends Polymer.Element {
     which is editStateChange makes the changes.
     */ 
     openEditor(e){
-    var identity = e.target.getAttribute("identity");
-    this.narrativeToEdit = identity;
-    this.editState = 1;
+        var identity = e.target.getAttribute("identity");
+        this.narrativeToEdit = identity;
+        this.editState = 1;
     }
     /*
     Close the editor by setting editState to 0.
     */
     closeEditor(){
-    this.editState = 0;
+        this.editState = 0;
     }
     /*
     Enter into 'edit links' state by setting editState to 2.
     */
     editLinkMode() {
-    this.editState = 2;
+        this.editState = 2;
     }
     /*
     Enter into 'edit text' state by setting editState to 4.
     */
     editTextMode() {
-    this.editState = 4;
+        this.editState = 4;
     }
     /*
     Clicking on the 'Save' button after editing a link label will transition
     to the 'edit links' state by setting editState to 2.
     */
     saveLinkLabel(e) {
-    this.editState = 2;
-    this.discardLinkLabelChange = false;
+        this.editState = 2;
+        this.discardLinkLabelChange = false;
     }
     cancelEditLink(e) {
-    this.discardLinkLabelChange = true;
-    console.info('In cancelEditLink, discardLinkLabelChange = '+this.discardLinkLabelChange);
-    this.editState = 2;
-    
+        this.discardLinkLabelChange = true;
+        console.info('In cancelEditLink, discardLinkLabelChange = '+this.discardLinkLabelChange);
+        this.editState = 2;
     }
     writeSavedEdit(e) {
-    this.editState = 1;
+        this.editState = 1;
     }
     cancelSavingEdit(e) {
-    this.editState = 1;
+        this.editState = 1;
     }
     /*
     Clicking on the 'Save' button after editing the text should transition to
     the 'editor opened' state by setting editState to 1.
     */
     saveEditedText(e){
-    this.editState = 1;
+        this.editState = 1;
     }
     /*
     Clicking on the 'Save Edits' button after making several changes and 'OK's
     should transition to the 'save edits' state by setting editState to 5.
     */
     saveEdits() {
-    if(this.editedLinks.length == 0){
-        var warning = Polymer.dom(this.root).querySelector("#warning");
-        // console.info(warning.hidden);
-        warning.innerHTML = "You haven't made any edits so far";
-        // console.info(warning.display)
-    }
-    else{
-        this.editState = 5;
-    }
+        if(this.editedLinks.length == 0){
+            var warning = Polymer.dom(this.root).querySelector("#warning");
+            // console.info(warning.hidden);
+            warning.innerHTML = "You haven't made any edits so far";
+            // console.info(warning.display)
+        }
+        else{
+            this.editState = 5;
+        }
     }
     /*
     This event handling method called editLinkHandler method is to be associated with
@@ -358,15 +385,15 @@ class FeedbackApp extends Polymer.Element {
     and removed while transitioning out.
     */
     editLinkHandler(e){
-    console.log("In the editLinkHandler method");
-    var _self = document.querySelector("feedback-app");
-    _self.linkToEdit.href = e.target.href;
-    _self.linkToEdit.valueBeforeEdit = e.target.innerHTML;
-    Polymer.dom(_self.root).querySelector("#header").innerHTML = _self.linkToEdit.href;
-    Polymer.dom(_self.root).querySelector("#header").href = _self.linkToEdit.href;
-    Polymer.dom(_self.root).querySelector("#input").value = _self.linkToEdit.valueBeforeEdit;
-    _self.editState = 3;
-    return false;
+        console.log("In the editLinkHandler method");
+        var _self = document.querySelector("feedback-app");
+        _self.linkToEdit.href = e.target.href;
+        _self.linkToEdit.valueBeforeEdit = e.target.innerHTML;
+        Polymer.dom(_self.root).querySelector("#header").innerHTML = _self.linkToEdit.href;
+        Polymer.dom(_self.root).querySelector("#header").href = _self.linkToEdit.href;
+        Polymer.dom(_self.root).querySelector("#input").value = _self.linkToEdit.valueBeforeEdit;
+        _self.editState = 3;
+        return false;
     }
     
     
@@ -375,11 +402,11 @@ class FeedbackApp extends Polymer.Element {
     Then it manipulates the shadow DOM to insert the data
     */
     ready(){
-    super.ready();
-    var _self = this;
-    $.get("/src/feedback-app/data_narratives.json", function(data){
-        _self.workflowURL = data.workflowURL;
-        _self.narratives = data.narratives;
-    });
+        super.ready();
+        var _self = this;
+        $.get("http://localhost:8080", function(data){
+            _self.workflowURL = data.workflowURL;
+            _self.narratives = data.narratives;
+        });
     }
 }
