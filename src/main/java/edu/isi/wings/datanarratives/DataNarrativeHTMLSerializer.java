@@ -40,11 +40,11 @@ public class DataNarrativeHTMLSerializer {
         String htmlPage = Constants.HTML_HEAD;
         htmlPage+=Constants.HTML_BODY_BEGIN;
         //add title: resource name and URI
-        htmlPage+="<h3 class=\"text-muted\">Data narratives for result: <a href=\""+d.getResult().getLocation()+"\">"+GeneralMethods.splitCamelCase(d.getResult().getName())+"</a></h3>\n";
-        
+       
         
         htmlPage+="<div class=\"row\">\n";
         htmlPage+="<div class=\"col-xs-8 col-md-8\">\n" +
+        	"<h3 class=\"text-muted\">Data narratives for result: <a href=\""+d.getResult().getLocation()+"\">"+GeneralMethods.splitCamelCase(d.getResult().getName())+"</a></h3>\n"+
 "	  <div class=\"panel-group\">\n";
         //insert data narratives here
         htmlPage+= getExecutionNarrative(d);
@@ -62,20 +62,20 @@ public class DataNarrativeHTMLSerializer {
 "	</div>";
         
         //Wf visualizations here
-       htmlPage+="<div class=\"col-xs-6 col-md-4\">";
+       htmlPage+="<div class=\"col-xs-6 col-md-offset-6 col-md-3\" style=' position:fixed; margin-left:800px;'>";
         //vis go here
         //replace visualizations with the right ones
-        htmlPage+="<div class=\"panel panel-primary \">\n" +
+        htmlPage+="<div class=\"panel panel-primary \" >\n" +
 "		  <div class=\"panel-heading workflowTab\">\n" +
 "			<h4 class=\"panel-title\">\n" +
-"			  <a data-toggle=\"collapse\" href=\"#collapseWf\">Workflow Visualization (Abstract method)</a>\n" +
+"			  Workflow Visualization (Abstract method)\n" +
 "			</h4>\n" +
 "		  </div>\n" +
 "			<a href="+ d.getContext().getWorkflowExecutionURI() + " id='executionWorkflow' > </a> <a href="+ d.getContext().getWorkflowTemplateURI() + " id='templateWorkflow' > </a>"	+
-"		  <div id=\"collapseWf\" class=\"panel-collapse collapse \">\n" +
+"		  <div id=\"collapseWf\" class=\"panel-body \">\n" +
 "<div class=\"bigCanvas\">  \n" + 
 " \n" + 
-"    <div class=\"visualization-container\" id=\"viz\" style=\"width:100%;height:400px;\">\n" + 
+"    <div class=\"visualization-container\" id=\"viz\" style=\"width:100%;height:275px;\">\n" + 
 "        <svg>\n" + 
 "        </svg>\n" + 
 //"        <img class=\"lazyload\" id='spinner' src=\"../images/spin.gif\"/ style=\"display:none\">\n" + 
@@ -85,16 +85,16 @@ public class DataNarrativeHTMLSerializer {
 "		  </div>\n" +
 "		</div>\n" +
 "		</div>\n" +
-"		<div class=\"panel panel-primary\">\n" +
+"		<div class=\"panel panel-primary\" >\n" +
 "		  <div class=\"panel-heading executionTab\">\n" +
 "			<h4 class=\"panel-title\">\n" +
-"			  <a data-toggle=\"collapse\" href=\"#collapseEx\">Workflow Execution Visualization</a>\n" +
+"			 Workflow Execution Visualization\n" +
 "			</h4>\n" +
 "		  </div>\n" +
-"		  <div id=\"collapseEx\" class=\"panel-collapse collapse\">\n" +
+"		  <div id=\"collapseEx\" class=\"panel-body\">\n" +
 "<div class=\"bigCanvas\">  \n" + 
 " \n" + 
-"    <div class=\"visualization-container2\" id=\"viz2\" style=\"width:100%;height:400px;\">\n" + 
+"    <div class=\"visualization-container2\" id=\"viz2\" style=\"width:100%;height:275px;\">\n" + 
 "        <svg>\n" + 
 "        </svg>\n" + 
 //"        <img class=\"lazyload\" id='spinner' src=\"../images/spin.gif\"/ style=\"display:none\">\n" + 
@@ -190,12 +190,12 @@ public class DataNarrativeHTMLSerializer {
     private static String serializeResource(DataNarrative d, Resource r, resourceTypes type){
         switch (type){
             case executionArtifact:
-                return "<a href=\""+r.getLocation()+"\">"+GeneralMethods.getFileNameFromURL(r.getLocation())+"</a> ";
+                return "<a onmouseout=\"unHighlightNode(\'"+r.getUri()+ "\')\"  onmouseover=\"highlightNode(\'"+r.getUri()+ "\')\"  id=\""+r.getUri() +"\" href=\""+r.getLocation()+"\">"+GeneralMethods.getFileNameFromURL(r.getLocation())+"</a> ";
             case parameter:
-                return "<a onmouseout=\"unHightlightNode(\'"+r.getUri()+"\')\" onmouseover=\"hightlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.getFileNameFromURL(r.getUri())+"</a> ";
+                return "<a onmouseout=\"unHighlightNode(\'"+r.getUri()+"\')\" onmouseover=\"highlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.getFileNameFromURL(r.getUri())+"</a> ";
             case template:
                 //templates may have an hyphen, remove
-                return "<a onmouseout=\"unHightlightNode(\'"+r.getUri()+"\')\" onmouseover=\"hightlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase(GeneralMethods.removeHypen(r.getName()))+"</a> ";
+                return "<a onmouseout=\"unHighlightNode(\'"+r.getUri()+"\')\" onmouseover=\"highlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase(GeneralMethods.removeHypen(r.getName()))+"</a> ";
             case processAndMotif:
                 String serialization = serializeResource(d, r, resourceTypes.other);
                 ArrayList<String> motifs = ((Step)r).getMotifs();
@@ -226,7 +226,7 @@ public class DataNarrativeHTMLSerializer {
                     return s;
             default:
                 //by default, get the name plus URI, without camelcase.
-                return "<a onmouseout=\"unHightlightNode(\'"+r.getUri()+"\')\" onmouseover=\"hightlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase((r.getName()))+"</a>";
+                return "<a onmouseout=\"unHighlightNode(\'"+r.getUri()+"\')\" onmouseover=\"highlightNode(\'"+r.getUri()+"\')\" href=\""+r.getUri()+"\">"+GeneralMethods.splitCamelCase((r.getName()))+"</a>";
         }
     }
     /**

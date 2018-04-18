@@ -381,19 +381,22 @@ var processClicked = function(){
 	console.log(" process clicked ");
 }
 
-var hightlightNode = function(nodeUri) {
+var highlightNode = function(nodeUri,color="red") {
+	
+	console.log(" heree for highlight");
 	svg.selectAll('g.node rect, g.node ellipse').each( function(uri) {
 		var node = vis.node(uri);
 		if(node.uri == nodeUri) {
               d3.select(this)
-                  .attr('stroke', 'red')
+                  .attr('stroke', color)
                   .attr('stroke-width', '4px');
 		}
       
 	});
 }
 
-var unHightlightNode = function(nodeUri) {
+var unHighlightNode = function(nodeUri) {
+	
 	svg.selectAll('g.node rect, g.node ellipse').each( function(uri) {
 		var node = vis.node(uri);
 		if(node.uri == nodeUri) {
@@ -428,7 +431,9 @@ var highlightPuts = function(putsArray) {
 }
 
 var unhighlightAllPuts = function() {
-    svg.selectAll('g.node ellipse').each( function(uri) {
+	
+	
+    svg.selectAll('g.node rect,g.node ellipse').each( function(uri) {
         var node = vis.node(uri);
         d3.select(this)
             .attr('stroke', null)
@@ -437,6 +442,8 @@ var unhighlightAllPuts = function() {
 }
 
 var unhighlightPuts = function(putsArray) {
+	
+	
     svg.selectAll('g.node ellipse').each( function(id) {
         var node = vis.node(id);
         for (var i = 0; i < putsArray.length; i++) {
@@ -457,10 +464,14 @@ var setupNodeOnClick = function (svg, vis) {
     //setup on click listeners for every node
     svg.selectAll('g.node').on('click', function(id) {
     	
+    		unhighlightAllPuts();
+    	
         var node = vis.node(id);
         console.log(" was clicked" + node.uri);
         $("a[href^='http://'").css("background-color","white");
+        $("a[id^='http://'").css("background-color","white");
         $("a[href$='"+ node.uri+ "']").css("background-color","yellow");
+        $("a[id$='"+ node.uri+ "']").css("background-color","yellow");
         svg.selectAll('g.node ellipse').each(function() {
             d3.select(this)
                 .attr('stroke', null)
@@ -470,6 +481,7 @@ var setupNodeOnClick = function (svg, vis) {
             addProcessInfo(node.uri, processInputMapping[node.uri], processOutputMapping[node.uri]);
             highlightPuts(processInputMapping[node.uri]);
             highlightPuts(processOutputMapping[node.uri]);
+            highlightNode(node.uri,"purple");
         } else if (node.type == 'input') {
             if($($(this).find("ellipse")[0]).css("fill")=="rgb(253, 219, 154)") {
                 getExecutionArtifactValues(addVariableInfo, node.uri, isVariableOfMapping[node.uri], outputByMapping[node.uri], 'parameter');
