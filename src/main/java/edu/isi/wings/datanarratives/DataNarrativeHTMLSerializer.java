@@ -42,8 +42,8 @@ public class DataNarrativeHTMLSerializer {
         //add title: resource name and URI
        
         
-        htmlPage+="<div class=\"row\">\n";
-        htmlPage+="<div class=\"col-xs-8 col-md-8\">\n" +
+        htmlPage+="<div class=\"row col-md-12\">\n";
+        htmlPage+="<div class=\"col-md-8\">\n" +
         	"<h3 class=\"text-muted\">Data narratives for result: <a href=\""+d.getResult().getLocation()+"\">"+GeneralMethods.splitCamelCase(d.getResult().getName())+"</a></h3>\n"+
 "	  <div class=\"panel-group\">\n";
         //insert data narratives here
@@ -62,7 +62,7 @@ public class DataNarrativeHTMLSerializer {
 "	</div>";
         
         //Wf visualizations here
-       htmlPage+="<div class=\"col-xs-6 col-md-offset-6 col-md-3\" style=' position:fixed; margin-left:800px;'>";
+       htmlPage+="<div class=\"col-md-4\"> <div class=\"sidebar-nav-fixed pull-right affix\" style=\"height: 100%; overflow-y:  auto;\"> ";
         //vis go here
         //replace visualizations with the right ones
         htmlPage+="<div class=\"panel panel-primary \" >\n" +
@@ -72,7 +72,7 @@ public class DataNarrativeHTMLSerializer {
 "			</h4>\n" +
 "		  </div>\n" +
 "			<a href="+ d.getContext().getWorkflowExecutionURI() + " id='executionWorkflow' > </a> <a href="+ d.getContext().getWorkflowTemplateURI() + " id='templateWorkflow' > </a>"	+
-"		  <div id=\"collapseWf\" class=\"panel-body \">\n" +
+"		  <div id=\"collapseWf\" style=\"padding:0px\" class=\"panel-body \">\n" +
 "<div class=\"bigCanvas\">  \n" + 
 " \n" + 
 "    <div class=\"visualization-container\" id=\"viz\" style=\"width:100%;height:275px;\">\n" + 
@@ -91,7 +91,7 @@ public class DataNarrativeHTMLSerializer {
 "			 Workflow Execution Visualization\n" +
 "			</h4>\n" +
 "		  </div>\n" +
-"		  <div id=\"collapseEx\" class=\"panel-body\">\n" +
+"		  <div id=\"collapseEx\"  style=\"padding:0px\" class=\"panel-body\">\n" +
 "<div class=\"bigCanvas\">  \n" + 
 " \n" + 
 "    <div class=\"visualization-container2\" id=\"viz2\" style=\"width:100%;height:275px;\">\n" + 
@@ -103,7 +103,7 @@ public class DataNarrativeHTMLSerializer {
 "		  </div>\n" +
 "		  </div>\n" +
 "		";
-        htmlPage+="</div>";
+        htmlPage+="</div></div>";
         
         htmlPage+=Constants.HTML_BODY_END;
         
