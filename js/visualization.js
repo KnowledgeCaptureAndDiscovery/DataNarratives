@@ -383,10 +383,11 @@ var processClicked = function(){
 
 var highlightNode = function(nodeUri,color="red") {
 	
-	console.log(" heree for highlight");
+	console.log(" heree for highlight" +nodeUri);
 	svg.selectAll('g.node rect, g.node ellipse').each( function(uri) {
 		var node = vis.node(uri);
 		if(node.uri == nodeUri) {
+			
               d3.select(this)
                   .attr('stroke', color)
                   .attr('stroke-width', '4px');
@@ -462,10 +463,19 @@ var unhighlightPuts = function(putsArray) {
 */
 var setupNodeOnClick = function (svg, vis) {
     //setup on click listeners for every node
+	svg.on('click',function(){
+		console.log(" svg click");
+		
+		
+		unhighlightAllPuts();
+		
+		
+		
+	});
     svg.selectAll('g.node').on('click', function(id) {
     	
     		unhighlightAllPuts();
-    	
+    		d3.event.stopPropagation();
         var node = vis.node(id);
         console.log(" was clicked" + node.uri);
         $("a[href^='http://'").css("background-color","white");
@@ -482,17 +492,21 @@ var setupNodeOnClick = function (svg, vis) {
             highlightPuts(processInputMapping[node.uri]);
             highlightPuts(processOutputMapping[node.uri]);
             highlightNode(node.uri,"purple");
+            
         } else if (node.type == 'input') {
             if($($(this).find("ellipse")[0]).css("fill")=="rgb(253, 219, 154)") {
                 getExecutionArtifactValues(addVariableInfo, node.uri, isVariableOfMapping[node.uri], outputByMapping[node.uri], 'parameter');
+                highlightNode(node.uri,"purple");
             }
             else {
                 getExecutionArtifactValues(addVariableInfo, node.uri, isVariableOfMapping[node.uri], outputByMapping[node.uri], 'input');
+                highlightNode(node.uri,"purple");
             }
             highlightPuts(isVariableOfMapping[node.uri]);
         } else if (node.type == 'output') {
             getExecutionArtifactValues(addVariableInfo, node.uri, isVariableOfMapping[node.uri], outputByMapping[node.uri], 'output');
             highlightPuts(outputByMapping[node.uri]);
+            highlightNode(node.uri,"purple");
         }
     });
 }

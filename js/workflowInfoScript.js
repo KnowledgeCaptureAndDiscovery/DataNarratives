@@ -283,7 +283,8 @@ function addVariableInfo(variableURI, usedBy, generatedBy, variableType, artifac
 			$($newPanel.find(".row.variable_row")[1]).hide();
 			$($newPanel.find(".col-md-9.col-md-offset-3")[1]).hide();
 		}
-		textGeneratedBy.append(newGeneratedBy);
+		if(textGeneratedBy!=undefined)
+			textGeneratedBy.append(newGeneratedBy);
 		
 		// show list of used by processes
 		var listUsedBy = $newPanel.find("ul")[2];
