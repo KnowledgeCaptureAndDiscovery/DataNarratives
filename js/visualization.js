@@ -30,11 +30,14 @@ var renderVisualization = function (res, isTrace, isIndexpage,isExecution) {
         d3.select("svg").remove();
         if(isExecution)
         {
-        		console.log("here");
+        		console.log(".visualization-container2");
         		d3.select('.visualization-container2').append('svg');
         }
         else
+        	{
+        		console.log(".visualization-container");
         		d3.select('.visualization-container').append('svg');
+        	}
     }
     else {
         d3.selectAll('.visualization-container:nth-child('+(isIndexpage-1)+')').append('svg');
@@ -254,7 +257,7 @@ var renderVisualization = function (res, isTrace, isIndexpage,isExecution) {
         addDimensions(render);
         // Set up an SVG group so that we can translate the final graph.
         if(!isIndexpage)  {
-            svg = d3.select("svg").attr('width','100%').attr('height','100%'), svgGroup = svg.append("g");
+        	 svg = d3.select("svg").attr('width','100%').attr('height','100%'), svgGroup = svg.append("g");
         }
         else  {
             svg = d3.selectAll("svg:nth-child("+(isIndexpage-1)+')').attr('width','100%').attr('height','100%'), svgGroup = svg.append("g");
@@ -279,7 +282,8 @@ var renderVisualization = function (res, isTrace, isIndexpage,isExecution) {
             .event(svg);
 
         if(!isIndexpage)  {
-            svg.attr('height', vis.graph().height * scale + yTopMargin);
+          	svg.attr('height', '275px');
+//            svg.attr('height', vis.graph().height * scale + yTopMargin);
             setupNodeOnClick(svg, vis);
             
         }   
@@ -296,6 +300,8 @@ var renderVisualization = function (res, isTrace, isIndexpage,isExecution) {
         getInputs(workflowURI, function (inputs) {
             for (var i = 0; i < inputs.length; i++) {
                 var nodeIndex = putNodeIndices[inputs[i].input.value];
+                console.log(putNodeIndices );
+                console.log("inputs[i].input.value" +inputs[i].input.value);
                 var newLabel = vis.node(nodeIndex).label;
                 var newURI = vis.node(nodeIndex).uri;
                 vis.setNode(nodeIndex, { 
@@ -465,7 +471,8 @@ var setupNodeOnClick = function (svg, vis) {
     //setup on click listeners for every node
 	svg.on('click',function(){
 		console.log(" svg click");
-		
+		 $("a[href^='http://'").css("background-color","white");
+	        $("a[id^='http://'").css("background-color","white");
 		
 		unhighlightAllPuts();
 		
@@ -496,17 +503,17 @@ var setupNodeOnClick = function (svg, vis) {
         } else if (node.type == 'input') {
             if($($(this).find("ellipse")[0]).css("fill")=="rgb(253, 219, 154)") {
                 getExecutionArtifactValues(addVariableInfo, node.uri, isVariableOfMapping[node.uri], outputByMapping[node.uri], 'parameter');
-                highlightNode(node.uri,"purple");
+                highlightNode(node.uri);
             }
             else {
                 getExecutionArtifactValues(addVariableInfo, node.uri, isVariableOfMapping[node.uri], outputByMapping[node.uri], 'input');
-                highlightNode(node.uri,"purple");
+                highlightNode(node.uri);
             }
             highlightPuts(isVariableOfMapping[node.uri]);
         } else if (node.type == 'output') {
             getExecutionArtifactValues(addVariableInfo, node.uri, isVariableOfMapping[node.uri], outputByMapping[node.uri], 'output');
             highlightPuts(outputByMapping[node.uri]);
-            highlightNode(node.uri,"purple");
+            highlightNode(node.uri);
         }
     });
 }
