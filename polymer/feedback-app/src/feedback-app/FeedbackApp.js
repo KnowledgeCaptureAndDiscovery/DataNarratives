@@ -30,10 +30,13 @@ class FeedbackApp extends Polymer.Element {
             /*
             The 'hideTextEditor' property will be used to hide or reveal the <paper-card> containing the editor for links.
             */
-            hideTextEditor: {
-                type: Boolean,
-                value: true
-            },
+            // hideTextEditor: {
+            //     type: Boolean,
+            //     value: true
+            // },
+            /* 
+            The 'workflowURL' property acts as a uniquely identifying property of a particular narrative
+            */
             workflowURL: {
                 type: String,
                 value: ""
@@ -140,7 +143,7 @@ class FeedbackApp extends Polymer.Element {
     // Clear the contents of the editor and make it hidden
     if(newValue == 0){
         Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML = "";
-        Polymer.dom(this.root).querySelector("#editor #textarea").innerHTML = "";
+        // Polymer.dom(this.root).querySelector("#editor #textarea").innerHTML = "";
         this.narrativeToEdit = -1;
         Polymer.dom(this.root).querySelector("#view").style.width = "";
         Polymer.dom(this.root).querySelector("#editor").style.width = "";
@@ -186,7 +189,7 @@ class FeedbackApp extends Polymer.Element {
                     success: function(data) {
                     console.log(data);
                     console.log('process success');
-                },
+                    },
 
                     error: function(jqXHR, exception) {
                         var msg = '';
@@ -266,13 +269,13 @@ class FeedbackApp extends Polymer.Element {
 
     // editState = 4 or 'edit text' state.
     // Need to manipulate <paper-textarea> to fill it with HTML corresponding to the text of the view
-    else if(newValue == 4){
-        var editorArea = Polymer.dom(this.root).querySelector("#editorarea #display");
-        this.hideLinkEditor = true;
-        var textEditor = Polymer.dom(this.root).querySelector("#editorarea #textarea");
-        textEditor.value = editorArea.innerHTML;
-        this.hideTextEditor = false;
-    }
+    // else if(newValue == 4){
+    //     var editorArea = Polymer.dom(this.root).querySelector("#editorarea #display");
+    //     this.hideLinkEditor = true;
+    //     var textEditor = Polymer.dom(this.root).querySelector("#editorarea #textarea");
+    //     textEditor.value = editorArea.innerHTML;
+    //     this.hideTextEditor = false;
+    // }
 
     // editState = 5 or 'record edits' state.
     // Currently, prints the Array editedLinks to the console.
@@ -334,9 +337,9 @@ class FeedbackApp extends Polymer.Element {
     /*
     Enter into 'edit text' state by setting editState to 4.
     */
-    editTextMode() {
-        this.editState = 4;
-    }
+    // editTextMode() {
+    //     this.editState = 4;
+    // }
     /*
     Clicking on the 'Save' button after editing a link label will transition
     to the 'edit links' state by setting editState to 2.
@@ -360,9 +363,9 @@ class FeedbackApp extends Polymer.Element {
     Clicking on the 'Save' button after editing the text should transition to
     the 'editor opened' state by setting editState to 1.
     */
-    saveEditedText(e){
-        this.editState = 1;
-    }
+    // saveEditedText(e){
+    //     this.editState = 1;
+    // }
     /*
     Clicking on the 'Save Edits' button after making several changes and 'OK's
     should transition to the 'save edits' state by setting editState to 5.
