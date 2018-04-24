@@ -11,9 +11,11 @@
 <link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 <!-- <link rel="import" href="/bower_components/paper-progress/paper-progress.html"> -->
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-collapse-item/paper-collapse-item.html">
 <link rel="import" href="/bower_components/polymer/lib/utils/gestures.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html"> 
 <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
@@ -88,15 +90,15 @@ tags in the <template> are allowed.
                 width: 500px;
                 position: fixed;
               } */
-              sample-content {
-                padding-top: 64px;
-              }
               
               paper-card{
                 color: black;
                 width: 100%;
                 word-wrap: break-word;
-                margin-bottom: 10px
+                margin-bottom: 10px;
+              }
+              paper-card.history-card {
+                padding: 10px;
               }
               paper-tooltip{
                 --paper-tooltip-delay-in: 500;
@@ -126,9 +128,13 @@ tags in the <template> are allowed.
               .card-body {
                 margin: 20px;
               }
-              .card-content {
-                padding: 10px;
+              .card-actions {
+                margin: 10px;
               }
+              iron-icon {
+                margin-right: 30px;
+              }
+              
               #link-to-edit {
                 color: white;
               }
@@ -139,6 +145,19 @@ tags in the <template> are allowed.
               paper-button.green {
                 background-color: var(--paper-green-500);
                 color: white;
+              }
+              iron-icon.icon-ok {
+                color: var(--paper-green-500);
+                margin-top: 20px;
+              }
+              iron-icon.icon-cancel {
+                color: var(--paper-red-500);
+                margin-top: 20px;
+              }
+              paper-collapse-item {
+                margin: 20px;
+                word-break: break-word;
+                word-wrap: break-word;
               }
               .editor-toolbar {
                 background-color: #675682;
@@ -222,9 +241,14 @@ tags in the <template> are allowed.
                                     The event handlers are defined in the <script> tag as instance methods of FeedbackApp
                                     -->
                                     <div class="horizontal justified">
-                                        <paper-button on-click="openEditor" identity$="{{index}}">Edit</paper-button>
-                                        <paper-button on-click="seeMore" identity$="{{index}}">See More</paper-button>
-                                        <paper-button on-click="seeLess" identity$="{{index}}">See Less</paper-button>
+                                        <!-- <paper-button on-click="openEditor" identity$="{{index}}">Edit</paper-button> -->
+                                        <iron-icon icon="icons:create" on-click="openEditor" identity$="{{index}}" title="Edit"></iron-icon>
+                                        <!-- <paper-button on-click="seeMore" identity$="{{index}}">See More</paper-button> -->
+                                        <iron-icon icon="icons:expand-more" on-click="seeMore" identity$="{{index}}" title="See More"></iron-icon>
+                                        <!-- <paper-button on-click="seeLess" identity$="{{index}}">See Less</paper-button> -->
+                                        <iron-icon icon="icons:expand-less" on-click="seeLess" identity$="{{index}}" title="See Less"></iron-icon>
+                                        <!-- <paper-button on-click="seeHistory" identity$="{{index}}">See Less</paper-button> -->
+                                        <iron-icon icon="icons:history" on-click="seeHistory" identity$="{{index}}" title="See Edit History"></iron-icon>
                                     </div>
                                 </div>
                                 
@@ -243,27 +267,27 @@ tags in the <template> are allowed.
                 The narrative editor is inserted with the text content of the 
                 view which caused the opening of the editor
               -->
-              <div class="panel p2" id="editor" hidden$="{{hideEditor}}" edit-state$="{{editState}}">
-                  <paper-card id="narrative-editor">
+              <div class="panel p2" id="editor" hidden$="{{hideRightPanel}}">
+
+                  <paper-card id="narrative-editor" hidden$="{{hideNarrativeEditor}}"  edit-state$="{{editState}}">
                       <paper-toolbar class="editor-toolbar">
                           <div slot="top" class="title">Narrative Editor</div>
                       </paper-toolbar>
                       <div class="card-body">
                           <div class="card-actions">
                               <div class="horizontal justified">
-                                  <paper-button on-click="editLinkMode">Edit Links</paper-button>
-                                  <!-- <paper-button on-click="editTextMode">Edit Text</paper-button> -->
-                                  <paper-button on-click="saveEdits">Save</paper-button>
-                                  <paper-button on-click="closeEditor">Close</paper-button>
+                                  <!-- <paper-button on-click="editLinkMode">Edit Links</paper-button> -->
+                                  <iron-icon icon="icons:create" on-click="editLinkMode" title="Edit Link Labels"></iron-icon>
+                                  <!-- <paper-button on-click="saveEdits">Save</paper-button> -->
+                                  <iron-icon icon="icons:save" on-click="saveEdits" title="Save"></iron-icon>
+                                  <!-- <paper-button on-click="closeEditor">Close</paper-button> -->
+                                  <iron-icon icon="icons:close" on-click="closeEditor" title="Close"></iron-icon>
                               </div>
                           </div>
         
                           <div class="card-content" id="editorarea">
                             <em><span id="warning" style="color:red; margin: 20px"></span></em>
                             <div id="display"></div>
-                            <!-- <paper-textarea id="textarea" label="Edit the text" hidden$="{{hideTextEditor}}"></paper-textarea>
-                            <paper-button class="custom green" hidden$="{{hideTextEditor}}">OK</paper-button>
-                            <paper-button class="custom red" hidden$="{{hideTextEditor}}">Cancel</paper-button> -->
                           </div>
                       </div>
                       
@@ -280,54 +304,77 @@ tags in the <template> are allowed.
                         <a id="header"></a>
                       </h4>
                       <paper-input id="input" label="Edit the label"></paper-input>
+                      <div class="horizontal justified">
+                          <iron-icon icon="icons:done" class="custom icon-ok" on-click="saveLinkLabel"></iron-icon>
+                          <iron-icon icon="icons:cancel" class="custom icon-cancel" on-click="cancelEditLink"></iron-icon>
+                      </div>
+                      
                     </div>
-                    <div class="card-actions">
-                      <paper-button class="custom green" on-click="saveLinkLabel">OK</paper-button>
-                      <paper-button class="custom red" on-click="cancelEditLink">Cancel</paper-button>
-                    </div>
+                    
+                    <!-- <div class="card-actions"> -->
+                      <!-- <div class="horizontal justified"> -->
+                        <!-- <paper-button class="custom green" on-click="saveLinkLabel">OK</paper-button> -->
+                        <!-- <iron-icon icon="icons:done" class="custom icon-ok" on-click="saveLinkLabel"></iron-icon> -->
+                        <!-- <paper-button class="custom green" on-click="saveLinkLabel"><iron-icon icon="icons:done"></iron-icon></paper-button> -->
+                        <!-- <paper-button class="custom red" on-click="cancelEditLink">Cancel</paper-button> -->
+                        <!-- <iron-icon icon="icons:cancel" class="custom icon-cancel" on-click="cancelEditLink"></iron-icon> -->
+                        <!-- <paper-button class="custom red" on-click="saveLinkLabel"><iron-icon icon="icons:cancel"></iron-icon></paper-button> -->
+                      <!-- </div> -->
+                    <!-- </div> -->
                   </paper-card>
     
-                  <!--
-                    This <div> will be used to hold the box where the text of the narrative
-                    can be directly edited on clicking 'Edit Text' button.
-                  -->
-                  <!-- <div id="text-editor" hidden$="{{hideTextEditor}}">
-                    <!-- <div class="card-content"> -->
-                      <!-- <paper-textarea id="text-area" label="Edit the text">
-                      </paper-textarea>
-                      <paper-button on-click="saveEditedText"></paper-button> -->
-                    <!-- </div> -->
-                  <!-- </div> -->
+                        
 
                   <paper-card id="save-edits-box" hidden$="{{hideSaveEditsBox}}">
                     <div class="card-content">
                       <paper-input label="Name your edit" id="edit-name"></paper-input>
                       <paper-input label="Briefly describe your edit" id="edit-description"></paper-input>
                       <paper-textarea label="Tell us why" id="edit-reason"></paper-textarea>
-                    </div>
-                    <div class="card-actions">
                       <div class="horizontal justified">
-                          <paper-button class="custom green" on-click="writeSavedEdit">OK</paper-button>
-                          <paper-button class="custom red" on-click="cancelSavingEdit">Cancel</paper-button>
+                          <iron-icon icon="icons:done" class="icon-ok" on-click="writeSavedEdit"></iron-icon>
+                          <iron-icon icon="icons:cancel" class="icon-cancel" on-click="cancelSavingEdit"></iron-icon>
                       </div>
-                  </div>
+                    </div>
+                    <!-- <div class="card-actions"> -->
+                      <!-- <div class="horizontal justified"> -->
+                          <!-- <paper-button class="custom green" on-click="writeSavedEdit">OK</paper-button> -->
+                          <!-- <iron-icon icon="icons:done" on-click="writeSavedEdit"></iron-icon> -->
+                          <!-- <paper-button class="custom red" on-click="cancelSavingEdit">Cancel</paper-button> -->
+                          <!-- <iron-icon icon="icons:cancel" on-click="cancelSavingEdit"></iron-icon> -->
+                      <!-- </div> -->
+                    <!-- </div> -->
                   </paper-card>
                 
-                  <paper-card id="edit-history">
+                  <paper-card id="edit-history" hidden$="{{hideEditHistory}}">
                       <paper-toolbar class="editor-toolbar">
                           <div slot="top" class="title">Edit History</div>
                       </paper-toolbar>
-                      <!-- <div class="card-actions">
-                          <div class="horizontal justified">
-                              <paper-button on-click="editLinkMode">Edit Links</paper-button>
-                              <paper-button on-click="editTextMode">Edit Text</paper-button>
-                              <paper-button on-click="saveEdits">Save</paper-button>
-                              <paper-button on-click="closeEditor">Close</paper-button>
-                          </div>
-                      </div> -->
-    
-                      <div class="card-content" id="history-display">
-                        
+                      
+                      <div class="card-content" id="history"> 
+                        <em><span id="warning-history" style="color:red; margin: 20px"></span></em>
+                        <dom-repeat items="{{editNarrativeHistory}}">
+                          <template>
+                              <paper-card class="history-card">
+                                <div identifier$="{{index}}" on-click="toggleThis">
+                                  [[item.dateString]]
+                                </div>
+                                <iron-collapse identifier$="{{index}}">
+                                    <div class="card-content">
+                                      <div class="card-metadata">
+                                          <h4>[[item.editName]]</h4>
+                                          <p>[[item.editDescription]]</p>
+                                          <p>[[item.editReason]]</p>
+                                      </div>
+                                      <div class="card-text">
+                                          <p>[[item.editedNarrativeText]]</p>
+                                      </div>  
+                                    </div>
+                                </iron-collapse>
+                                
+                              </paper-card>
+                          </template>
+                        </dom-repeat>
+                          
                       </div>
                   </paper-card>
 

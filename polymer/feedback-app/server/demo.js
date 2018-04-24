@@ -27,10 +27,31 @@ app.use(function (req, res, next) {
 
 
 app.get('/', function(req, res) {
-    fs.readFile('data_narratives.json', function(err, data) {
-        res.contentType('json');
-        res.send(data);
-    });
+    // console.log(req.query.fileName);
+    if(typeof req.query.fileName !== "undefined") {
+        fs.readFile('data_narratives.json', function(err, data) {
+            res.contentType('json');
+            res.send(data);
+        });
+    }
+    else if(typeof req.query.originNarrativeIndex !== "undefined") {
+        console.log(req.query.originNarrativeIndex);
+        fs.readFile('data_store.json', function(err, data) {
+            data = JSON.parse(data);
+            // console.log(data);
+            var filteredData = data.filter(function(currentValue) {
+                console.log(currentValue.originNarrativeIndex);
+                return currentValue.originNarrativeIndex == req.query.originNarrativeIndex;
+            });
+            console.log(filteredData);
+            filteredData = filteredData.sort(function(current, next) {
+                return (next.timeStamp - current.timeStamp); 
+            });
+            filteredData = JSON.stringify(filteredData, null, 4);
+            res.contentType('json');
+            res.send(filteredData);
+        });
+    }
 });
 
 app.post('/', function(req, res) {
@@ -45,7 +66,7 @@ app.post('/', function(req, res) {
         });
         res.contentType('json');
         res.send(data);
-});
+    });
 //  res.contentType('json');
 //  res.send({ status: "successful" });
 });
