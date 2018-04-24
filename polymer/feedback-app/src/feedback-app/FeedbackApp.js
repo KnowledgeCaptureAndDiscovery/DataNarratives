@@ -246,7 +246,10 @@ class FeedbackApp extends Polymer.Element {
                 }
             
             }
-            this.hideRightPanel = false;
+            if(this.hideRightPanel == true){
+                this.hideRightPanel = false;
+            }
+            this.hideNarrativeEditor = false;
             Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
             Polymer.dom(this.root).querySelector("#view").style.width = "50%";
             Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML = Polymer.dom(this.root).querySelector(".card-content[identity='"+this.narrativeToEdit+"']").innerHTML; 
@@ -359,9 +362,15 @@ class FeedbackApp extends Polymer.Element {
                 for(var i=0; i<data.length; ++i){
                     var obj = {};
                     obj.dateString = new Date(data[i].timeStamp).toDateString();
-                    obj.editName = data[i].editName;
-                    obj.editReason = data[i].editReason;
-                    obj.editDescription = data[i].editDescription;
+                    if(typeof data[i].editName !== "undefined"){
+                        obj.editName = "Name : "+data[i].editName;
+                    }
+                    if(typeof data[i].editDescription !== "undefined"){
+                        obj.editDescription = "Description : "+data[i].editDescription;
+                    }
+                    if(typeof data[i].editReason !== "undefined"){
+                        obj.editReason = "Reason : "+data[i].editReason;
+                    }
                     obj.editedNarrativeText = data[i].editedNarrativeText;
                     obj.editedLinks = data[i].editedLinks;
                     array.push(JSON.parse(JSON.stringify(obj)));
@@ -405,11 +414,10 @@ class FeedbackApp extends Polymer.Element {
         if(this.hideRightPanel == true){
             this.hideRightPanel = false;
             this.hideNarrativeEditor = true;
-            this.hideEditHistory = false;
         }
-        else{
-            this.hideEditHistory = false;
-        }
+        this.hideEditHistory = false;
+        Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
+        Polymer.dom(this.root).querySelector("#view").style.width = "50%";
     }
     toggleThis(e) {
         var identifier = e.target.getAttribute('identifier');
@@ -420,6 +428,14 @@ class FeedbackApp extends Polymer.Element {
             $(textDiv).find("a[href='"+this.editNarrativeHistory[identifier].editedLinks[i].href+"']").css("color","red");
         }
         div.toggle();
+    }
+    closeEditHistory() {
+        this.hideEditHistory = true;
+        if(this.hideNarrativeEditor == true){
+            this.hideRightPanel = true;
+            Polymer.dom(this.root).querySelector("#view").style.width = "";
+            Polymer.dom(this.root).querySelector("#editor").style.width = "";
+        }
     }
     /*
     Close the editor by setting editState to 0.

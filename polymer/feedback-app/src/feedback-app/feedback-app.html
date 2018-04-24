@@ -351,6 +351,7 @@ tags in the <template> are allowed.
                       </paper-toolbar>
                       
                       <div class="card-content" id="history"> 
+                        <iron-icon icon="icons:close" title="Close" on-click="closeEditHistory"></iron-icon>
                         <em><span id="warning-history" style="color:red; margin: 20px"></span></em>
                         <dom-repeat items="{{editNarrativeHistory}}">
                           <template>
