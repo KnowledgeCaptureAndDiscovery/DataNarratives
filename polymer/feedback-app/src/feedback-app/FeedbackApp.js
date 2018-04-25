@@ -87,19 +87,20 @@ class FeedbackApp extends Polymer.Element {
             narrativeToEdit: {
                 type: Number,
                 value: -1
+                // observer: "narrativeToEditChange"
             },
             /*
             The editStateDictionary property exists mainly to assist programmers and debuggers to keep a handy reference for the 
             state of the system.
             */
             editStateDictionary: {
-            value: {
-                    0: "editor closed",
-                    1: "editor opened",
-                    2: "edit links",
-                    3: "edit link label",
-                    4: "save edits"
-                }
+                value: {
+                        0: "editor closed",
+                        1: "editor opened",
+                        2: "edit links",
+                        3: "edit link label",
+                        4: "save edits"
+                    }
             },
             /*
             The editState property is the other state variable which keeps track of the current state of the editing process.
@@ -135,7 +136,7 @@ class FeedbackApp extends Polymer.Element {
                         type: String,
                         value: ""
                     }
-            }   
+                }   
             },
             /*
             The links edited so far are pushed on to the Array - editedLinks
@@ -147,6 +148,22 @@ class FeedbackApp extends Polymer.Element {
             discardLinkLabelChange: {
                 type: Boolean,
                 value: false
+            },
+            historiedNarrative: {
+                type: Number,
+                value: -1,
+                observer: "historiedNarrativeChange"
+            },
+            historyState: {
+                type: Number,
+                value: 0,
+                observer: "historyStateChange"
+            },
+            historyStateDictionary: {
+                value: {
+                    0: "history closed",
+                    1: "history opened" 
+                }
             } 
         };
     }
@@ -156,10 +173,155 @@ class FeedbackApp extends Polymer.Element {
     It implicitly receives the old and new values of the observed property. Based on these values,
     appropriate action is taken.
     */
-   editStateChange(newValue, oldValue){
+    closePanel() {
+        this.editState = 0;
+        this.historyState = 0;
+    }
+    hidePanel() {
+        this.hideRightPanel = true;
+        Polymer.dom(this.root).querySelector("#editor").style.width = "";
+        Polymer.dom(this.root).querySelector("#view").style.width = "";
+    }
+    openPanel() {
+        this.hideRightPanel = false;
+        Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
+        Polymer.dom(this.root).querySelector("#view").style.width = "50%";
+    }
+    historyStateChange(newValue, oldValue) {
+        if(newValue == 0){
+            this.hideEditHistory = true;
+            this.historiedNarrative = -1;
+            this.editNarrativeHistory.length = 0;
+            // dom-repeat render?
+            if(this.hideNarrativeEditor == true){
+                this.hidePanel();
+                // this.hideRightPanel = true;
+            }
+        }
+        if(newValue == 1){
+            if(this.hideRightPanel == true){
+                this.openPanel();
+                // this.hideRightPanel = false;
+            }
+            this.hideEditHistory = false;
+            // Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
+            // Polymer.dom(this.root).querySelector("#view").style.width = "50%";
+        }
+    }
+    closeHistory() {
+        this.historyState = 0;
+    }
+    openHistory(e) {
+        var identity = e.target.getAttribute("identity");
+        this.historiedNarrative = identity;
+        if(this.historyState == 0){
+            this.historyState = 1;
+        }
+    }
+    historiedNarrativeChange(newValue, oldValue) {
+        if(newValue == -1){
+            return;
+        }
+        var _self = this;
+        $.ajax({
+            url: "http://localhost:8080/",
+            type: "GET",
+            dataType: "json",
+            data: {originNarrativeIndex: this.historiedNarrative},
+            contentType: "application/json",
+            cache: false,
+            timeout: 5000,
+            async: false,
+            complete: function() {
+                console.log("GET request sent");
+            },
+
+            success: function(data) {
+                console.log("GET success");
+                _self.editNarrativeHistory.length = 0;
+                var array = [];
+                for(var i=0; i<data.length; ++i){
+                    var obj = {};
+                    obj.dateString = new Date(data[i].timeStamp).toDateString();
+                    if(typeof data[i].editName !== "undefined"){
+                        obj.editName = "Name : "+data[i].editName;
+                    }
+                    if(typeof data[i].editDescription !== "undefined"){
+                        obj.editDescription = "Description : "+data[i].editDescription;
+                    }
+                    if(typeof data[i].editReason !== "undefined"){
+                        obj.editReason = "Reason : "+data[i].editReason;
+                    }
+                    obj.editedNarrativeText = data[i].editedNarrativeText;
+                    obj.editedLinks = data[i].editedLinks;
+                    array.push(JSON.parse(JSON.stringify(obj)));
+                }
+                _self.editNarrativeHistory = array;
+            },
+
+            error: function(jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connected.\n Verify Network.';
+                } 
+                else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } 
+                else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } 
+                else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } 
+                else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } 
+                else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } 
+                else {
+                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                console.log(msg);
+            }
+        });
+
+        if(this.editNarrativeHistory.length == 0){
+            Polymer.dom(this.root).querySelector("#warning-history").innerHTML = "You haven't made any edits to this narrative";
+        }
+        else{
+            Polymer.dom(this.root).querySelector("#warning-history").innerHTML = "";
+        }
+        // Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
+        // Polymer.dom(this.root).querySelector("#view").style.width = "50%";
+    }
+    toggleThis(e) {
+        var identifier = e.target.getAttribute('identifier');
+        var div = Polymer.dom(this.root).querySelector("iron-collapse[identifier='"+identifier+"']");
+        var textDiv = Polymer.dom(div).querySelector(".card-text");
+        $(textDiv).html(this.editNarrativeHistory[identifier].editedNarrativeText);
+        for(var i=0; i<this.editNarrativeHistory[identifier].editedLinks.length; ++i){
+            $(textDiv).find("a[href='"+this.editNarrativeHistory[identifier].editedLinks[i].href+"']").css("color","red");
+        }
+        div.toggle();
+    }
+    
+    restoreDefaults() {
+        if(this.hideNarrativeEditor == true){
+            Polymer.dom(this.root).querySelector("#view").style.width = "";
+            Polymer.dom(this.root).querySelector("#editor").style.width = "";
+            this.closePanel();
+        }
+    }
+    narrativeToEditChange(newValue, oldValue){
+        this.editState = 9;
+    } 
+    editStateChange(newValue, oldValue){
         // Logging to console for debugging purposes
         console.log(newValue+" : "+this.editStateDictionary[newValue]);
-
+        if(newValue == 9){
+            this.editState = 1;
+        }
         if(oldValue == 2 && newValue != 3){
             var editorArea = Polymer.dom(this.root).querySelector("#editorarea #display");
             $(editorArea).find("a").css("color", "");
@@ -172,9 +334,14 @@ class FeedbackApp extends Polymer.Element {
             Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML = "";
             // Polymer.dom(this.root).querySelector("#editor #textarea").innerHTML = "";
             this.narrativeToEdit = -1;
-            Polymer.dom(this.root).querySelector("#view").style.width = "";
-            Polymer.dom(this.root).querySelector("#editor").style.width = "";
-            this.hideRightPanel = true;
+            this.hideNarrativeEditor = true;
+            if(this.hideEditHistory == true){
+                this.hidePanel();
+            }
+            // this.restoreDefaults();
+            // Polymer.dom(this.root).querySelector("#view").style.width = "";
+            // Polymer.dom(this.root).querySelector("#editor").style.width = "";
+            // this.hideRightPanel = true;
         }
 
         // editState = 1 or 'editor opened' state.
@@ -246,12 +413,14 @@ class FeedbackApp extends Polymer.Element {
                 }
             
             }
-            if(this.hideRightPanel == true){
-                this.hideRightPanel = false;
-            }
             this.hideNarrativeEditor = false;
-            Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
-            Polymer.dom(this.root).querySelector("#view").style.width = "50%";
+            this.openPanel();
+            // if(this.hideRightPanel == true){
+            //     this.hideRightPanel = false;
+            // }
+            // this.hideNarrativeEditor = false;
+            // Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
+            // Polymer.dom(this.root).querySelector("#view").style.width = "50%";
             Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML = Polymer.dom(this.root).querySelector(".card-content[identity='"+this.narrativeToEdit+"']").innerHTML; 
 
         }
@@ -336,107 +505,19 @@ class FeedbackApp extends Polymer.Element {
     */ 
     openEditor(e) {
         var identity = e.target.getAttribute("identity");
-        this.narrativeToEdit = identity;
-        this.editState = 1;
+        if(this.editState == 0){
+            this.narrativeToEdit = identity;
+            console.log(this.narrativeToEdit)
+            this.editState = 1;
+        }
+        // if(this.editState == 0 || this.editState == 1){
+        //      this.narrativeToEdit = identity;
+        // }
+        // else{
+        //     return;
+        // }
     }
-    seeHistory(e) {
-        var identity = e.target.getAttribute("identity");
-        var _self = this;
-        $.ajax({
-            url: "http://localhost:8080/",
-            type: "GET",
-            dataType: "json",
-            data: {originNarrativeIndex: identity},
-            contentType: "application/json",
-            cache: false,
-            timeout: 5000,
-            async: false,
-            complete: function() {
-                console.log("GET request sent");
-            },
-
-            success: function(data) {
-                console.log("GET success");
-                _self.editNarrativeHistory.length = 0;
-                var array = [];
-                for(var i=0; i<data.length; ++i){
-                    var obj = {};
-                    obj.dateString = new Date(data[i].timeStamp).toDateString();
-                    if(typeof data[i].editName !== "undefined"){
-                        obj.editName = "Name : "+data[i].editName;
-                    }
-                    if(typeof data[i].editDescription !== "undefined"){
-                        obj.editDescription = "Description : "+data[i].editDescription;
-                    }
-                    if(typeof data[i].editReason !== "undefined"){
-                        obj.editReason = "Reason : "+data[i].editReason;
-                    }
-                    obj.editedNarrativeText = data[i].editedNarrativeText;
-                    obj.editedLinks = data[i].editedLinks;
-                    array.push(JSON.parse(JSON.stringify(obj)));
-                }
-                _self.editNarrativeHistory = array;
-            },
-
-            error: function(jqXHR, exception) {
-                var msg = '';
-                if (jqXHR.status === 0) {
-                    msg = 'Not connected.\n Verify Network.';
-                } 
-                else if (jqXHR.status == 404) {
-                    msg = 'Requested page not found. [404]';
-                } 
-                else if (jqXHR.status == 500) {
-                    msg = 'Internal Server Error [500].';
-                } 
-                else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
-                } 
-                else if (exception === 'timeout') {
-                    msg = 'Time out error.';
-                } 
-                else if (exception === 'abort') {
-                    msg = 'Ajax request aborted.';
-                } 
-                else {
-                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                }
-                console.log(msg);
-            }
-        });
-
-        if(this.editNarrativeHistory.length == 0){
-            Polymer.dom(this.root).querySelector("#warning-history").innerHTML = "You haven't made any edits to this narrative";
-        }
-        else{
-            Polymer.dom(this.root).querySelector("#warning-history").innerHTML = "";
-        }
-        if(this.hideRightPanel == true){
-            this.hideRightPanel = false;
-            this.hideNarrativeEditor = true;
-        }
-        this.hideEditHistory = false;
-        Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
-        Polymer.dom(this.root).querySelector("#view").style.width = "50%";
-    }
-    toggleThis(e) {
-        var identifier = e.target.getAttribute('identifier');
-        var div = Polymer.dom(this.root).querySelector("iron-collapse[identifier='"+identifier+"']");
-        var textDiv = Polymer.dom(div).querySelector(".card-text");
-        $(textDiv).html(this.editNarrativeHistory[identifier].editedNarrativeText);
-        for(var i=0; i<this.editNarrativeHistory[identifier].editedLinks.length; ++i){
-            $(textDiv).find("a[href='"+this.editNarrativeHistory[identifier].editedLinks[i].href+"']").css("color","red");
-        }
-        div.toggle();
-    }
-    closeEditHistory() {
-        this.hideEditHistory = true;
-        if(this.hideNarrativeEditor == true){
-            this.hideRightPanel = true;
-            Polymer.dom(this.root).querySelector("#view").style.width = "";
-            Polymer.dom(this.root).querySelector("#editor").style.width = "";
-        }
-    }
+    
     /*
     Close the editor by setting editState to 0.
     */

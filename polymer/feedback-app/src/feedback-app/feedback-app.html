@@ -248,7 +248,7 @@ tags in the <template> are allowed.
                                         <!-- <paper-button on-click="seeLess" identity$="{{index}}">See Less</paper-button> -->
                                         <iron-icon icon="icons:expand-less" on-click="seeLess" identity$="{{index}}" title="See Less"></iron-icon>
                                         <!-- <paper-button on-click="seeHistory" identity$="{{index}}">See Less</paper-button> -->
-                                        <iron-icon icon="icons:history" on-click="seeHistory" identity$="{{index}}" title="See Edit History"></iron-icon>
+                                        <iron-icon icon="icons:history" on-click="openHistory" identity$="{{index}}" title="See Edit History"></iron-icon>
                                     </div>
                                 </div>
                                 
@@ -268,7 +268,7 @@ tags in the <template> are allowed.
                 view which caused the opening of the editor
               -->
               <div class="panel p2" id="editor" hidden$="{{hideRightPanel}}">
-
+                  <iron-icon icon="icons:close" on-click="closePanel" title="Close this panel" ></iron-icon>
                   <paper-card id="narrative-editor" hidden$="{{hideNarrativeEditor}}"  edit-state$="{{editState}}">
                       <paper-toolbar class="editor-toolbar">
                           <div slot="top" class="title">Narrative Editor</div>
@@ -305,8 +305,8 @@ tags in the <template> are allowed.
                       </h4>
                       <paper-input id="input" label="Edit the label"></paper-input>
                       <div class="horizontal justified">
-                          <iron-icon icon="icons:done" class="custom icon-ok" on-click="saveLinkLabel"></iron-icon>
-                          <iron-icon icon="icons:cancel" class="custom icon-cancel" on-click="cancelEditLink"></iron-icon>
+                          <iron-icon icon="icons:done" class="custom icon-ok" title="OK" on-click="saveLinkLabel"></iron-icon>
+                          <iron-icon icon="icons:cancel" class="custom icon-cancel" title="Cancel" on-click="cancelEditLink"></iron-icon>
                       </div>
                       
                     </div>
@@ -331,8 +331,8 @@ tags in the <template> are allowed.
                       <paper-input label="Briefly describe your edit" id="edit-description"></paper-input>
                       <paper-textarea label="Tell us why" id="edit-reason"></paper-textarea>
                       <div class="horizontal justified">
-                          <iron-icon icon="icons:done" class="icon-ok" on-click="writeSavedEdit"></iron-icon>
-                          <iron-icon icon="icons:cancel" class="icon-cancel" on-click="cancelSavingEdit"></iron-icon>
+                          <iron-icon icon="icons:done" class="icon-ok" title="OK" on-click="writeSavedEdit"></iron-icon>
+                          <iron-icon icon="icons:cancel" class="icon-cancel" title="Cancel" on-click="cancelSavingEdit"></iron-icon>
                       </div>
                     </div>
                     <!-- <div class="card-actions"> -->
@@ -351,7 +351,7 @@ tags in the <template> are allowed.
                       </paper-toolbar>
                       
                       <div class="card-content" id="history"> 
-                        <iron-icon icon="icons:close" title="Close" on-click="closeEditHistory"></iron-icon>
+                        <iron-icon icon="icons:close" title="Close" on-click="closeHistory"></iron-icon>
                         <em><span id="warning-history" style="color:red; margin: 20px"></span></em>
                         <dom-repeat items="{{editNarrativeHistory}}">
                           <template>
