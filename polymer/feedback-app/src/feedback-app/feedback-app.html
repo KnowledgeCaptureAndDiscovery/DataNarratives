@@ -353,10 +353,10 @@ tags in the <template> are allowed.
                       <div class="card-content" id="history"> 
                         <iron-icon icon="icons:close" title="Close" on-click="closeHistory"></iron-icon>
                         <em><span id="warning-history" style="color:red; margin: 20px"></span></em>
-                        <dom-repeat items="{{editNarrativeHistory}}">
+                        <dom-repeat items="{{editNarrativeHistory}}" id="history-cards">
                           <template>
                               <paper-card class="history-card">
-                                <div identifier$="{{index}}" on-click="toggleThis">
+                                <div identifier$="{{index}}" on-click="toggleCard">
                                   [[item.dateString]]
                                 </div>
                                 <iron-collapse identifier$="{{index}}">

@@ -43,7 +43,7 @@ app.get('/', function(req, res) {
                 console.log(currentValue.originNarrativeIndex);
                 return currentValue.originNarrativeIndex == req.query.originNarrativeIndex;
             });
-            console.log(filteredData);
+            // console.log(filteredData);
             filteredData = filteredData.sort(function(current, next) {
                 return (next.timeStamp - current.timeStamp); 
             });
@@ -65,7 +65,7 @@ app.post('/', function(req, res) {
                 throw err;
         });
         res.contentType('json');
-        res.send(data);
+        res.send(JSON.stringify({status: "success"}));
     });
 //  res.contentType('json');
 //  res.send({ status: "successful" });

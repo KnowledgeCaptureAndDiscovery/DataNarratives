@@ -257,6 +257,7 @@ class FeedbackApp extends Polymer.Element {
                     array.push(JSON.parse(JSON.stringify(obj)));
                 }
                 _self.editNarrativeHistory = array;
+                // _self.notifyPath('editNarrativeHistory');
             },
 
             error: function(jqXHR, exception) {
@@ -292,10 +293,9 @@ class FeedbackApp extends Polymer.Element {
         else{
             Polymer.dom(this.root).querySelector("#warning-history").innerHTML = "";
         }
-        // Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
-        // Polymer.dom(this.root).querySelector("#view").style.width = "50%";
+
     }
-    toggleThis(e) {
+    toggleCard(e) {
         var identifier = e.target.getAttribute('identifier');
         var div = Polymer.dom(this.root).querySelector("iron-collapse[identifier='"+identifier+"']");
         var textDiv = Polymer.dom(div).querySelector(".card-text");
@@ -305,14 +305,7 @@ class FeedbackApp extends Polymer.Element {
         }
         div.toggle();
     }
-    
-    restoreDefaults() {
-        if(this.hideNarrativeEditor == true){
-            Polymer.dom(this.root).querySelector("#view").style.width = "";
-            Polymer.dom(this.root).querySelector("#editor").style.width = "";
-            this.closePanel();
-        }
-    }
+
     narrativeToEditChange(newValue, oldValue){
         this.editState = 9;
     } 
@@ -355,6 +348,7 @@ class FeedbackApp extends Polymer.Element {
                     Polymer.dom(this.root).querySelector("#warning").innerHTML = "You haven't made any edits";
                 }
                 else{
+                    var _self = this;
                     var metadata = {};
                     metadata.timeStamp = Date.now();
                     metadata.workflowURL = this.workflowURL;
@@ -383,6 +377,31 @@ class FeedbackApp extends Polymer.Element {
                         success: function(data) {
                             console.log(data);
                             console.log('Data posted successfully');
+                            if(_self.narrativeToEdit == _self.historiedNarrative){
+                                var obj = {};
+                                obj.dateString = new Date(metadata.timeStamp).toDateString();
+                                if(typeof metadata.editName !== "undefined"){
+                                    obj.editName = "Name : "+metadata.editName;
+                                }
+                                if(typeof metadata.editDescription !== "undefined"){
+                                    obj.editDescription = "Description : "+metadata.editDescription;
+                                }
+                                if(typeof metadata.editReason !== "undefined"){
+                                    obj.editReason = "Reason : "+metadata.editReason;
+                                }
+                                obj.editedNarrativeText = metadata.editedNarrativeText;
+                                obj.editedLinks = metadata.editedLinks;
+                                _self.editNarrativeHistory.unshift(obj);
+                                Polymer.dom(_self.root).querySelector("#history-cards").render();
+                                // if(this.editNarrativeHistory.length == 0){
+                                //     Polymer.dom(this.root).querySelector("#warning-history").innerHTML = "You haven't made any edits to this narrative";
+                                // }
+                                // else{
+                                Polymer.dom(_self.root).querySelector("#warning-history").innerHTML = "";
+                                // }
+                                // _self.notifyPath('editNarrativeHistory');
+                                console.log(_self.editNarrativeHistory);
+                            }
                         },
 
                         error: function(jqXHR, exception) {
@@ -415,12 +434,6 @@ class FeedbackApp extends Polymer.Element {
             }
             this.hideNarrativeEditor = false;
             this.openPanel();
-            // if(this.hideRightPanel == true){
-            //     this.hideRightPanel = false;
-            // }
-            // this.hideNarrativeEditor = false;
-            // Polymer.dom(this.root).querySelector("#editor").style.width = "50%";
-            // Polymer.dom(this.root).querySelector("#view").style.width = "50%";
             Polymer.dom(this.root).querySelector("#editorarea #display").innerHTML = Polymer.dom(this.root).querySelector(".card-content[identity='"+this.narrativeToEdit+"']").innerHTML; 
 
         }
