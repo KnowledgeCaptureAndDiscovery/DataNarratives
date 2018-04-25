@@ -1,6 +1,7 @@
 <!-- Import scripts - webcomponents(js) and jquery and web componenents (.html) -->
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="/node_modules/clipboard/dist/clipboard.min.js"></script>
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="/bower_components/app-layout/app-layout.html">
 <link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
@@ -131,6 +132,9 @@ tags in the <template> are allowed.
               .card-actions {
                 margin: 10px;
               }
+              .card-content {
+                user-select: all;
+              }
               iron-icon {
                 margin-right: 30px;
               }
@@ -249,6 +253,7 @@ tags in the <template> are allowed.
                                         <iron-icon icon="icons:expand-less" on-click="seeLess" identity$="{{index}}" title="See Less"></iron-icon>
                                         <!-- <paper-button on-click="seeHistory" identity$="{{index}}">See Less</paper-button> -->
                                         <iron-icon icon="icons:history" on-click="openHistory" identity$="{{index}}" title="See Edit History"></iron-icon>
+                                        <!-- <iron-icon icon="icons:content-copy" class="icon-copy" title="Copy to Clipboard" data-clipboard-target=".card-content[identity={{index}}]"></iron-icon> -->
                                     </div>
                                 </div>
                                 
@@ -350,7 +355,7 @@ tags in the <template> are allowed.
                           <div slot="top" class="title">Edit History</div>
                       </paper-toolbar>
                       
-                      <div class="card-content" id="history"> 
+                      <div class="card-body" id="history"> 
                         <iron-icon icon="icons:close" title="Close" on-click="closeHistory"></iron-icon>
                         <em><span id="warning-history" style="color:red; margin: 20px"></span></em>
                         <dom-repeat items="{{editNarrativeHistory}}" id="history-cards">
@@ -360,16 +365,16 @@ tags in the <template> are allowed.
                                   [[item.dateString]]
                                 </div>
                                 <iron-collapse identifier$="{{index}}">
-                                    <div class="card-content">
+                                    <!-- <div class="card-content"> -->
                                       <div class="card-metadata">
                                           <h4>[[item.editName]]</h4>
                                           <p>[[item.editDescription]]</p>
                                           <p>[[item.editReason]]</p>
                                       </div>
-                                      <div class="card-text">
+                                      <div class="card-content">
                                           <p>[[item.editedNarrativeText]]</p>
                                       </div>  
-                                    </div>
+                                    <!-- </div> -->
                                 </iron-collapse>
                                 
                               </paper-card>
@@ -394,6 +399,7 @@ tags in the <template> are allowed.
     'feedback-app', which is returned by FeedbackApp.is and the class FeedbackApp
     This is called registration
     */
+    new ClipboardJS('.icon-copy');
     window.customElements.define(FeedbackApp.is, FeedbackApp);
   </script>
 </dom-module>

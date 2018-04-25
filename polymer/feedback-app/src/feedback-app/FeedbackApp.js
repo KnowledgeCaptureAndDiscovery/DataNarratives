@@ -298,7 +298,7 @@ class FeedbackApp extends Polymer.Element {
     toggleCard(e) {
         var identifier = e.target.getAttribute('identifier');
         var div = Polymer.dom(this.root).querySelector("iron-collapse[identifier='"+identifier+"']");
-        var textDiv = Polymer.dom(div).querySelector(".card-text");
+        var textDiv = Polymer.dom(div).querySelector(".card-content");
         $(textDiv).html(this.editNarrativeHistory[identifier].editedNarrativeText);
         for(var i=0; i<this.editNarrativeHistory[identifier].editedLinks.length; ++i){
             $(textDiv).find("a[href='"+this.editNarrativeHistory[identifier].editedLinks[i].href+"']").css("color","red");
@@ -393,12 +393,12 @@ class FeedbackApp extends Polymer.Element {
                                 obj.editedLinks = metadata.editedLinks;
                                 _self.editNarrativeHistory.unshift(obj);
                                 Polymer.dom(_self.root).querySelector("#history-cards").render();
-                                // if(this.editNarrativeHistory.length == 0){
-                                //     Polymer.dom(this.root).querySelector("#warning-history").innerHTML = "You haven't made any edits to this narrative";
-                                // }
-                                // else{
-                                Polymer.dom(_self.root).querySelector("#warning-history").innerHTML = "";
-                                // }
+                                if(_self.editNarrativeHistory.length == 0){
+                                    Polymer.dom(_self.root).querySelector("#warning-history").innerHTML = "You haven't made any edits to this narrative";
+                                }
+                                else{
+                                    Polymer.dom(_self.root).querySelector("#warning-history").innerHTML = "";
+                                }
                                 // _self.notifyPath('editNarrativeHistory');
                                 console.log(_self.editNarrativeHistory);
                             }
