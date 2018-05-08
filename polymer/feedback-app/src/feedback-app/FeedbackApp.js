@@ -65,20 +65,6 @@ class FeedbackApp extends Polymer.Element {
             editNarrativeHistory: {
                 type: Array,
                 value: []
-                // [
-                //     {
-                //         title: "abc",
-                //         text: "asdfghjk"
-                //     },
-                //     {
-                //         title: "qwer",
-                //         text: "1234567"
-                //     },
-                //     {
-                //         title: "567890",
-                //         text: "bnm,hg"
-                //     }
-                // ]
             },
             /*
             The property narrativeToEdit is one of two state variables - it keeps a record of which narrative view is being
@@ -319,6 +305,7 @@ class FeedbackApp extends Polymer.Element {
             var editorArea = Polymer.dom(this.root).querySelector("#editorarea #display");
             $(editorArea).find("a").css("color", "");
             $(editorArea).find("a").css("text-decoration", "");
+            $(editorArea).css("user-select", "");
             $(editorArea).find("a").off("click");
         }
         // editState = 0 or 'editor closed' state. 
@@ -468,6 +455,7 @@ class FeedbackApp extends Polymer.Element {
             var editorArea = Polymer.dom(this.root).querySelector("#editorarea #display");
             $(editorArea).find("a").css("color", "red");
             $(editorArea).find("a").css("text-decoration", "none");
+            $(editorArea).css("user-select", "none");
             $(editorArea).find("a").on("click", this.editLinkHandler);
         }
 

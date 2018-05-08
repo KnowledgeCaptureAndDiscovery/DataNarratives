@@ -1,177 +1,138 @@
 <!-- Import scripts - webcomponents(js) and jquery and web componenents (.html) -->
 <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="/node_modules/clipboard/dist/clipboard.min.js"></script>
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="/bower_components/app-layout/app-layout.html">
-<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="/bower_components/app-layout/demo/sample-content.html">
 <link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-<!-- <link rel="import" href="/bower_components/paper-progress/paper-progress.html"> -->
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
-<link rel="import" href="/bower_components/paper-collapse-item/paper-collapse-item.html">
 <link rel="import" href="/bower_components/polymer/lib/utils/gestures.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html"> 
 <link rel="import" href="/bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
-<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="/bower_components/resizable-panels/resizable-panels.html">
 <link rel="import" href="/bower_components/paper-tooltip/paper-tooltip.html">
 <link rel="import" href="/bower_components/iron-collapse/iron-collapse.html">
-<link rel="import" href="/bower_components/iron-collapse-button/iron-collapse-button.html">
-<!-- <link rel="import" href="/bower_components/polymer/elements/dom-repeat.html"> -->
 
 <!-- 
-Define the web component feedback-app in <dom-module>
-Definition consists of structure - defined in <template> tag, and scripts defined in <script> tag 
-Style and custom style is also included in <template>
-In Polymer, the web component defined by <dom-module> is associated with an ES6/JavaScript class
-Using this web component (simply dropping it in an HTML document)creates an instance of the associated class in the browser
-The web component defines a 'shadow DOM' i.e. its internal components (other HTML tags or web componenets)
-are visible to the instance but not to the DOM tree
-Each web component has properties which could be data or methods
-Both one-way and two-way binding between the properties in the object and attributes or content of 
-tags in the <template> are allowed. 
+  Define the web component feedback-app in <dom-module>
+  Definition consists of structure - defined in <template> tag, and scripts defined in <script> tag 
+  Style and custom style is also included in <template>
+  In Polymer, the web component defined by <dom-module> is associated with an ES6/JavaScript class
+  Using this web component (simply dropping it in an HTML document)creates an instance of the associated class in the browser
+  The web component defines a 'shadow DOM' i.e. its internal components (other HTML tags or web componenets)
+  are visible to the instance but not to the DOM tree
+  Each web component has properties which could be data or methods
+  Both one-way and two-way binding between the properties in the object and attributes or content of 
+  tags in the <template> are allowed.  
 -->
+
 
 <dom-module id="feedback-app">
   
     <template>
+        <!--
+          Style rules go here
+        -->
         <custom-style>
             <style is="custom-style">
-              html, body {
-                margin: 0;
-                font-family: 'Roboto', 'Noto', sans-serif;
-                -webkit-font-smoothing: antialiased;
-                background: #f1f1f1;
-                max-height: 368px;
-              }
-              app-toolbar {
-                background-color: #49274a;
-                color: #fff;
-              }
-          
-              paper-icon-button {
-                --paper-icon-button-ink-color: white;
-              }
-          
-              /* app-header {
-                @apply --layout-fixed-top;
-                color: #fff;
-                --app-header-background-rear-layer: {
-                  background-color: #ef6c00;
-                };
-              } */
-              
-              #main-content{
-                display: flex;
-              }
-              #narrative-views{
-                border-width: 2px;
-                border-style:solid;
-                border-color: chocolate;
-                margin-top: 0px;
-                margin-right: 0px;
-                display: list-item;
-                padding: 20px;
-              }
-              /* #narrative-editor{
-                border-style: dotted;
-                border-width: 4px;
-                border-color: coral;
-                margin-top: 0px;
-                margin-left: 0px;
-                width: 500px;
-                position: fixed;
-              } */
-              
-              paper-card{
-                color: black;
-                width: 100%;
-                word-wrap: break-word;
-                margin-bottom: 10px;
-              }
-              paper-card.history-card {
-                padding: 10px;
-              }
-              paper-tooltip{
-                --paper-tooltip-delay-in: 500;
-                font-size: 12pt;
-              }
-              .panel { 
-                padding: 20px; 
-                color: white; 
-                width: 100%;
-                height: 100%;
-                /* max-width: 100%; */
-              }
-              .p1 { 
-                background-color: white; 
-                width: 100%;
-                /* height: 100%; */
-                /* max-width: 100%;  */
-                /* overflow-y: scroll; */
-              }
-              .p2 { 
-                background-color: white; 
-                width: 50%;
-                /* position: fixed; */
-                /* height: 100%; */
-                /* max-width: 50%  */
-              }
-              .card-body {
-                margin: 20px;
-              }
-              .card-actions {
-                margin: 10px;
-              }
-              .card-content {
-                user-select: all;
-              }
-              iron-icon {
-                margin-right: 30px;
-              }
-              
-              #link-to-edit {
-                color: white;
-              }
-              paper-button.red {
-                background-color: var(--paper-red-500);
-                color: white;
-              } 
-              paper-button.green {
-                background-color: var(--paper-green-500);
-                color: white;
-              }
-              iron-icon.icon-ok {
-                color: var(--paper-green-500);
-                margin-top: 20px;
-              }
-              iron-icon.icon-cancel {
-                color: var(--paper-red-500);
-                margin-top: 20px;
-              }
-              paper-collapse-item {
-                margin: 20px;
-                word-break: break-word;
-                word-wrap: break-word;
-              }
-              .editor-toolbar {
-                background-color: #675682;
 
-              }
-              .view-head{
-                background-color: #5f0f4e;
-              }
+                html, body {
+                  margin: 0;
+                  font-family: 'Roboto', 'Noto', sans-serif;
+                  -webkit-font-smoothing: antialiased;
+                  background: #f1f1f1;
+                  max-height: 368px;
+                }
+
+                app-toolbar {
+                  background-color: #49274a;
+                  color: #fff;
+                }
+                
+                div.panel { 
+                  padding: 20px; 
+                  color: white; 
+                  width: 100%;
+                  height: 100%;
+                }
+
+                div.p1 { 
+                  background-color: white; 
+                  width: 100%;
+                }
+
+                div.p2 { 
+                  background-color: white; 
+                  width: 50%;
+                }
+                
+                div.card-body {
+                  margin: 20px;
+                }
+
+                div.card-actions {
+                  margin: 10px;
+                }
+
+                div.card-content {
+                  user-select: all;
+                }
+
+                paper-card{
+                  color: black;
+                  width: 100%;
+                  word-wrap: break-word;
+                  margin-bottom: 10px;
+                }
+
+                paper-card.history-card {
+                  padding: 10px;
+                }
+
+                paper-tooltip {
+                  --paper-tooltip-delay-in: 500;
+                  font-size: 12pt;
+                }
+                
+                .editor-toolbar {
+                  background-color: #675682;
+                }
+
+                .view-head{
+                  background-color: #5f0f4e;
+                }
+
+                paper-button.red {
+                  background-color: var(--paper-red-500);
+                  color: white;
+                }
+
+                paper-button.green {
+                  background-color: var(--paper-green-500);
+                  color: white;
+                }
+                
+                paper-icon-button {
+                  margin-right: 30px;
+                }
+
+                paper-icon-button.icon-ok {
+                  color: var(--paper-green-500);
+                  margin-top: 20px;
+                }
+
+                paper-icon-button.icon-cancel {
+                  color: var(--paper-red-500);
+                  margin-top: 20px;
+                }
                      
-          </style>
+            </style>
         </custom-style>
     
         <!--
@@ -180,226 +141,238 @@ tags in the <template> are allowed.
           <app-header-layout> positions an <app-header> and other content
         -->
         <app-header-layout>
-          <app-header>
-            <app-toolbar>
-              DANA: DAta NArratives
-            </app-toolbar>
-          </app-header>
+
+            <app-header>
+                <app-toolbar>
+                    DANA: DAta NArratives
+                </app-toolbar>
+            </app-header>
     
-          <!--
-            <resizable-panels> creates resizable panels (horizontally by default) - each of which is placed in a <div>
-            -->  
-          <resizable-panels>
             <!--
-              The first panel is for placing the narrative views
-            -->
-            <div class="panel p1" id="view">
-              <!--
-                Each narrative is placed in a <paper-card>
-                It contains a heading like <paper-toolbar>, 
-                <paper-tooltip> for displaying tooltip text,
-                followed by the actual body of the card.
-                This body is encapsulated in an <iron-collapse> tag
-                for collapsing or expanding the card. The body contains
-                buttons in <paper-button> and a <div> for holding the narrative
-                text
-                The contents into <paper-toolbar>, <paper-tooltip> and the body
-                are data-binded with respective subproperties of each element
-                in the narratives property.
-                The same template is stamped on to each element in narratives to
-                create as many <paper-card> components as there are views. To this
-                end, <dom-repeat> is used.
+              <resizable-panels> creates resizable panels (horizontally by default) - each of which is placed in a <div>
+              There are two such panels (represented by <div>s)    
+            -->  
+            <resizable-panels>
+                <!--
+                  The first panel is for placing the narrative views
                 -->
+                <div class="panel p1" id="view">
+                    <!--
+                      Each narrative is placed in a <paper-card>
+                      It contains a heading like <paper-toolbar>, 
+                      <paper-tooltip> for displaying tooltip text,
+                      followed by the actual body of the card.
+                      This body is encapsulated in an <iron-collapse> tag
+                      for collapsing or expanding the card. The body contains
+                      buttons in <paper-button> and a <div> for holding the narrative
+                      text
+                      The contents into <paper-toolbar>, <paper-tooltip> and the body
+                      are data-binded with respective subproperties of each element
+                      in the narratives property.
+                      The same template is stamped on to each element in narratives to
+                      create as many <paper-card> components as there are views. To this
+                      end, <dom-repeat> is used.
+                      -->
 
-              <!--
-                'items' here is the attribute to be set to an Array propoerty supplied by
-                the class FeedbackApp.
-              -->
-              <dom-repeat items="{{narratives}}">
-                  <template>
-                      <paper-card>
-                          <!--
-                            Since the 'id' attribute cannot be assigned uniquely to each <paper-card>
-                            in the <dom-repeat> syntax, another attribute called 'identity' is created and 
-                            data-binded with the 'index' property automatically created by <dom-repeat>
-                            as the index of the element of the 'items' array.
-                          -->
-                          <paper-toolbar class="view-head" on-click="toggleCollapse" identity$="{{index}}">
-                              <!--
-                                Similar to 'index', <dom-repeat> also provides another property - 'item'
-                                as an alias or reference to the current element in the 'items' array to 
-                                which the <dom-repeat> template is being applied.
-                                In this case, each 'item' refers to a narrative view. Therefore its subproperties
-                                title, tooltip_text and text are data-binded at the respective places.
-                              --> 
-                              <div slot="top" id="cardtooltip" class="title">{{item.title}}</div>
-                          </paper-toolbar>
-                          <paper-tooltip id="cardtooltip" for="cardtitle" position="top">{{item.tooltip_text}}</paper-tooltip>
-                          <iron-collapse identity$="{{index}}">
-                            <div class="card-body">
-                                <div class="card-actions">
+                    <!--
+                      'items' here is the attribute to be set to an Array property supplied by
+                      the class FeedbackApp.
+                    -->
+                    <dom-repeat items="{{narratives}}">
+                        <!--
+                          The template that <dom-repeat> stamps on the 'items' Array goes in <template>
+                        -->
+                        <template>
+                            <paper-card>
+                                <!--
+                                  Since the 'id' attribute cannot be assigned uniquely to each <paper-card>
+                                  in the <dom-repeat> syntax, another attribute called 'identity' is created and 
+                                  data-binded with the 'index' property automatically created by <dom-repeat>
+                                  as the index of the element of the 'items' array.
+                                -->
+                                <paper-toolbar class="view-head" on-click="toggleCollapse" identity$="{{index}}">
                                     <!--
-                                    Clicking the 'Edit' button opens the narrative editor - the second <div> as panel
-                                    Clicking the 'See More' button will show hidden parts of the test
-                                    Clicking the 'See Less' button will hide hideable parts of the text
-                                    The event handlers are defined in the <script> tag as instance methods of FeedbackApp
-                                    -->
-                                    <div class="horizontal justified">
-                                        <!-- <paper-button on-click="openEditor" identity$="{{index}}">Edit</paper-button> -->
-                                        <iron-icon icon="icons:create" on-click="openEditor" identity$="{{index}}" title="Edit"></iron-icon>
-                                        <!-- <paper-button on-click="seeMore" identity$="{{index}}">See More</paper-button> -->
-                                        <iron-icon icon="icons:expand-more" on-click="seeMore" identity$="{{index}}" title="See More"></iron-icon>
-                                        <!-- <paper-button on-click="seeLess" identity$="{{index}}">See Less</paper-button> -->
-                                        <iron-icon icon="icons:expand-less" on-click="seeLess" identity$="{{index}}" title="See Less"></iron-icon>
-                                        <!-- <paper-button on-click="seeHistory" identity$="{{index}}">See Less</paper-button> -->
-                                        <iron-icon icon="icons:history" on-click="openHistory" identity$="{{index}}" title="See Edit History"></iron-icon>
-                                        <!-- <iron-icon icon="icons:content-copy" class="icon-copy" title="Copy to Clipboard" data-clipboard-target=".card-content[identity={{index}}]"></iron-icon> -->
-                                    </div>
-                                </div>
-                                
-                                <div class="card-content" identity$="{{index}}">{{item.text}}</div>
-                            </div>
-                          </iron-collapse>
-                      </paper-card>
-                  </template>
-                </dom-repeat>
-    
-              <br/>
-    
-              </div>
-              <!-- 
-                The second panel is for dislaying the narrative editor
-                The narrative editor is inserted with the text content of the 
-                view which caused the opening of the editor
-              -->
-              <div class="panel p2" id="editor" hidden$="{{hideRightPanel}}">
-                  <iron-icon icon="icons:close" on-click="closePanel" title="Close this panel" ></iron-icon>
-                  <paper-card id="narrative-editor" hidden$="{{hideNarrativeEditor}}"  edit-state$="{{editState}}">
-                      <paper-toolbar class="editor-toolbar">
-                          <div slot="top" class="title">Narrative Editor</div>
-                      </paper-toolbar>
-                      <div class="card-body">
-                          <div class="card-actions">
-                              <div class="horizontal justified">
-                                  <!-- <paper-button on-click="editLinkMode">Edit Links</paper-button> -->
-                                  <iron-icon icon="icons:create" on-click="editLinkMode" title="Edit Link Labels"></iron-icon>
-                                  <!-- <paper-button on-click="saveEdits">Save</paper-button> -->
-                                  <iron-icon icon="icons:save" on-click="saveEdits" title="Save"></iron-icon>
-                                  <!-- <paper-button on-click="closeEditor">Close</paper-button> -->
-                                  <iron-icon icon="icons:close" on-click="closeEditor" title="Close"></iron-icon>
-                              </div>
-                          </div>
-        
-                          <div class="card-content" id="editorarea">
-                            <em><span id="warning" style="color:red; margin: 20px"></span></em>
-                            <div id="display"></div>
-                          </div>
-                      </div>
-                      
-                  </paper-card>
-                  
-                  <!--
-                    This <paper-card> is a small box that pops up whenever a user clicks on a link to edit.
-                    It contains a header with the href of the link, a <paper-input> to change the label
-                    and a 'Save' button to save the label.
-                  -->
-                  <paper-card id="link-editor" hidden$="{{hideLinkEditor}}">
-                    <div class="card-content">
-                      <h4>
-                        <a id="header"></a>
-                      </h4>
-                      <paper-input id="input" label="Edit the label"></paper-input>
-                      <div class="horizontal justified">
-                          <iron-icon icon="icons:done" class="custom icon-ok" title="OK" on-click="saveLinkLabel"></iron-icon>
-                          <iron-icon icon="icons:cancel" class="custom icon-cancel" title="Cancel" on-click="cancelEditLink"></iron-icon>
-                      </div>
-                      
-                    </div>
-                    
-                    <!-- <div class="card-actions"> -->
-                      <!-- <div class="horizontal justified"> -->
-                        <!-- <paper-button class="custom green" on-click="saveLinkLabel">OK</paper-button> -->
-                        <!-- <iron-icon icon="icons:done" class="custom icon-ok" on-click="saveLinkLabel"></iron-icon> -->
-                        <!-- <paper-button class="custom green" on-click="saveLinkLabel"><iron-icon icon="icons:done"></iron-icon></paper-button> -->
-                        <!-- <paper-button class="custom red" on-click="cancelEditLink">Cancel</paper-button> -->
-                        <!-- <iron-icon icon="icons:cancel" class="custom icon-cancel" on-click="cancelEditLink"></iron-icon> -->
-                        <!-- <paper-button class="custom red" on-click="saveLinkLabel"><iron-icon icon="icons:cancel"></iron-icon></paper-button> -->
-                      <!-- </div> -->
-                    <!-- </div> -->
-                  </paper-card>
-    
-                        
-
-                  <paper-card id="save-edits-box" hidden$="{{hideSaveEditsBox}}">
-                    <div class="card-content">
-                      <paper-input label="Name your edit" id="edit-name"></paper-input>
-                      <paper-input label="Briefly describe your edit" id="edit-description"></paper-input>
-                      <paper-textarea label="Tell us why" id="edit-reason"></paper-textarea>
-                      <div class="horizontal justified">
-                          <iron-icon icon="icons:done" class="icon-ok" title="OK" on-click="writeSavedEdit"></iron-icon>
-                          <iron-icon icon="icons:cancel" class="icon-cancel" title="Cancel" on-click="cancelSavingEdit"></iron-icon>
-                      </div>
-                    </div>
-                    <!-- <div class="card-actions"> -->
-                      <!-- <div class="horizontal justified"> -->
-                          <!-- <paper-button class="custom green" on-click="writeSavedEdit">OK</paper-button> -->
-                          <!-- <iron-icon icon="icons:done" on-click="writeSavedEdit"></iron-icon> -->
-                          <!-- <paper-button class="custom red" on-click="cancelSavingEdit">Cancel</paper-button> -->
-                          <!-- <iron-icon icon="icons:cancel" on-click="cancelSavingEdit"></iron-icon> -->
-                      <!-- </div> -->
-                    <!-- </div> -->
-                  </paper-card>
-                
-                  <paper-card id="edit-history" hidden$="{{hideEditHistory}}">
-                      <paper-toolbar class="editor-toolbar">
-                          <div slot="top" class="title">Edit History</div>
-                      </paper-toolbar>
-                      
-                      <div class="card-body" id="history"> 
-                        <iron-icon icon="icons:close" title="Close" on-click="closeHistory"></iron-icon>
-                        <em><span id="warning-history" style="color:red; margin: 20px"></span></em>
-                        <dom-repeat items="{{editNarrativeHistory}}" id="history-cards">
-                          <template>
-                              <paper-card class="history-card">
-                                <div identifier$="{{index}}" on-click="toggleCard">
-                                  [[item.dateString]]
-                                </div>
-                                <iron-collapse identifier$="{{index}}">
-                                    <!-- <div class="card-content"> -->
-                                      <div class="card-metadata">
-                                          <h4>[[item.editName]]</h4>
-                                          <p>[[item.editDescription]]</p>
-                                          <p>[[item.editReason]]</p>
+                                      Similar to 'index', <dom-repeat> also provides another property - 'item'
+                                      as an alias or reference to the current element in the 'items' array to 
+                                      which the <dom-repeat> template is being applied.
+                                      In this case, each 'item' refers to a narrative view. Therefore its subproperties
+                                      title, tooltip_text and text are data-binded at the respective places.
+                                    --> 
+                                    <div slot="top" id="cardtooltip" class="title">[[item.title]]</div>
+                                </paper-toolbar>
+                                <paper-tooltip id="cardtooltip" for="cardtitle" position="top">[[item.tooltip_text]]</paper-tooltip>
+                                <!--
+                                  <iron-collapse> is used to wrap around the <div> that wants collapsible behaviour
+                                -->
+                                <iron-collapse identity$="{{index}}">
+                                  <div class="card-body">
+                                      <div class="card-actions">
+                                          <!--
+                                            Clicking the 'Edit' button opens the narrative editor - the second <div> as panel
+                                            Clicking the 'See Edit History' button opens the narrative editor - the second <div> as panel
+                                            Clicking the 'See More' button will show hidden parts of the test
+                                            Clicking the 'See Less' button will hide hideable parts of the text
+                                            The event handlers are defined in the <script> tag, within the class definition of FeedbackApp as instance methods
+                                          -->
+                                          <div class="horizontal justified">
+                                            <paper-icon-button icon="icons:create" on-click="openEditor" identity$="{{index}}" title="Edit"></paper-icon-button>
+                                            <paper-icon-button icon="icons:history" on-click="openHistory" identity$="{{index}}" title="See Edit History"></paper-icon-button>
+                                            <paper-icon-button icon="icons:expand-more" on-click="seeMore" identity$="{{index}}" title="See More"></paper-icon-button>
+                                            <paper-icon-button icon="icons:expand-less" on-click="seeLess" identity$="{{index}}" title="See Less"></paper-icon-button>
+                                          </div>
                                       </div>
-                                      <div class="card-content">
-                                          <p>[[item.editedNarrativeText]]</p>
-                                      </div>  
-                                    <!-- </div> -->
+                                      <!--
+                                        The text of the narrative is placed in this <div> container
+                                      -->
+                                      <div class="card-content" identity$="{{index}}">[[item.text]]</div>
+                                  </div>
                                 </iron-collapse>
-                                
-                              </paper-card>
-                          </template>
-                        </dom-repeat>
-                          
-                      </div>
-                  </paper-card>
+                            </paper-card>
+                        </template>
+                    </dom-repeat>    
+                </div>
 
+                <!-- 
+                  The second panel is for dislaying the narrative editor and the edit history
+                  It contains many <paper-card> containers - for the narrative editor, for boxes to edit link labels
+                  and save edits, and the edit history
+                  The narrative editor is inserted with the text content of the 
+                  view which caused the opening of the editor
+                -->
+                <div class="panel p2" id="editor" hidden$="{{hideRightPanel}}">
+                    <paper-icon-button icon="icons:close" on-click="closePanel" title="Close this panel"></paper-icon-button>
+                    <paper-card id="narrative-editor" hidden$="{{hideNarrativeEditor}}"  edit-state$="{{editState}}">
+                        <paper-toolbar class="editor-toolbar">
+                            <div slot="top" class="title">Narrative Editor</div>
+                        </paper-toolbar>
+                        <div class="card-body">
+                            <div class="card-actions">
+                                <!--
+                                  A horizontal row of buttons
+                                  The 'Edit Link Labels' button enters into 'editing link labels' mode
+                                  The 'Save' button saves the edited narratives
+                                  The 'Close' button hides the <div> containing narrative editor
+                                -->
+                                <div class="horizontal justified">
+                                    <paper-icon-button icon="icons:create" on-click="editLinkMode" title="Edit Link Labels"></paper-icon-button>
+                                    <paper-icon-button icon="icons:save" on-click="saveEdits" title="Save"></paper-icon-button>
+                                    <paper-icon-button icon="icons:close" on-click="closeEditor" title="Close"></paper-icon-button>
+                                </div>
+                            </div>
+                            <!--
+                              This is the <div> that will hold the text of the narrative being edited
+                              Specifically, a <span> holds a warning to be displayed if users try to save without
+                              making any edits
+                              The inner <div> will actually hold the text
+                            -->
+                            <div class="card-content" id="editorarea">
+                                <em>
+                                    <span id="warning" style="color:red; margin: 20px"></span>
+                                </em>
+                                <div id="display"></div>
+                            </div>
+                        </div>
+                    </paper-card>
+                    
+                    <!--
+                      This <paper-card> is a small box that pops up whenever a user clicks on a link to edit.
+                      It contains a header with the href of the link, a <paper-input> to change the label
+                      and two buttons - 'OK' and 'Cancel'.
+                    -->
+                    <paper-card id="link-editor" hidden$="{{hideLinkEditor}}">
+                        <div class="card-content">
+                            <h4>
+                                <a id="header"></a>
+                            </h4>
+                            <paper-input id="input" label="Edit the label"></paper-input>
+                            <div class="horizontal justified">
+                                <paper-icon-button icon="icons:done" class="custom icon-ok" title="OK" on-click="saveLinkLabel"></paper-icon-button>
+                                <paper-icon-button icon="icons:cancel" class="custom icon-cancel" title="Cancel" on-click="cancelEditLink"></paper-icon-button>
+                            </div>
+                        </div>
+                    </paper-card>
+                    
+                    <!--
+                      This <paper-card> is a small box that pops up when users are ready to save by
+                      clicking on the 'Save' button in the narrative editor.
+                      It contains three <paper-input> elements for users to enter some metadata
+                      Finally, it also contains two buttons - 'OK' and 'Cancel'
+                    -->
+                    <paper-card id="save-edits-box" hidden$="{{hideSaveEditsBox}}">
+                        <div class="card-content">
+                            <paper-input label="Name your edit" id="edit-name"></paper-input>
+                            <paper-input label="Briefly describe your edit" id="edit-description"></paper-input>
+                            <paper-input label="Tell us why" id="edit-reason"></paper-input>
+                            <div class="horizontal justified">
+                                <paper-icon-button icon="icons:done" class="icon-ok" title="OK" on-click="writeSavedEdit"></paper-icon-button>
+                                <paper-icon-button icon="icons:cancel" class="icon-cancel" title="Cancel" on-click="cancelSavingEdit"></paper-icon-button>
+                            </div>
+                        </div>
+                    </paper-card>
+                  
+                    <!--
+                      This <paper-card> is the container for displaying the edit history
+                      It contains a <paper-toolbar> and the rest of the content placed in a <div>
+                    -->
+                    <paper-card id="edit-history" hidden$="{{hideEditHistory}}">
+                        <paper-toolbar class="editor-toolbar">
+                            <div slot="top" class="title">Edit History</div>
+                        </paper-toolbar>
+                        <!--
+                          This <div> contains a 'Close' button, clicking on which will hide the <paper-card>,
+                          a <span> element to display a message if the particular narrative has no history of 
+                          edits to report, and a <dom-repeat> to stamp a template to each item in an Array that
+                          contains the history of edits
+                        -->
+                        <div class="card-body" id="history"> 
+                            <paper-icon-button icon="icons:close" title="Close" on-click="closeHistory"></paper-icon-button>
+                            <em>
+                                <span id="warning-history" style="color:red; margin: 20px"></span>
+                            </em>
+                            <!--
+                              <dom-repeat> has the 'items' Array data-binded to the 'editNarrativeHistory'
+                              property of FeedbackApp
+                            -->
+                            <dom-repeat items="{{editNarrativeHistory}}" id="history-cards">
+                                <template>
+                                    <paper-card class="history-card">
+                                        <div identifier$="{{index}}" on-click="toggleCard">
+                                          [[item.dateString]]
+                                        </div>
+                                        <iron-collapse identifier$="{{index}}">
+                                            <div class="card-metadata">
+                                                <h4>[[item.editName]]</h4>
+                                                <p>[[item.editDescription]]</p>
+                                                <p>[[item.editReason]]</p>
+                                            </div>
+                                            <div class="card-content">
+                                                <p>[[item.editedNarrativeText]]</p>
+                                            </div>  
+                                        </iron-collapse>
+                                    </paper-card>
+                                </template>
+                            </dom-repeat>
+                        </div>
+                    </paper-card>
 
-              </div>
+                </div>
             </resizable-panels>
     
         </app-header-layout>
        
-      </template>
+    </template>
 
-  <script src="FeedbackApp.js"></script>
-  <script>
-    /*
-    Most crucially, establish a binding between the name of the web component
-    'feedback-app', which is returned by FeedbackApp.is and the class FeedbackApp
-    This is called registration
-    */
-    new ClipboardJS('.icon-copy');
-    window.customElements.define(FeedbackApp.is, FeedbackApp);
-  </script>
+    <!--
+      The class definition of FeedbackApp is linked
+    -->
+    <script src="FeedbackApp.js"></script>
+    <script>
+        /*
+        Most crucially, establish a binding between the name of the web component
+        'feedback-app', which is returned by FeedbackApp.is and the class FeedbackApp
+        This is called registration
+        */
+        window.customElements.define(FeedbackApp.is, FeedbackApp);
+    </script>
+
 </dom-module>
