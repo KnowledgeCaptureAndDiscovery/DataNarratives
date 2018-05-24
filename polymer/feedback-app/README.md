@@ -1,12 +1,44 @@
 # \<feedback-app\>
 
-The single page web app of the feedback system
+The single page web app of the feedback system.
+
+## Install Node.js and npm
+
+If you don't have Node.js or npm installed, follow the instructions [here](https://www.npmjs.com/get-npm). 
 
 ## Install the Polymer-CLI
 
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
 
+## Installing dependencies
+
+There are two types of dependencies that need to be installed.
+
+Install the Polymer front-end related dependencies with
+
+```
+$ bower install
+```
+It will install all the dependencies in bower.json.
+
+
+Next, install the Node.js back-end related dependencies with
+
+```
+$ npm install
+```
+
+It will install all the dependencies in package.json.
+
 ## Viewing Your Application
+
+First, set the server up. Navigate to feedback-app/server directory, and run
+
+```
+$ node server.js
+```
+
+With the server running, in the directory feedback-app, run
 
 ```
 $ polymer serve
@@ -31,15 +63,3 @@ $ polymer test
 ```
 
 Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
-
-## Running a Server with node.js
-
-As prerequisites, install node.js on your machine (find installers [here](https://nodejs.org/en/download/), or use a package manager). The Node Package Manager (npm) is also installed with node.
-
-Install some modules necessary 
-
-```
-$ npm install express
-$ npm install body-parser
-```
-
