@@ -12,7 +12,7 @@ First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polyme
 
 ## Installing dependencies
 
-There are two types of dependencies that need to be installed.
+While building for the first time, there are two types of dependencies that need to be installed.
 
 Install the Polymer front-end related dependencies with
 
